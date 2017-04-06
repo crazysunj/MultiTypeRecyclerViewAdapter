@@ -2,6 +2,7 @@ package com.crazysunj.multityperecyclerviewadapter;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
+import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textView2;
     private TextView textView3;
     private TextView textView4;
+    private GridLayoutManager layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,31 @@ public class MainActivity extends AppCompatActivity {
         textView2 = (TextView) findViewById(R.id.text2);
         textView3 = (TextView) findViewById(R.id.text3);
         textView4 = (TextView) findViewById(R.id.text4);
+        adapter = new SampleAdapter();
+//        adapter.handleMoudleWithProgress(DialogUtil.getDialog(this));
+//        layout = new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false) {
+//            @Override
+//            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+//                try {
+//                    super.onLayoutChildren(recycler, state);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
+//                try {
+//                    return super.scrollVerticallyBy(dy, recycler, state);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    return 0;
+//                }
+//            }
+//        };
+
+//        recyclerView.setLayoutManager(layout);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this) {
 
             @Override
@@ -61,9 +89,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        adapter = new SampleAdapter();
-        adapter.handleMoudleWithProgress(DialogUtil.getDialog(this));
+//        StickyHeaderDecoration decoration = new StickyHeaderDecoration(adapter, true);
+//        recyclerView.addItemDecoration(decoration);
+//        recyclerView.setAdapter(adapter);
         adapter.bindToRecyclerView(recyclerView);
+//        layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+//            @Override
+//            public int getSpanSize(int position) {
+//                MultiHeaderEntity entity = adapter.getData().get(position);
+//                int itemType = entity.getItemType();
+//                Log.d("MainActivity", "itemType:" + itemType);
+//                if (itemType == SampleAdapter.DEFAULT_HEADER_TYPE || itemType == SampleAdapter.TYPE_HEADER_IMG) {
+//                    return layout.getSpanCount();
+//                }
+//                return 1;
+//            }
+//        });
+
         int rand = random.nextInt(6);
         List<MultiHeaderEntity> list = new ArrayList<>();
         for (int i = 0, size = rand + 1; i < size; i++) {
@@ -79,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 long s = System.currentTimeMillis();
                 Random random = new Random();
-                int rand = random.nextInt(7000);
+                int rand = random.nextInt(200);
                 final List<MultiHeaderEntity> list = new ArrayList<>();
                 for (int i = 0, size = rand + 1; i < size; i++) {
                     list.add(new FirstItem(String.format("我是第一种类型%d", i), i));
