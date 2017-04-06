@@ -9,13 +9,18 @@ MultiTypeRecyclerViewAdapter for recyclerview
 
 先给大家欣赏几张优美的动态图，网差的朋友赶紧把demo下载下来，运行运行，看看效果。
 
-![](http://crazysunj.com/img/GIF_20170330_165026.gif)
 
-![](http://crazysunj.com/img/GIF_20170330_170450.gif)
+![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/GIF_20170330_165026.gif)
 
-![](http://crazysunj.com/img/GIF_20170330_171326.gif)
 
-![](http://crazysunj.com/img/GIF_20170330_172021.gif)
+![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/GIF_20170330_170450.gif)
+
+
+![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/GIF_20170330_171326.gif)
+
+
+![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/GIF_20170330_172021.gif)
+
 
 库中依赖
 
