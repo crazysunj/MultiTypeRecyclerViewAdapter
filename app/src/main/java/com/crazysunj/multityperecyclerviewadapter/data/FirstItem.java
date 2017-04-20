@@ -42,6 +42,15 @@ public class FirstItem implements FirstStickyItem {
     }
 
     @Override
+    public void setId(long id) {
+    }
+
+    @Override
+    public void setType(int type) {
+
+    }
+
+    @Override
     public int getItemType() {
         return SampleAdapter.TYPE_ONE;
     }

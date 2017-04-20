@@ -12,4 +12,8 @@ public interface MultiHeaderEntity extends MultiItemEntity {
     long getId();
 
     long getHeaderId();
+
+    void setId(long id);
+
+    void setType(int type);
 }

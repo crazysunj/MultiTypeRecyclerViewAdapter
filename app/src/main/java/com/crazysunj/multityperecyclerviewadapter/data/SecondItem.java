@@ -40,6 +40,16 @@ public class SecondItem implements SecondStickyItem {
     }
 
     @Override
+    public void setId(long id) {
+
+    }
+
+    @Override
+    public void setType(int type) {
+
+    }
+
+    @Override
     public int getItemType() {
         return SampleAdapter.TYPE_THREE;
     }

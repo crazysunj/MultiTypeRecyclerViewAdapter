@@ -33,8 +33,18 @@ public class HeaderSecondItem implements SecondStickyItem {
     }
 
     @Override
+    public void setId(long id) {
+
+    }
+
+    @Override
+    public void setType(int type) {
+
+    }
+
+    @Override
     public int getItemType() {
-        return SampleAdapter.DEFAULT_HEADER_TYPE;
+        return SampleAdapter.TYPE_THREE - 1000;
     }
 
     @Override

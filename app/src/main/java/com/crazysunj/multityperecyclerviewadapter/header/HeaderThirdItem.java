@@ -34,8 +34,18 @@ public class HeaderThirdItem implements ThirdStickyItem {
     }
 
     @Override
+    public void setId(long id) {
+
+    }
+
+    @Override
+    public void setType(int type) {
+
+    }
+
+    @Override
     public int getItemType() {
-        return SampleAdapter.DEFAULT_HEADER_TYPE;
+        return SampleAdapter.TYPE_FOUR - 1000;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.crazysunj.multityperecyclerviewadapter;
 
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.crazysunj.multitypeadapter.AsynMultiTypeAdapter;
 import com.crazysunj.multitypeadapter.SynMultiTypeAdapter;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
@@ -37,12 +36,11 @@ public class SampleAdapter extends SynMultiTypeAdapter<MultiHeaderEntity, BaseVi
 
     public SampleAdapter() {
         super(true);
-        registerMoudle(TYPE_ONE, LEVEL_FIRST, R.layout.item_first);
-        registerMoudle(TYPE_TWO, LEVEL_FOURTH, R.layout.item_fourth);
-        registerMoudle(TYPE_THREE, LEVEL_SENCOND, R.layout.item_second);
-        registerMoudle(TYPE_FOUR, LEVEL_THIRD, R.layout.item_third);
-        registerMoudle(DEFAULT_HEADER_TYPE, DEFAULT_HEADER_LEVEL, R.layout.item_header);
-        registerMoudle(TYPE_HEADER_IMG, DEFAULT_HEADER_LEVEL, R.layout.item_header_img);
+        registerMoudle(TYPE_ONE, LEVEL_FIRST, R.layout.item_first, R.layout.item_header);
+        registerMoudle(TYPE_TWO, LEVEL_FOURTH, R.layout.item_fourth, R.layout.item_header_img);
+        registerMoudle(TYPE_THREE, LEVEL_SENCOND, R.layout.item_second, R.layout.item_header_img);
+        registerMoudleWithShimmer(TYPE_FOUR, LEVEL_THIRD, R.layout.item_third,
+                R.layout.item_header_img, R.layout.layout_default_shimmer_header_view, R.layout.layout_default_shimmer_view);
     }
 
     @Override

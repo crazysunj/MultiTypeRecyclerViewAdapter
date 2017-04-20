@@ -1,9 +1,10 @@
 package com.crazysunj.multitypeadapter;
 
-import android.app.Dialog;
+import android.support.annotation.IntRange;
 import android.support.annotation.LayoutRes;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.LruCache;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
+import com.crazysunj.multitypeadapter.entity.ShimmerEntity;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 
@@ -20,6 +22,11 @@ import java.util.List;
 
 /**
  * 使用粘性头部，请调用bindToRecyclerView,否则自己添加decoration
+ * type 取值范围
+ * 数据类型 [0,1000)
+ * 头类型 [-1000,0]
+ * shimmer数据类型 [-2000,-1000)
+ * shimmer头类型 [-3000,-2000)
  * Created by sunjian on 2017/3/27.
  */
 
@@ -27,9 +34,7 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
         extends BaseQuickAdapter<T, K> implements StickyHeaderAdapter<K> {
 
     private static final int DEFAULT_VIEW_TYPE = -0xff;
-    private static final int DEFAULT_VIEW_LEVEL = 0;
     public static final int DEFAULT_HEADER_LEVEL = -1;
-    public static final int DEFAULT_HEADER_TYPE = -1;
     public static final int REFRESH_HEADER = 0;
     public static final int REFRESH_DATA = 1;
     public static final int REFRESH_HEADER_DATA = 2;
@@ -38,8 +43,6 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
     private long mMaxHeaderId = -1;
     private long mMinHeaderId = Long.MIN_VALUE;
     private boolean mIsUseStickyHeader = false;
-
-    private Dialog mDialog;
 
     private SparseIntArray mLayouts;
     private SparseIntArray mLevels;
@@ -127,11 +130,53 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
     }
 
     /**
-     * @param type
-     * @param level       如果是头部，瞎JB传个负数就行了，但类型得分清楚
-     * @param layoutResId
+     * @param type                     数据类型
+     * @param level                    数据级别
+     * @param layoutResId              正常类型布局id
+     * @param headerResId              头类型布局id
+     * @param shimmerLayoutResId       loading 数据类型布局id
+     * @param shimmerHeaderLayoutResId loading 头类型布局id
      */
-    public void registerMoudle(int type, int level, @LayoutRes int layoutResId) {
+    public void registerMoudleWithShimmer(@IntRange(from = 0, to = 999) int type, @IntRange(from = 0) int level,
+                                          @LayoutRes int layoutResId, @LayoutRes int headerResId,
+                                          @LayoutRes int shimmerLayoutResId, @LayoutRes int shimmerHeaderLayoutResId) {
+        registerMoudle(type, level, layoutResId, headerResId);
+
+        int shimmerType = type - 2000;
+        mLevels.put(shimmerType, level);
+        mLayouts.put(shimmerType, shimmerLayoutResId);
+
+        int shimmerHeaderType = type - 3000;
+        mLevels.put(shimmerHeaderType, level);
+        mLayouts.put(shimmerHeaderType, shimmerHeaderLayoutResId);
+    }
+
+    public void registerMoudleWithShimmer(@IntRange(from = 0, to = 999) int type, @IntRange(from = 0) int level,
+                                          @LayoutRes int layoutResId, @LayoutRes int headerResId, @LayoutRes int shimmerHeaderLayoutResId) {
+        registerMoudle(type, level, layoutResId, headerResId);
+        int shimmerHeaderType = type - 3000;
+        mLevels.put(shimmerHeaderType, level);
+        mLayouts.put(shimmerHeaderType, shimmerHeaderLayoutResId);
+    }
+
+    public void registerMoudleWithShimmer(@IntRange(from = 0, to = 999) int type, @IntRange(from = 0) int level,
+                                          @LayoutRes int layoutResId, @LayoutRes int shimmerLayoutResId) {
+        registerMoudle(type, level, layoutResId);
+        int shimmerType = type - 2000;
+        mLevels.put(shimmerType, level);
+        mLayouts.put(shimmerType, shimmerLayoutResId);
+    }
+
+    public void registerMoudle(@IntRange(from = 0, to = 999) int type, @IntRange(from = 0) int level,
+                               @LayoutRes int layoutResId, @LayoutRes int headerResId) {
+        registerMoudle(type, level, layoutResId);
+        int headerType = type - 1000;
+        mLevels.put(headerType, level);
+        mLayouts.put(headerType, headerResId);
+    }
+
+    public void registerMoudle(@IntRange(from = 0, to = 999) int type, @IntRange(from = 0) int level,
+                               @LayoutRes int layoutResId) {
         mLevels.put(type, level);
         mLayouts.put(type, layoutResId);
     }
@@ -144,10 +189,6 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
      */
     public LevelData<T> getDataWithType(int type) {
         return mLevelOldData.get(getLevel(type));
-    }
-
-    public void handleMoudleWithProgress(Dialog dialog) {
-        mDialog = dialog;
     }
 
     public void setMaxHeaderId(long maxHeaderId) {
@@ -171,12 +212,100 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
         return mMaxHeaderId--;
     }
 
+    /**
+     * 务必在调用之前确定缓存数量值，可调用setMaxHeaderCacheCount和setMaxHeaderCacheCount
+     *
+     * @param type
+     * @param dataCount
+     */
+    public void notifyShimmerDataChanged(int type, @IntRange(from = 1) int dataCount) {
+        List<T> datas = getShimmerDatas(type, dataCount);
+        notifyMoudleChanged(datas, null, type, REFRESH_DATA);
+    }
+
     public void notifyMoudleDataChanged(List<T> data, int type) {
         notifyMoudleChanged(data, null, type, REFRESH_DATA);
     }
 
+    /**
+     * 务必在调用之前确定缓存数量值，可调用setMaxHeaderCacheCount和setMaxHeaderCacheCount
+     *
+     * @param type
+     */
+    public void notifyShimmerHeaderChanged(int type) {
+        T header = getShimmerHeader(type);
+        notifyMoudleChanged(null, header, type, REFRESH_HEADER);
+    }
+
     public void notifyMoudleHeaderChanged(T header, int type) {
         notifyMoudleChanged(null, header, type, REFRESH_HEADER);
+    }
+
+    private LruCache<Integer, List<T>> mDataCache;
+    private LruCache<Integer, T> mHeaderCache;
+    private int mMaxDataCacheCount = 12;
+    private int mMaxHeaderCacheCount = 6;
+
+    public void setMaxDataCacheCount(int mMaxDataCacheCount) {
+        this.mMaxDataCacheCount = mMaxDataCacheCount;
+    }
+
+    public void setMaxHeaderCacheCount(int mMaxHeaderCacheCount) {
+        this.mMaxHeaderCacheCount = mMaxHeaderCacheCount;
+    }
+
+    /**
+     * 务必在调用之前确定缓存数量值，可调用setMaxHeaderCacheCount和setMaxHeaderCacheCount
+     *
+     * @param type
+     * @param dataCount
+     */
+    public void notifyShimmerDataAndHeaderChanged(int type, @IntRange(from = 1) int dataCount) {
+
+        T header = getShimmerHeader(type);
+        List<T> datas = getShimmerDatas(type, dataCount);
+        notifyMoudleChanged(datas, header, type, REFRESH_HEADER_DATA);
+
+    }
+
+    private List<T> getShimmerDatas(int type, @IntRange(from = 1) int dataCount) {
+        if (mDataCache == null) {
+            mDataCache = new LruCache<Integer, List<T>>(mMaxDataCacheCount);
+        }
+        List<T> datas = mDataCache.get(type);
+        if (datas == null) {
+            datas = new ArrayList<T>();
+            mDataCache.put(type, datas);
+        }
+        int size = datas.size();
+        if (size < dataCount) {
+            for (int i = 0, n = dataCount - size; i < n; i++) {
+                datas.add((T) new ShimmerEntity());
+            }
+        }
+        for (int i = 0; i < dataCount; i++) {
+            T entity = datas.get(i);
+            entity.setId(getRefreshHeaderId());
+            entity.setType(type - 3000);
+        }
+
+        return datas;
+    }
+
+    private T getShimmerHeader(int type) {
+
+        if (mHeaderCache == null) {
+            mHeaderCache = new LruCache<Integer, T>(mMaxHeaderCacheCount);
+        }
+        T header = mHeaderCache.get(type);
+        if (header == null) {
+            header = (T) new ShimmerEntity();
+            mHeaderCache.put(type, header);
+        }
+        header.setId(getRefreshHeaderId());
+        header.setType(type - 3000);
+
+        return header;
     }
 
     public void notifyMoudleDataAndHeaderChanged(List<T> data, T header, int type) {
@@ -193,9 +322,6 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
         return true;
     }
 
-    protected void setDefaultViewTypeLayout(@LayoutRes int layoutResId) {
-        registerMoudle(DEFAULT_VIEW_TYPE, DEFAULT_VIEW_LEVEL, layoutResId);
-    }
 
     protected void convert(K helper, T item, int position) {
 
@@ -221,20 +347,7 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
 
     protected void handleResult(DiffUtil.DiffResult diffResult) {
         diffResult.dispatchUpdatesTo(this);
-        dismissDialog();
         isCanRefresh = true;
-    }
-
-    protected void showDialog() {
-        if (mDialog != null) {
-            mDialog.show();
-        }
-    }
-
-    protected void dismissDialog() {
-        if (mDialog != null) {
-            mDialog.dismiss();
-        }
     }
 
     protected final DiffUtil.DiffResult handleRefresh(List<T> newData, T newHeader, int type, int refreshType) {

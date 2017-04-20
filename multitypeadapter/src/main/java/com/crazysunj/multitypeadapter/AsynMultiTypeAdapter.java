@@ -50,7 +50,6 @@ public class AsynMultiTypeAdapter<T extends MultiHeaderEntity, K extends BaseVie
     protected void startRefresh(List<T> newData, T newHeader, int type, int refreshType) {
 
         cancelFuture();
-        showDialog();
         mFuture = mExecutor.schedule(new HandleTask(new HandleBase<T>(newData, newHeader, type, refreshType)),
                 0, TimeUnit.MILLISECONDS);
     }

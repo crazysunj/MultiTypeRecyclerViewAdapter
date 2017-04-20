@@ -41,6 +41,16 @@ public class FourthItem implements FourthStickyItem {
     }
 
     @Override
+    public void setId(long id) {
+
+    }
+
+    @Override
+    public void setType(int type) {
+
+    }
+
+    @Override
     public int getItemType() {
         return SampleAdapter.TYPE_TWO;
     }

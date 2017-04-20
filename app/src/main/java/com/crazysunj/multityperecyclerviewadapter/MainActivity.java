@@ -1,7 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
-import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
@@ -113,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         }
         textView3.setText(String.format("类型3的数量：%d", list.size()));
         adapter.notifyMoudleDataAndHeaderChanged(list, new HeaderThirdItem("我是第三种类型的头", adapter.getRefreshHeaderId()), SampleAdapter.TYPE_FOUR);
+        adapter.notifyShimmerDataAndHeaderChanged(SampleAdapter.TYPE_FOUR, 3);
     }
 
     public void click1(View view) {

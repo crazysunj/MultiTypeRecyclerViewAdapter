@@ -18,7 +18,6 @@ public class SynMultiTypeAdapter<T extends MultiHeaderEntity, K extends BaseView
 
     @Override
     protected void startRefresh(List<T> newData, T newHeader, int type, int refreshType) {
-        showDialog();
         handleResult(handleRefresh(newData, newHeader, type, refreshType));
     }
 
