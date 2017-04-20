@@ -4,9 +4,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.util.DiffUtil;
 
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multitypeadapter.entity.HandleBase;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
+import com.crazysunj.multitypeadapter.viewholder.ShimmerViewHolder;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * Created by sunjian on 2017/4/1.
  */
 
-public class AsynMultiTypeAdapter<T extends MultiHeaderEntity, K extends BaseViewHolder> extends BaseMultiTypeRecyclerViewAdapter<T, K> {
+public class AsynMultiTypeAdapter<T extends MultiHeaderEntity, K extends ShimmerViewHolder> extends BaseMultiTypeRecyclerViewAdapter<T, K> {
 
     private static final int HANDLE_DATA_UPDATE = 1;
 

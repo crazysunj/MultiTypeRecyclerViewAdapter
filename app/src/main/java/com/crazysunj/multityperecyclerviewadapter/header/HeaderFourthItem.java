@@ -44,7 +44,7 @@ public class HeaderFourthItem implements FourthStickyItem {
 
     @Override
     public int getItemType() {
-        return SampleAdapter.TYPE_HEADER_IMG;
+        return SampleAdapter.TYPE_FOUR - 1000;
     }
 
     @Override

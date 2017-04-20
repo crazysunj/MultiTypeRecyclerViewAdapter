@@ -3,6 +3,7 @@ package com.crazysunj.multityperecyclerviewadapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multitypeadapter.SynMultiTypeAdapter;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
+import com.crazysunj.multitypeadapter.viewholder.ShimmerViewHolder;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
@@ -20,7 +21,7 @@ import com.crazysunj.multityperecyclerviewadapter.sticky.ThirdStickyItem;
  * Created by sunjian on 2017/3/28.
  */
 
-public class SampleAdapter extends SynMultiTypeAdapter<MultiHeaderEntity, BaseViewHolder> {
+public class SampleAdapter extends SynMultiTypeAdapter<MultiHeaderEntity, ShimmerViewHolder> {
 
 
     public static final int TYPE_HEADER_IMG = -2;
@@ -37,14 +38,17 @@ public class SampleAdapter extends SynMultiTypeAdapter<MultiHeaderEntity, BaseVi
     public SampleAdapter() {
         super(true);
         registerMoudle(TYPE_ONE, LEVEL_FIRST, R.layout.item_first, R.layout.item_header);
-        registerMoudle(TYPE_TWO, LEVEL_FOURTH, R.layout.item_fourth, R.layout.item_header_img);
-        registerMoudle(TYPE_THREE, LEVEL_SENCOND, R.layout.item_second, R.layout.item_header_img);
+        registerMoudleWithShimmer(TYPE_TWO, LEVEL_FOURTH, R.layout.item_fourth, R.layout.item_header_img,
+                R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
+        registerMoudleWithShimmer(TYPE_THREE, LEVEL_SENCOND, R.layout.item_second, R.layout.item_header_img,
+                R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
         registerMoudleWithShimmer(TYPE_FOUR, LEVEL_THIRD, R.layout.item_third,
-                R.layout.item_header_img, R.layout.layout_default_shimmer_header_view, R.layout.layout_default_shimmer_view);
+                R.layout.item_header_img, R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
     }
 
+
     @Override
-    public void onBindHeaderViewHolder(BaseViewHolder helper, int position) {
+    public void onBindHeaderViewHolder(ShimmerViewHolder helper, int position) {
         MultiHeaderEntity stickyEntity = mData.get(position);
 
         if (stickyEntity instanceof FirstStickyItem) {
@@ -59,7 +63,7 @@ public class SampleAdapter extends SynMultiTypeAdapter<MultiHeaderEntity, BaseVi
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, MultiHeaderEntity item, int position) {
+    protected void convert(ShimmerViewHolder helper, MultiHeaderEntity item, int position) {
         if (item instanceof FirstItem) {
             renderFirst(helper, (FirstItem) item);
         } else if (item instanceof SecondItem) {
@@ -85,15 +89,24 @@ public class SampleAdapter extends SynMultiTypeAdapter<MultiHeaderEntity, BaseVi
     }
 
     private void renderHeaderThird(BaseViewHolder helper, HeaderThirdItem item) {
-        helper.setText(R.id.item_header, item.getName());
+//        helper.setText(R.id.item_header, item.getName());
+        helper.setText(R.id.item_header_name, item.getName());
+        helper.setImageResource(R.id.item_header_img, R.mipmap.ic_launcher);
+
     }
 
     private void renderHeaderSecond(BaseViewHolder helper, HeaderSecondItem item) {
-        helper.setText(R.id.item_header, item.getName());
+//        helper.setText(R.id.item_header, item.getName());
+        helper.setText(R.id.item_header_name, item.getName());
+        helper.setImageResource(R.id.item_header_img, R.mipmap.ic_launcher);
+
     }
 
     private void renderHeaderFirst(BaseViewHolder helper, HeaderFirstItem item) {
         helper.setText(R.id.item_header, item.getName());
+//        helper.setText(R.id.item_header_name, item.getName());
+//        helper.setImageResource(R.id.item_header_img, R.mipmap.ic_launcher);
+
     }
 
     private void renderFourth(BaseViewHolder helper, FourthItem item) {

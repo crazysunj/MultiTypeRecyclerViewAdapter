@@ -1,7 +1,7 @@
 package com.crazysunj.multitypeadapter;
 
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
+import com.crazysunj.multitypeadapter.viewholder.ShimmerViewHolder;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * Created by sunjian on 2017/4/1.
  */
 
-public class SynMultiTypeAdapter<T extends MultiHeaderEntity, K extends BaseViewHolder> extends BaseMultiTypeRecyclerViewAdapter<T, K> {
+public class SynMultiTypeAdapter<T extends MultiHeaderEntity, K extends ShimmerViewHolder> extends BaseMultiTypeRecyclerViewAdapter<T, K> {
 
     public SynMultiTypeAdapter(boolean isUseStickyHeader) {
         super(isUseStickyHeader);
