@@ -13,30 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.multitypeadapter.entity;
+package com.crazysunj.multitypeadapter.helper;
+
+import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 
 import java.util.List;
 
 /**
- * 一开始的时候就这样设计了，懒得改了 - -！,分别获取个人感觉更人性化
- * Created by sunjian on 2017/3/27.
+ * 同步适配器，数据量过大可能会卡顿，甚至出现anr，但是1500左右的数据还是没问题，相对来说比较稳定
+ * Created by sunjian on 2017/4/1.
  */
 
-public class LevelData<T> {
+public class SynAdapterHelper<T extends MultiHeaderEntity> extends RecyclerViewAdapterHelper<T> {
 
-    private List<T> data;
-    private T header;
 
-    public LevelData(List<T> data, T header) {
-        this.data = data;
-        this.header = header;
+    public SynAdapterHelper(List<T> data) {
+        super(data);
     }
 
-    public List<T> getData() {
-        return data;
+    @Override
+    protected void startRefresh(List<T> newData, T newHeader, int type, int refreshType) {
+        handleResult(handleRefresh(newData, newHeader, type, refreshType));
     }
 
-    public T getHeader() {
-        return header;
-    }
 }

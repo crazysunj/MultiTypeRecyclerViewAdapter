@@ -1,6 +1,6 @@
 package com.crazysunj.multityperecyclerviewadapter.header;
 
-import com.crazysunj.multityperecyclerviewadapter.SampleAdapter;
+import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 import com.crazysunj.multityperecyclerviewadapter.sticky.ThirdStickyItem;
 
 /**
@@ -34,18 +34,8 @@ public class HeaderThirdItem implements ThirdStickyItem {
     }
 
     @Override
-    public void setId(long id) {
-
-    }
-
-    @Override
-    public void setType(int type) {
-
-    }
-
-    @Override
     public int getItemType() {
-        return SampleAdapter.TYPE_FOUR - 1000;
+        return SimpleHelper.TYPE_FOUR - 1000;
     }
 
     @Override

@@ -1,4 +1,19 @@
-package com.crazysunj.multitypeadapter;
+/**
+ * Copyright 2017 Sun Jian
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.crazysunj.multitypeadapter.helper;
 
 import android.os.Handler;
 import android.os.Message;
@@ -6,7 +21,6 @@ import android.support.v7.util.DiffUtil;
 
 import com.crazysunj.multitypeadapter.entity.HandleBase;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
-import com.crazysunj.multitypeadapter.viewholder.ShimmerViewHolder;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -21,16 +35,13 @@ import java.util.concurrent.TimeUnit;
  * Created by sunjian on 2017/4/1.
  */
 
-public class AsynMultiTypeAdapter<T extends MultiHeaderEntity, K extends ShimmerViewHolder> extends BaseMultiTypeRecyclerViewAdapter<T, K> {
+public class AsynAdapterHelper<T extends MultiHeaderEntity> extends RecyclerViewAdapterHelper<T> {
 
     private static final int HANDLE_DATA_UPDATE = 1;
 
     protected ScheduledExecutorService mExecutor = Executors.newSingleThreadScheduledExecutor();
     protected ScheduledFuture<?> mFuture;
 
-    public AsynMultiTypeAdapter(boolean isUseStickyHeader) {
-        super(isUseStickyHeader);
-    }
 
     private Handler mHandler = new Handler() {
         @Override
@@ -45,6 +56,10 @@ public class AsynMultiTypeAdapter<T extends MultiHeaderEntity, K extends Shimmer
             }
         }
     };
+
+    public AsynAdapterHelper(List<T> data) {
+        super(data);
+    }
 
     @Override
     protected void startRefresh(List<T> newData, T newHeader, int type, int refreshType) {

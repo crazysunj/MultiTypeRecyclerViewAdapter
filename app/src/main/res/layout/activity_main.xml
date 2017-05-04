@@ -95,4 +95,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="click1"
+        android:text="线性排布" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="click2"
+        android:text="一般线性排布" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="click3"
+        android:text="方格排布" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="click4"
+        android:text="一般方格排布" />
+
 </LinearLayout>

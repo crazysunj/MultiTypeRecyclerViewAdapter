@@ -1,4 +1,19 @@
-package com.crazysunj.multitypeadapter;
+/**
+ * Copyright 2017 Sun Jian
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.crazysunj.multitypeadapter.helper;
 
 import android.support.annotation.IntRange;
 import android.support.annotation.LayoutRes;
@@ -7,31 +22,26 @@ import android.support.v7.widget.RecyclerView;
 import android.util.LruCache;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
-import android.view.ViewGroup;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
-import com.crazysunj.multitypeadapter.entity.ShimmerEntity;
-import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
-import com.crazysunj.multitypeadapter.viewholder.ShimmerViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * description
  * 使用粘性头部，请调用bindToRecyclerView,否则自己添加decoration
  * type 取值范围
  * 数据类型 [0,1000)
- * 头类型 [-1000,0]
+ * 头类型 [-1000,0)
  * shimmer数据类型 [-2000,-1000)
  * shimmer头类型 [-3000,-2000)
- * Created by sunjian on 2017/3/27.
+ * Created by sunjian on 2017/5/4.
  */
 
-public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEntity, K extends ShimmerViewHolder>
-        extends BaseQuickAdapter<T, K> implements StickyHeaderAdapter<K> {
+public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
     private static final int DEFAULT_VIEW_TYPE = -0xff;
     //默认头的level，处理数据只跟type有关系
@@ -68,17 +78,15 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
     private LruCache<Integer, T> mHeaderCache;
     //老数据
     protected List<T> mOldData;
+    //当前数据
+    protected List<T> mData;
+    //跟data无关且在data之前的条目数量
+    private int mPreDataCount = 0;
+    private RecyclerView.Adapter mAdapter;
 
+    public RecyclerViewAdapterHelper(List<T> data) {
 
-    public BaseMultiTypeRecyclerViewAdapter() {
-        this(false);
-    }
-
-    public BaseMultiTypeRecyclerViewAdapter(boolean isUseStickyHeader) {
-
-        super(null);
-
-        this.mIsUseStickyHeader = isUseStickyHeader;
+        mData = data == null ? new ArrayList<T>() : data;
 
         if (mOldData == null) {
             mOldData = new ArrayList<T>();
@@ -98,43 +106,16 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
     }
 
     /**
-     * 这里会产生recyclerview传说中的BUG
+     * 绑定adapter
      *
-     * @param position
-     * @return
+     * @param adapter
      */
-    @Override
-    public long getHeaderId(int position) {
+    public void bindAdapter(RecyclerView.Adapter adapter) {
 
-        try {
-            return mData.get(position).getHeaderId();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return StickyHeaderDecoration.NO_HEADER_ID;
-        }
+        mAdapter = adapter;
     }
 
-    @Override
-    public K onCreateHeaderViewHolder(ViewGroup parent) {
-
-        return createBaseViewHolder(parent, R.layout.item_header);
-    }
-
-    @Override
-    public void onBindHeaderViewHolder(K helper, int position) throws Exception {
-
-    }
-
-    @Override
-    protected void convert(K helper, T item) {
-
-        //开启动画
-        helper.startAnim();
-        convert(helper, item, helper.getLayoutPosition() - getHeaderLayoutCount());
-    }
-
-    @Override
-    protected int getDefItemViewType(int position) {
+    public int getItemViewType(int position) {
 
         T item = mData.get(position);
         if (item != null) {
@@ -142,26 +123,6 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
         }
 
         return DEFAULT_VIEW_TYPE;
-    }
-
-    @Override
-    protected K onCreateDefViewHolder(ViewGroup parent, int viewType) {
-
-        return createBaseViewHolder(parent, getLayoutId(viewType));
-    }
-
-    /**
-     * 绑定RecyclerView的时候添加粘性头，当然可以自己添加
-     *
-     * @param recyclerView
-     */
-    @Override
-    public void bindToRecyclerView(RecyclerView recyclerView) {
-
-        if (mIsUseStickyHeader) {
-            recyclerView.addItemDecoration(new StickyHeaderDecoration(this));
-        }
-        super.bindToRecyclerView(recyclerView);
     }
 
     /**
@@ -225,6 +186,24 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
     }
 
     /**
+     * 提供粘性头headerId
+     *
+     * @param position
+     * @return
+     */
+    public long getHeaderId(int position) {
+        try {
+            return mData.get(position).getHeaderId();
+        } catch (Exception e) {
+            return StickyHeaderDecoration.NO_HEADER_ID;
+        }
+    }
+
+    public List<T> getData() {
+        return mData;
+    }
+
+    /**
      * 传头部的type是拿不到数据的
      *
      * @param type
@@ -253,6 +232,16 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
     public void setMinRandomId(long minRandomId) {
 
         mMinRandomId = minRandomId;
+    }
+
+    /**
+     * 设置刷新数据前自定义的条目数量，防止混乱
+     *
+     * @param preDataCount
+     */
+    public void serPreDataCount(int preDataCount) {
+
+        mPreDataCount = preDataCount;
     }
 
     /**
@@ -351,21 +340,21 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
     /**
      * 设置loadview的数据集合缓存最大值
      *
-     * @param mMaxDataCacheCount
+     * @param maxDataCacheCount
      */
-    public void setMaxDataCacheCount(int mMaxDataCacheCount) {
+    public void setMaxDataCacheCount(int maxDataCacheCount) {
 
-        this.mMaxDataCacheCount = mMaxDataCacheCount;
+        mMaxDataCacheCount = maxDataCacheCount;
     }
 
     /**
      * 设置loadview的头集合缓存最大值
      *
-     * @param mMaxHeaderCacheCount
+     * @param maxHeaderCacheCount
      */
-    public void setMaxHeaderCacheCount(int mMaxHeaderCacheCount) {
+    public void setMaxHeaderCacheCount(int maxHeaderCacheCount) {
 
-        this.mMaxHeaderCacheCount = mMaxHeaderCacheCount;
+        mMaxHeaderCacheCount = maxHeaderCacheCount;
     }
 
     /**
@@ -387,11 +376,6 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
      */
     protected boolean isDetectMoves() {
         return true;
-    }
-
-
-    protected void convert(K helper, T item, int position) {
-
     }
 
     /**
@@ -428,9 +412,11 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
      *
      * @param diffResult
      */
-    protected void handleResult(DiffUtil.DiffResult diffResult) {
+    protected final void handleResult(DiffUtil.DiffResult diffResult) {
 
-        diffResult.dispatchUpdatesTo(this);
+        if (mAdapter != null) {
+            diffResult.dispatchUpdatesTo(mAdapter);
+        }
         isCanRefresh = true;
     }
 
@@ -493,7 +479,7 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
             }
         }
 
-        int positionStart = sum + getHeaderLayoutCount();
+        int positionStart = sum + mPreDataCount;
         boolean isDataEmpty = newData == null || newData.isEmpty();
         boolean isHeaderEmpty = newHeader == null;
 
@@ -512,7 +498,7 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
         return result;
     }
 
-    private int getLayoutId(int viewType) {
+    public final int getLayoutId(int viewType) {
 
         return mLayouts.get(viewType);
     }
@@ -550,14 +536,19 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
         int size = datas.size();
 
         if (size < dataCount) {
+
             for (int i = 0, n = dataCount - size; i < n; i++) {
                 datas.add((T) new ShimmerEntity());
             }
         }
         for (int i = 0; i < dataCount; i++) {
+
             T entity = datas.get(i);
-            entity.setId(getRandomId());
-            entity.setType(type - 2000);
+            if (entity instanceof ShimmerEntity) {
+                ShimmerEntity head = (ShimmerEntity) entity;
+                head.setId(getRandomId());
+                head.setType(type - 2000);
+            }
         }
 
         return datas;
@@ -582,9 +573,13 @@ public abstract class BaseMultiTypeRecyclerViewAdapter<T extends MultiHeaderEnti
             mHeaderCache.put(type, header);
         }
 
-        header.setId(getRandomId());
-        header.setType(type - 3000);
+        if (header instanceof ShimmerEntity) {
+            ShimmerEntity head = (ShimmerEntity) header;
+            head.setId(getRandomId());
+            head.setType(type - 3000);
+        }
 
         return header;
     }
+
 }

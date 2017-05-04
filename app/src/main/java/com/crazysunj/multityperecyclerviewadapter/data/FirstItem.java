@@ -1,7 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.data;
 
 import com.crazysunj.multityperecyclerviewadapter.R;
-import com.crazysunj.multityperecyclerviewadapter.SampleAdapter;
+import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 import com.crazysunj.multityperecyclerviewadapter.sticky.FirstStickyItem;
 
 /**
@@ -42,17 +42,8 @@ public class FirstItem implements FirstStickyItem {
     }
 
     @Override
-    public void setId(long id) {
-    }
-
-    @Override
-    public void setType(int type) {
-
-    }
-
-    @Override
     public int getItemType() {
-        return SampleAdapter.TYPE_ONE;
+        return SimpleHelper.TYPE_ONE;
     }
 
     @Override

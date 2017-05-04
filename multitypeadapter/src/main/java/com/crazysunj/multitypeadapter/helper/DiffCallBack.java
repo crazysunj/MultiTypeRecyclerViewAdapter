@@ -1,4 +1,19 @@
-package com.crazysunj.multitypeadapter;
+/**
+ * Copyright 2017 Sun Jian
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.crazysunj.multitypeadapter.helper;
 
 import android.support.v7.util.DiffUtil;
 
@@ -11,7 +26,7 @@ import java.util.List;
  * Created by sunjian on 2017/3/28.
  */
 
-final class DiffCallBack<T extends MultiHeaderEntity> extends DiffUtil.Callback {
+public class DiffCallBack<T extends MultiHeaderEntity> extends DiffUtil.Callback {
 
     private List<T> mOldDatas;
     private List<T> mNewDatas;
@@ -35,19 +50,13 @@ final class DiffCallBack<T extends MultiHeaderEntity> extends DiffUtil.Callback 
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
         T oldItem = mOldDatas.get(oldItemPosition);
         T newItem = mNewDatas.get(newItemPosition);
-        if (oldItem == null || newItem == null) {
-            return false;
-        }
-        return oldItem.getId() == newItem.getId();
+        return !(oldItem == null || newItem == null) && oldItem.getId() == newItem.getId();
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         T oldItem = mOldDatas.get(oldItemPosition);
         T newItem = mNewDatas.get(newItemPosition);
-        if (oldItem == null || newItem == null) {
-            return false;
-        }
-        return oldItem.getId() == newItem.getId();
+        return !(oldItem == null || newItem == null) && oldItem.getId() == newItem.getId();
     }
 }
