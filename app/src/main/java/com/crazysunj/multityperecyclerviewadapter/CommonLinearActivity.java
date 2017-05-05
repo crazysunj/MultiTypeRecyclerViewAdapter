@@ -52,6 +52,16 @@ public class CommonLinearActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+
+            @Override
+            public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
+                try {
+                    return super.scrollVerticallyBy(dy, recycler, state);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return 0;
+                }
+            }
         });
         recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
         recyclerView.setAdapter(adapter);

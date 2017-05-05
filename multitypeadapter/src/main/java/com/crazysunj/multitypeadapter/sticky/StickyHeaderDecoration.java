@@ -10,8 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
-
 /**
  * 粘性头部关于recyclerview的decoration
  */
@@ -147,7 +145,6 @@ public final class StickyHeaderDecoration extends RecyclerView.ItemDecoration {
         if (layoutPos == 0) {
             final int count = parent.getChildCount();
             final long currentId = mAdapter.getHeaderId(adapterPos);
-            // find next view with header and compute the offscreen push if needed
             for (int i = 1; i < count; i++) {
                 int adapterPosHere = parent.getChildAdapterPosition(parent.getChildAt(i));
                 if (adapterPosHere != RecyclerView.NO_POSITION) {

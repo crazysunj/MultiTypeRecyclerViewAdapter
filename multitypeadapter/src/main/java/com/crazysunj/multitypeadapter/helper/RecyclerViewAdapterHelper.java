@@ -520,6 +520,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * @param dataCount
      * @return
      */
+    @SuppressWarnings("unchecked")
     private List<T> createShimmerDatas(int type, @IntRange(from = 1) int dataCount) {
 
         if (mDataCache == null) {
@@ -560,6 +561,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * @param type
      * @return
      */
+    @SuppressWarnings("unchecked")
     private T createShimmerHeader(int type) {
 
         if (mHeaderCache == null) {

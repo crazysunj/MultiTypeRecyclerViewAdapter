@@ -1,4 +1,19 @@
-package com.crazysunj.multityperecyclerviewadapter.helper;
+/**
+ * Copyright 2017 Sun Jian
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.crazysunj.multitypeadapter.helper;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,13 +21,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
-import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
-import com.crazysunj.multitypeadapter.helper.SynAdapterHelper;
+import com.crazysunj.multitypeadapter.holder.CommonViewHolder;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -25,7 +37,7 @@ import java.util.List;
  * Created by sunjian on 2017/5/4.
  */
 
-public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends CommonShimmerVH> extends RecyclerView.Adapter<K> {
+public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends CommonViewHolder> extends RecyclerView.Adapter<K> {
 
     protected Context mContext;
     protected LayoutInflater mLayoutInflater;
@@ -35,12 +47,18 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
     public CommonHelperAdapter(RecyclerViewAdapterHelper<T> helper) {
 
         mData = helper.getData();
-        mHelper = helper == null ? new SynAdapterHelper<T>(null) : helper;
+        helper.bindAdapter(this);
+        mHelper = helper;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return mHelper.getItemViewType(position);
     }
 
     @Override
     public K onCreateViewHolder(ViewGroup parent, int viewType) {
-        return createCommonShimmerVH(parent, mHelper.getLayoutId(viewType));
+        return createCommonViewHolder(parent, mHelper.getLayoutId(viewType));
     }
 
     @Override
@@ -48,17 +66,18 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
         return mData.size();
     }
 
-    protected K createCommonShimmerVH(ViewGroup parent, int layoutResId) {
+    protected K createCommonViewHolder(ViewGroup parent, int layoutResId) {
         if (mContext == null) {
             mContext = parent.getContext();
         }
         if (mLayoutInflater == null) {
             mLayoutInflater = LayoutInflater.from(mContext);
         }
-        return createCommonShimmerVH(mLayoutInflater.inflate(layoutResId, parent, false));
+        return createCommonViewHolder(mLayoutInflater.inflate(layoutResId, parent, false));
     }
 
-    protected K createCommonShimmerVH(View view) {
+    @SuppressWarnings("unchecked")
+    protected K createCommonViewHolder(View view) {
         Class temp = getClass();
         Class z = null;
         while (z == null && null != temp) {
@@ -66,7 +85,7 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
             temp = temp.getSuperclass();
         }
         K k = createGenericKInstance(z, view);
-        return null != k ? k : (K) new CommonShimmerVH(view);
+        return null != k ? k : (K) new CommonViewHolder(view);
     }
 
     /**
@@ -76,6 +95,7 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
      * @param view
      * @return
      */
+    @SuppressWarnings("unchecked")
     private K createGenericKInstance(Class z, View view) {
         try {
             Constructor constructor;
@@ -89,13 +109,7 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
                 constructor = z.getDeclaredConstructor(View.class);
                 return (K) constructor.newInstance(view);
             }
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -114,7 +128,7 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
             for (Type temp : types) {
                 if (temp instanceof Class) {
                     Class tempClass = (Class) temp;
-                    if (BaseViewHolder.class.isAssignableFrom(tempClass)) {
+                    if (CommonViewHolder.class.isAssignableFrom(tempClass)) {
                         return tempClass;
                     }
                 }

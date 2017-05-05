@@ -1,11 +1,11 @@
 package com.crazysunj.multityperecyclerviewadapter.helper;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.crazysunj.multitypeadapter.holder.CommonViewHolder;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
-public class CommonShimmerVH extends RecyclerView.ViewHolder {
+public class CommonShimmerVH extends CommonViewHolder {
 
 
     public CommonShimmerVH(View view) {

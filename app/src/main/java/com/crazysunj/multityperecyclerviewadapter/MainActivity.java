@@ -27,6 +27,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void click4(View view) {
-
+        startActivity(new Intent(this, CommonGridActivity.class));
     }
 }

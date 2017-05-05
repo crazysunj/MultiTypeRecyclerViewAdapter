@@ -1,11 +1,9 @@
 package com.crazysunj.multityperecyclerviewadapter.helper;
 
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
+import com.crazysunj.multitypeadapter.helper.CommonHelperAdapter;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
 import com.crazysunj.multityperecyclerviewadapter.R;
@@ -29,7 +27,7 @@ import com.crazysunj.multityperecyclerviewadapter.sticky.ThirdStickyItem;
  */
 
 public class SimpleCommonHelperAdapter extends CommonHelperAdapter<MultiHeaderEntity, CommonShimmerVH>
-        implements StickyHeaderAdapter<SimpleCommonHelperAdapter.StickyHeaderVH> {
+        implements StickyHeaderAdapter<CommonShimmerVH> {
 
     public SimpleCommonHelperAdapter(RecyclerViewAdapterHelper<MultiHeaderEntity> helper) {
         super(helper);
@@ -37,23 +35,24 @@ public class SimpleCommonHelperAdapter extends CommonHelperAdapter<MultiHeaderEn
 
     @Override
     public void onBindViewHolder(CommonShimmerVH holder, int position) {
+
         MultiHeaderEntity item = mData.get(position);
         if (item instanceof FirstItem) {
-            renderFirst((FirstVH) holder, (FirstItem) item);
+            renderFirst(holder, (FirstItem) item);
         } else if (item instanceof SecondItem) {
-            renderSecond((FirstVH) holder, (SecondItem) item);
+            renderSecond(holder, (SecondItem) item);
         } else if (item instanceof ThirdItem) {
-            renderThird((FirstVH) holder, (ThirdItem) item);
+            renderThird(holder, (ThirdItem) item);
         } else if (item instanceof FourthItem) {
-            renderFourth((FirstVH) holder, (FourthItem) item);
+            renderFourth(holder, (FourthItem) item);
         } else if (item instanceof HeaderFirstItem) {
-            renderHeaderFirst((SecondVH) holder, (HeaderFirstItem) item);
+            renderHeaderFirst(holder, (HeaderFirstItem) item);
         } else if (item instanceof HeaderSecondItem) {
-            renderHeaderSecond((FirstVH) holder, (HeaderSecondItem) item);
+            renderHeaderSecond(holder, (HeaderSecondItem) item);
         } else if (item instanceof HeaderThirdItem) {
-            renderHeaderThird((FirstVH) holder, (HeaderThirdItem) item);
+            renderHeaderThird(holder, (HeaderThirdItem) item);
         } else if (item instanceof HeaderFourthItem) {
-            renderHeaderFourth((FirstVH) holder, (HeaderFourthItem) item);
+            renderHeaderFourth(holder, (HeaderFourthItem) item);
         }
     }
 
@@ -63,93 +62,61 @@ public class SimpleCommonHelperAdapter extends CommonHelperAdapter<MultiHeaderEn
     }
 
     @Override
-    public StickyHeaderVH onCreateHeaderViewHolder(ViewGroup parent) {
-        return new StickyHeaderVH(mLayoutInflater.inflate(R.layout.item_header, parent, false));
+    public CommonShimmerVH onCreateHeaderViewHolder(ViewGroup parent) {
+        return createCommonViewHolder(parent, R.layout.item_header);
     }
 
     @Override
-    public void onBindHeaderViewHolder(StickyHeaderVH helper, int position) throws Exception {
+    public void onBindHeaderViewHolder(CommonShimmerVH holder, int position) throws Exception {
         MultiHeaderEntity stickyEntity = mData.get(position);
 
         if (stickyEntity instanceof FirstStickyItem) {
-            helper.mStickyHeader.setText(((FirstStickyItem) stickyEntity).getStickyName());
+            holder.getTextView(R.id.item_header).setText(((FirstStickyItem) stickyEntity).getStickyName());
         } else if (stickyEntity instanceof SecondStickyItem) {
-            helper.mStickyHeader.setText(((SecondStickyItem) stickyEntity).getStickyName());
+            holder.getTextView(R.id.item_header).setText(((SecondStickyItem) stickyEntity).getStickyName());
         } else if (stickyEntity instanceof ThirdStickyItem) {
-            helper.mStickyHeader.setText(((ThirdStickyItem) stickyEntity).getStickyName());
+            holder.getTextView(R.id.item_header).setText(((ThirdStickyItem) stickyEntity).getStickyName());
         } else if (stickyEntity instanceof FourthStickyItem) {
-            helper.mStickyHeader.setText(((FourthStickyItem) stickyEntity).getStickyName());
+            holder.getTextView(R.id.item_header).setText(((FourthStickyItem) stickyEntity).getStickyName());
         }
     }
 
-    static class StickyHeaderVH extends CommonShimmerVH {
-
-        private TextView mStickyHeader;
-
-        StickyHeaderVH(View view) {
-            super(view);
-            mStickyHeader = (TextView) view.findViewById(R.id.item_header);
-        }
+    private void renderHeaderFourth(CommonShimmerVH holder, HeaderFourthItem item) {
+        holder.getTextView(R.id.item_header_name).setText(item.getName());
+        holder.getImageView(R.id.item_header_img).setImageResource(R.mipmap.ic_launcher);
     }
 
-    static class FirstVH extends CommonShimmerVH {
-
-        private TextView mName;
-        private ImageView mImg;
-
-        FirstVH(View view) {
-            super(view);
-            mName = (TextView) view.findViewById(R.id.item_header_name);
-            mImg = (ImageView) view.findViewById(R.id.item_header_img);
-        }
+    private void renderHeaderThird(CommonShimmerVH holder, HeaderThirdItem item) {
+        holder.getTextView(R.id.item_header_name).setText(item.getName());
+        holder.getImageView(R.id.item_header_img).setImageResource(R.mipmap.ic_launcher);
     }
 
-    static class SecondVH extends CommonShimmerVH {
-
-        private TextView mName;
-
-        SecondVH(View view) {
-            super(view);
-            mName = (TextView) view.findViewById(R.id.item_header);
-        }
+    private void renderHeaderSecond(CommonShimmerVH holder, HeaderSecondItem item) {
+        holder.getTextView(R.id.item_header_name).setText(item.getName());
+        holder.getImageView(R.id.item_header_img).setImageResource(R.mipmap.ic_launcher);
     }
 
-    private void renderHeaderFourth(FirstVH holder, HeaderFourthItem item) {
-        holder.mName.setText(item.getName());
-        holder.mImg.setImageResource(R.mipmap.ic_launcher);
+    private void renderHeaderFirst(CommonShimmerVH holder, HeaderFirstItem item) {
+        holder.getTextView(R.id.item_header).setText(item.getName());
     }
 
-    private void renderHeaderThird(FirstVH holder, HeaderThirdItem item) {
-        holder.mName.setText(item.getName());
-        holder.mImg.setImageResource(R.mipmap.ic_launcher);
+    private void renderFourth(CommonShimmerVH holder, FourthItem item) {
+        holder.getTextView(R.id.item_name).setText(item.getName());
+        holder.getImageView(R.id.item_img).setImageResource(R.mipmap.ic_launcher);
     }
 
-    private void renderHeaderSecond(FirstVH holder, HeaderSecondItem item) {
-        holder.mName.setText(item.getName());
-        holder.mImg.setImageResource(R.mipmap.ic_launcher);
+    private void renderThird(CommonShimmerVH holder, ThirdItem item) {
+        holder.getTextView(R.id.item_name).setText(item.getName());
+        holder.getImageView(R.id.item_img).setImageResource(R.mipmap.ic_launcher);
     }
 
-    private void renderHeaderFirst(SecondVH holder, HeaderFirstItem item) {
-        holder.mName.setText(item.getName());
+    private void renderSecond(CommonShimmerVH holder, SecondItem item) {
+        holder.getTextView(R.id.item_name).setText(item.getName());
+        holder.getImageView(R.id.item_img).setImageResource(R.mipmap.ic_launcher);
     }
 
-    private void renderFourth(FirstVH holder, FourthItem item) {
-        holder.mName.setText(item.getName());
-        holder.mImg.setImageResource(item.getImg());
-    }
-
-    private void renderThird(FirstVH holder, ThirdItem item) {
-        holder.mName.setText(item.getName());
-        holder.mImg.setImageResource(item.getImg());
-    }
-
-    private void renderSecond(FirstVH holder, SecondItem item) {
-        holder.mName.setText(item.getName());
-        holder.mImg.setImageResource(item.getImg());
-    }
-
-    private void renderFirst(FirstVH holder, FirstItem item) {
-        holder.mName.setText(item.getName());
-        holder.mImg.setImageResource(item.getImg());
+    private void renderFirst(CommonShimmerVH holder, FirstItem item) {
+        holder.getTextView(R.id.item_name).setText(item.getName());
+        holder.getImageView(R.id.item_img).setImageResource(R.mipmap.ic_launcher);
     }
 }

@@ -19,6 +19,7 @@
         <activity android:name=".LinearActivity" />
         <activity android:name=".GridActivity" />
         <activity android:name=".CommonLinearActivity" />
+        <activity android:name=".CommonGridActivity" />
 
     </application>
 
