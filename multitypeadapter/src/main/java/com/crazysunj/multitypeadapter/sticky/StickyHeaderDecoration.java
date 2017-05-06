@@ -1,5 +1,3 @@
-
-
 package com.crazysunj.multitypeadapter.sticky;
 
 import android.graphics.Canvas;
@@ -11,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
+ * 加强版,对GridLayoutManager支持有缺陷，会使item移动，可使RecyclerView移动到当前刷新类型item可以避免
  * 粘性头部关于recyclerview的decoration
  */
 public final class StickyHeaderDecoration extends RecyclerView.ItemDecoration {
@@ -20,7 +19,7 @@ public final class StickyHeaderDecoration extends RecyclerView.ItemDecoration {
 
     private StickyHeaderAdapter mAdapter;
 
-    private boolean mRenderInline;
+    private boolean mRenderInline;//是否叠层
 
     public StickyHeaderDecoration(StickyHeaderAdapter adapter) {
         this(adapter, false);
@@ -34,6 +33,7 @@ public final class StickyHeaderDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+
         int position = parent.getChildAdapterPosition(view);
         int headerHeight = 0;
 
@@ -49,13 +49,24 @@ public final class StickyHeaderDecoration extends RecyclerView.ItemDecoration {
     }
 
     private boolean showHeaderAboveItem(int itemAdapterPosition) {
+
         return itemAdapterPosition == 0 || mAdapter.getHeaderId(itemAdapterPosition - 1) != mAdapter.getHeaderId(itemAdapterPosition);
     }
 
+    /**
+     * 如果需要刷新sticky头，请清除缓存
+     */
     public void clearHeaderCache() {
         mHeaderCache.clear();
     }
 
+    /**
+     * 配合使用点击事件等
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public View findHeaderViewUnder(float x, float y) {
 
         for (int i = 0, n = mHeaderCache.size(); i < n; i++) {
@@ -75,22 +86,23 @@ public final class StickyHeaderDecoration extends RecyclerView.ItemDecoration {
     }
 
     private boolean hasHeader(int position) {
+
         return mAdapter.getHeaderId(position) != NO_HEADER_ID;
     }
 
+    @SuppressWarnings("unchecked")
     private RecyclerView.ViewHolder getHeader(RecyclerView parent, int position) {
+
         final long key = mAdapter.getHeaderId(position);
         if (mHeaderCache.indexOfKey(key) >= 0) {
+
             return mHeaderCache.get(key);
         } else {
+
             final RecyclerView.ViewHolder holder = mAdapter.onCreateHeaderViewHolder(parent);
             final View header = holder.itemView;
 
-            try {
-                mAdapter.onBindHeaderViewHolder(holder, position);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            mAdapter.onBindHeaderViewHolder(holder, position);
 
             int widthSpec = View.MeasureSpec.makeMeasureSpec(parent.getMeasuredWidth(), View.MeasureSpec.EXACTLY);
             int heightSpec = View.MeasureSpec.makeMeasureSpec(parent.getMeasuredHeight(), View.MeasureSpec.UNSPECIFIED);
@@ -111,6 +123,7 @@ public final class StickyHeaderDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void onDrawOver(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
+
         final int count = parent.getChildCount();
         long previousHeaderId = -1;
 
@@ -140,6 +153,7 @@ public final class StickyHeaderDecoration extends RecyclerView.ItemDecoration {
     }
 
     private int getHeaderTop(RecyclerView parent, View child, View header, int adapterPos, int layoutPos) {
+
         int headerHeight = getHeaderHeightForLayout(header);
         int top = ((int) child.getY()) - headerHeight;
         if (layoutPos == 0) {
@@ -168,6 +182,7 @@ public final class StickyHeaderDecoration extends RecyclerView.ItemDecoration {
     }
 
     private int getHeaderHeightForLayout(View header) {
+
         return mRenderInline ? 0 : header.getHeight();
     }
 }

@@ -38,6 +38,7 @@ public class GridActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("方格排布");
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         textView1 = (TextView) findViewById(R.id.text1);
         textView2 = (TextView) findViewById(R.id.text2);
@@ -45,26 +46,7 @@ public class GridActivity extends AppCompatActivity {
         textView4 = (TextView) findViewById(R.id.text4);
         helper = new SimpleHelper();
         SimpleHelperAdapter adapter = new SimpleHelperAdapter(helper);
-        layout = new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false) {
-            @Override
-            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-                try {
-                    super.onLayoutChildren(recycler, state);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
-                try {
-                    return super.scrollVerticallyBy(dy, recycler, state);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return 0;
-                }
-            }
-        };
+        layout = new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false);
 
         recyclerView.setLayoutManager(layout);
         recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));

@@ -35,6 +35,7 @@ public class LinearActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("线性排布");
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         textView1 = (TextView) findViewById(R.id.text1);
         textView2 = (TextView) findViewById(R.id.text2);
@@ -42,27 +43,7 @@ public class LinearActivity extends AppCompatActivity {
         textView4 = (TextView) findViewById(R.id.text4);
         helper = new SimpleHelper();
         SimpleHelperAdapter adapter = new SimpleHelperAdapter(helper);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this) {
-
-            @Override
-            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-                try {
-                    super.onLayoutChildren(recycler, state);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
-                try {
-                    return super.scrollVerticallyBy(dy, recycler, state);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return 0;
-                }
-            }
-        });
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
         recyclerView.setAdapter(adapter);
 

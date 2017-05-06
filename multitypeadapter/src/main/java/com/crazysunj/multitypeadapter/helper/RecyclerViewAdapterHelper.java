@@ -15,10 +15,14 @@
  */
 package com.crazysunj.multitypeadapter.helper;
 
+import android.support.annotation.ColorInt;
 import android.support.annotation.IntRange;
 import android.support.annotation.LayoutRes;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.LruCache;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -29,10 +33,13 @@ import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * description
- * 使用粘性头部，请调用bindToRecyclerView,否则自己添加decoration
+ * 如果您发现哪里性能比较差或者说设计不合理，希望您能反馈给我
+ * email:twsunj@gmail.com
  * type 取值范围
  * 数据类型 [0,1000)
  * 头类型 [-1000,0)
@@ -77,7 +84,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     //头的缓存
     private LruCache<Integer, T> mHeaderCache;
     //老数据
-    protected List<T> mOldData;
+    protected List<T> mNewData;
     //当前数据
     protected List<T> mData;
     //跟data无关且在data之前的条目数量
@@ -88,8 +95,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         mData = data == null ? new ArrayList<T>() : data;
 
-        if (mOldData == null) {
-            mOldData = new ArrayList<T>();
+        if (mNewData == null) {
+            mNewData = new ArrayList<T>();
         }
 
         if (mLevelOldData == null) {
@@ -192,11 +199,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * @return
      */
     public long getHeaderId(int position) {
-        try {
-            return mData.get(position).getHeaderId();
-        } catch (Exception e) {
-            return StickyHeaderDecoration.NO_HEADER_ID;
-        }
+
+        return mData.get(position).getHeaderId();
     }
 
     public List<T> getData() {
@@ -417,6 +421,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         if (mAdapter != null) {
             diffResult.dispatchUpdatesTo(mAdapter);
         }
+
+        mData.clear();
+        mData.addAll(mNewData);
         isCanRefresh = true;
     }
 
@@ -430,6 +437,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * @return
      */
     protected final DiffUtil.DiffResult handleRefresh(List<T> newData, T newHeader, int type, int refreshType) {
+
+        mNewData.clear();
+        mNewData.addAll(mData);
 
         int level = getLevel(type);
         int sum = 0;
@@ -465,7 +475,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
                 if (refreshType == REFRESH_HEADER) {
                     oldData = oldItemData;
                 } else {
-                    mData.removeAll(oldItemData);
+                    mNewData.removeAll(oldItemData);
                 }
             }
 
@@ -474,7 +484,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
                 if (refreshType == REFRESH_DATA) {
                     oldHeader = oldItemHeader;
                 } else {
-                    mData.remove(oldItemHeader);
+                    mNewData.remove(oldItemHeader);
                 }
             }
         }
@@ -484,16 +494,14 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         boolean isHeaderEmpty = newHeader == null;
 
         if (!isDataEmpty && refreshType != REFRESH_HEADER) {
-            mData.addAll(positionStart, newData);
+            mNewData.addAll(oldHeader == null ? positionStart : positionStart + 1, newData);
         }
         if (!isHeaderEmpty && refreshType != REFRESH_DATA) {
-            mData.add(positionStart, newHeader);
+            mNewData.add(positionStart, newHeader);
         }
 
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(getDiffCallBack(mOldData, mData), isDetectMoves());
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(getDiffCallBack(mData, mNewData), isDetectMoves());
         mLevelOldData.put(level, new LevelData<T>(refreshType != REFRESH_HEADER ? newData : oldData, refreshType != REFRESH_DATA ? newHeader : oldHeader));
-        mOldData.clear();
-        mOldData.addAll(mData);
 
         return result;
     }
@@ -542,12 +550,21 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
                 datas.add((T) new ShimmerEntity());
             }
         }
+        long headerId = StickyHeaderDecoration.NO_HEADER_ID;
+        LevelData<T> levelData = getDataWithType(type);
+        if (levelData != null) {
+            List<T> data = levelData.getData();
+            if (data != null && !data.isEmpty()) {
+                headerId = data.get(0).getHeaderId();
+            }
+        }
         for (int i = 0; i < dataCount; i++) {
 
             T entity = datas.get(i);
             if (entity instanceof ShimmerEntity) {
                 ShimmerEntity head = (ShimmerEntity) entity;
                 head.setId(getRandomId());
+                head.setHeaderId(headerId);
                 head.setType(type - 2000);
             }
         }
@@ -576,12 +593,43 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         }
 
         if (header instanceof ShimmerEntity) {
+            long headerId = StickyHeaderDecoration.NO_HEADER_ID;
+            LevelData<T> levelData = getDataWithType(type);
+            if (levelData != null) {
+                List<T> data = levelData.getData();
+                if (data != null && !data.isEmpty()) {
+                    headerId = data.get(0).getHeaderId();
+                }
+            }
             ShimmerEntity head = (ShimmerEntity) header;
             head.setId(getRandomId());
+            head.setHeaderId(headerId);
             head.setType(type - 3000);
         }
 
         return header;
+    }
+
+    /**
+     * 处理关键字高亮
+     * 如果需要检索算法库，请联系我
+     *
+     * @param originStr       被处理字符串
+     * @param keyWord         关键字
+     * @param hightLightColor 高亮颜色
+     * @return CharSequence
+     */
+    public static CharSequence handleKeyWordHighLight
+    (String originStr, String keyWord, @ColorInt int hightLightColor) {
+
+        SpannableString ss = new SpannableString(originStr);
+        Pattern p = Pattern.compile(keyWord);
+        Matcher m = p.matcher(ss);
+        while (m.find()) {
+            ss.setSpan(new ForegroundColorSpan(hightLightColor), m.start(), m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        return ss;
     }
 
 }

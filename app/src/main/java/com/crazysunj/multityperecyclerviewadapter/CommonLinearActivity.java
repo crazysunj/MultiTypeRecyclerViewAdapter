@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
-import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
@@ -35,6 +34,7 @@ public class CommonLinearActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("一般线性排布");
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         textView1 = (TextView) findViewById(R.id.text1);
         textView2 = (TextView) findViewById(R.id.text2);
@@ -42,28 +42,7 @@ public class CommonLinearActivity extends AppCompatActivity {
         textView4 = (TextView) findViewById(R.id.text4);
         helper = new SimpleHelper();
         SimpleCommonHelperAdapter adapter = new SimpleCommonHelperAdapter(helper);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this) {
-
-            @Override
-            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-                try {
-                    super.onLayoutChildren(recycler, state);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
-                try {
-                    return super.scrollVerticallyBy(dy, recycler, state);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return 0;
-                }
-            }
-        });
-        recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
         helper.notifyShimmerDataAndHeaderChanged(SimpleHelper.TYPE_FOUR, 3);

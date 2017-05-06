@@ -15,12 +15,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".LinearActivity" />
         <activity android:name=".GridActivity" />
         <activity android:name=".CommonLinearActivity" />
         <activity android:name=".CommonGridActivity" />
-
+        <activity android:name=".HighLightActivity" />
+        <activity android:name=".RxLinearActivity" />
     </application>
 
 </manifest>

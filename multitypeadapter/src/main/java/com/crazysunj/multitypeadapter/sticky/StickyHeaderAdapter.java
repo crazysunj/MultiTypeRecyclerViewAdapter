@@ -1,4 +1,3 @@
-
 package com.crazysunj.multitypeadapter.sticky;
 
 import android.support.v7.widget.RecyclerView;
@@ -13,5 +12,5 @@ public interface StickyHeaderAdapter<T extends RecyclerView.ViewHolder> {
 
     T onCreateHeaderViewHolder(ViewGroup parent);
 
-    void onBindHeaderViewHolder(T holder, int position) throws Exception;
+    void onBindHeaderViewHolder(T holder, int position);
 }

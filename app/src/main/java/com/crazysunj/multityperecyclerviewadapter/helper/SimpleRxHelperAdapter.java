@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
-import com.crazysunj.multitypeadapter.helper.AsynAdapterHelper;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
 import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
@@ -27,12 +26,12 @@ import com.crazysunj.multityperecyclerviewadapter.sticky.ThirdStickyItem;
  * Created by sunjian on 2017/5/4.
  */
 
-public class SimpleHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, ShimmerViewHolder>
+public class SimpleRxHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, ShimmerViewHolder>
         implements StickyHeaderAdapter<ShimmerViewHolder> {
 
-    private AsynAdapterHelper<MultiHeaderEntity> mHelper;
+    private RxAdapterHelper mHelper;
 
-    public SimpleHelperAdapter(AsynAdapterHelper<MultiHeaderEntity> helper) {
+    public SimpleRxHelperAdapter(RxAdapterHelper helper) {
 
         super(helper.getData());
         helper.bindAdapter(this);
@@ -82,7 +81,7 @@ public class SimpleHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, Shi
     }
 
     @Override
-    public void onBindHeaderViewHolder(ShimmerViewHolder helper, int position){
+    public void onBindHeaderViewHolder(ShimmerViewHolder helper, int position) {
         MultiHeaderEntity stickyEntity = mData.get(position);
 
         if (stickyEntity instanceof FirstStickyItem) {

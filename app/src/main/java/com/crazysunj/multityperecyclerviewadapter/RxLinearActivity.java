@@ -2,71 +2,66 @@ package com.crazysunj.multityperecyclerviewadapter;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
+import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
 import com.crazysunj.multityperecyclerviewadapter.data.ThirdItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFirstItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFourthItem;
-import com.crazysunj.multityperecyclerviewadapter.header.HeaderSecondItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderThirdItem;
-import com.crazysunj.multityperecyclerviewadapter.helper.SimpleCommonHelperAdapter;
+import com.crazysunj.multityperecyclerviewadapter.helper.RxAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
+import com.crazysunj.multityperecyclerviewadapter.helper.SimpleRxHelperAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class CommonGridActivity extends AppCompatActivity {
+public class RxLinearActivity extends AppCompatActivity {
 
     private TextView textView1;
     private TextView textView2;
     private TextView textView3;
     private TextView textView4;
-    private GridLayoutManager layout;
-    private SimpleHelper helper;
+    private RxAdapterHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle("一般方格排布");
+        setTitle("Rx线性排布");
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         textView1 = (TextView) findViewById(R.id.text1);
         textView2 = (TextView) findViewById(R.id.text2);
         textView3 = (TextView) findViewById(R.id.text3);
         textView4 = (TextView) findViewById(R.id.text4);
-        helper = new SimpleHelper();
-        SimpleCommonHelperAdapter adapter = new SimpleCommonHelperAdapter(helper);
-        layout = new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false);
-
-        recyclerView.setLayoutManager(layout);
+        helper = new RxAdapterHelper();
+        SimpleRxHelperAdapter adapter = new SimpleRxHelperAdapter(helper);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
         recyclerView.setAdapter(adapter);
-        layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+
+        helper.notifyShimmerDataAndHeaderChanged(SimpleHelper.TYPE_FOUR, 3);
+        textView3.postDelayed(new Runnable() {
             @Override
-            public int getSpanSize(int position) {
-                int itemType = helper.getItemViewType(position);
-                if ((itemType >= -1000 && itemType < 0) || (itemType >= -3000 && itemType < -2000)) {
-                    return layout.getSpanCount();
+            public void run() {
+                Random random = new Random();
+                int rand = random.nextInt(6);
+                List<MultiHeaderEntity> list = new ArrayList<>();
+                for (int i = 0, size = rand + 1; i < size; i++) {
+                    list.add(new ThirdItem(String.format("我是第三种类型%d", i), 12 + i));
                 }
-                return 1;
+                textView3.setText(String.format("类型3的数量：%d", list.size()));
+                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderThirdItem("我是第三种类型的头", helper.getRandomId()), SimpleHelper.TYPE_FOUR);
             }
-        });
-        Random random = new Random();
-        int rand = random.nextInt(6);
-        List<MultiHeaderEntity> list = new ArrayList<>();
-        for (int i = 0, size = rand + 1; i < size; i++) {
-            list.add(new ThirdItem(String.format("我是第三种类型%d", i), 12 + i));
-        }
-        textView3.setText(String.format("类型3的数量：%d", list.size()));
-        helper.notifyMoudleDataAndHeaderChanged(list, new HeaderThirdItem("我是第三种类型的头", helper.getRandomId()), SimpleHelper.TYPE_FOUR);
+        }, 3000);
     }
 
     public void click1(View view) {
@@ -101,7 +96,7 @@ public class CommonGridActivity extends AppCompatActivity {
                     list.add(new SecondItem(String.format("我是第二种类型%d", i), 6 + i));
                 }
                 textView2.setText(String.format("类型2的数量：%d", list.size()));
-                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderSecondItem(String.format("我是第二种类型的头,点击次数：%d", list.size()), helper.getRandomId()), SimpleHelper.TYPE_THREE);
+                helper.notifyMoudleDataChanged(list, SimpleHelper.TYPE_THREE);
             }
         }, 2000);
 

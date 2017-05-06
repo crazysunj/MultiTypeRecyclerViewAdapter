@@ -29,4 +29,12 @@ public class MainActivity extends AppCompatActivity {
     public void click4(View view) {
         startActivity(new Intent(this, CommonGridActivity.class));
     }
+
+    public void click5(View view) {
+        startActivity(new Intent(this, HighLightActivity.class));
+    }
+
+    public void click6(View view) {
+        startActivity(new Intent(this, RxLinearActivity.class));
+    }
 }

@@ -18,6 +18,7 @@ package com.crazysunj.multitypeadapter.entity;
 import java.util.List;
 
 /**
+ * 给异步AdapterHelper封装实体类
  * Created by sunjian on 2017/3/31.
  */
 public final class HandleBase<T> {

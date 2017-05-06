@@ -34,6 +34,7 @@ import java.util.List;
  * description
  * <p>
  * 一般RecyclerViewAdapter结合helper使用
+ * 有具体需求的自定义
  * Created by sunjian on 2017/5/4.
  */
 
@@ -53,20 +54,24 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
 
     @Override
     public int getItemViewType(int position) {
+
         return mHelper.getItemViewType(position);
     }
 
     @Override
     public K onCreateViewHolder(ViewGroup parent, int viewType) {
+
         return createCommonViewHolder(parent, mHelper.getLayoutId(viewType));
     }
 
     @Override
     public int getItemCount() {
+
         return mData.size();
     }
 
     protected K createCommonViewHolder(ViewGroup parent, int layoutResId) {
+
         if (mContext == null) {
             mContext = parent.getContext();
         }
@@ -78,6 +83,7 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
 
     @SuppressWarnings("unchecked")
     protected K createCommonViewHolder(View view) {
+
         Class temp = getClass();
         Class z = null;
         while (z == null && null != temp) {
@@ -88,20 +94,14 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
         return null != k ? k : (K) new CommonViewHolder(view);
     }
 
-    /**
-     * try to create Generic K instance
-     *
-     * @param z
-     * @param view
-     * @return
-     */
     @SuppressWarnings("unchecked")
     private K createGenericKInstance(Class z, View view) {
+
         try {
+
             Constructor constructor;
             String buffer = Modifier.toString(z.getModifiers());
             String className = z.getName();
-            // inner and unstatic class
             if (className.contains("$") && !buffer.contains("static")) {
                 constructor = z.getDeclaredConstructor(getClass(), View.class);
                 return (K) constructor.newInstance(this, view);
@@ -112,16 +112,12 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
-    /**
-     * get generic parameter K
-     *
-     * @param z
-     * @return
-     */
     private Class getInstancedGenericKClass(Class z) {
+
         Type type = z.getGenericSuperclass();
         if (type instanceof ParameterizedType) {
             Type[] types = ((ParameterizedType) type).getActualTypeArguments();
@@ -134,6 +130,7 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
                 }
             }
         }
+
         return null;
     }
 

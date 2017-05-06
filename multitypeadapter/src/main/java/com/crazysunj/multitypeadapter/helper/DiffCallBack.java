@@ -22,7 +22,8 @@ import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import java.util.List;
 
 /**
- * 关于新老数据比较的callback，暂时不提供出去，大可自己实现一个，关于接口已经提供
+ * 关于新老数据比较的callback，暂时不提供出去
+ * 如果你有自己的比较逻辑，大可自己实现一个，关于DiffUtil的用法我就不介绍了，关于接口已经提供
  * Created by sunjian on 2017/3/28.
  */
 class DiffCallBack<T extends MultiHeaderEntity> extends DiffUtil.Callback {
@@ -31,31 +32,38 @@ class DiffCallBack<T extends MultiHeaderEntity> extends DiffUtil.Callback {
     private List<T> mNewDatas;
 
     DiffCallBack(List<T> mOldDatas, List<T> mNewDatas) {
+
         this.mOldDatas = mOldDatas;
         this.mNewDatas = mNewDatas;
     }
 
     @Override
     public int getOldListSize() {
+
         return mOldDatas == null ? 0 : mOldDatas.size();
     }
 
     @Override
     public int getNewListSize() {
+
         return mNewDatas == null ? 0 : mNewDatas.size();
     }
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+
         T oldItem = mOldDatas.get(oldItemPosition);
         T newItem = mNewDatas.get(newItemPosition);
+
         return !(oldItem == null || newItem == null) && oldItem.getId() == newItem.getId();
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+
         T oldItem = mOldDatas.get(oldItemPosition);
         T newItem = mNewDatas.get(newItemPosition);
+
         return !(oldItem == null || newItem == null) && oldItem.getId() == newItem.getId();
     }
 }

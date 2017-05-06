@@ -67,7 +67,7 @@ public class SimpleCommonHelperAdapter extends CommonHelperAdapter<MultiHeaderEn
     }
 
     @Override
-    public void onBindHeaderViewHolder(CommonShimmerVH holder, int position) throws Exception {
+    public void onBindHeaderViewHolder(CommonShimmerVH holder, int position){
         MultiHeaderEntity stickyEntity = mData.get(position);
 
         if (stickyEntity instanceof FirstStickyItem) {

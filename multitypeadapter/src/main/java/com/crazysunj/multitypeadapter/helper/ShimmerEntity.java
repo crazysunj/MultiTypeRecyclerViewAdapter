@@ -21,42 +21,55 @@ import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 /**
  * description
  * <p>
+ * 生成shimmer的实体类
  * Created by sunjian on 2017/4/20.
  */
 
 final class ShimmerEntity implements MultiHeaderEntity {
 
     private long id;
+    private long headerId = StickyHeaderDecoration.NO_HEADER_ID;
     private int type;
 
     ShimmerEntity() {
     }
 
     ShimmerEntity(long id, int type) {
+
         this.id = id;
         this.type = type;
     }
 
     public void setId(long id) {
+
         this.id = id;
     }
 
+    public void setHeaderId(long headerId) {
+
+        this.headerId = headerId;
+    }
+
     public void setType(int type) {
+
         this.type = type;
     }
 
     @Override
     public long getId() {
+
         return id;
     }
 
     @Override
     public long getHeaderId() {
-        return StickyHeaderDecoration.NO_HEADER_ID;
+
+        return headerId;
     }
 
     @Override
     public int getItemType() {
+
         return type;
     }
 }
