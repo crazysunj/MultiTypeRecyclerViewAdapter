@@ -66,8 +66,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     private long mMaxRandomId = -1;
     //随机id的默认最小值
     private long mMinRandomId = Long.MIN_VALUE;
-    //是否使用粘性
-    private boolean mIsUseStickyHeader = false;
     //loadingview关于数据方面的最大缓存值
     private int mMaxDataCacheCount = 12;
     //loadingview关于头方面的最大缓存值
