@@ -1,62 +1,50 @@
 # MultiTypeRecyclerViewAdapter
-MultiTypeRecyclerViewAdapter for recyclerview
+MultiTypeRecyclerViewAdapter for Recyclerview
 
+## 特点
 
-* 自动添加模块头
+* 与Adapter为组合关系
+* 一行代码刷新相应viewType
+* 支持facebook的shimmer加载效果
 * 支持粘性头
-* 自动刷新单个模块
-* 一行代码搞定，大大加快开发效率
+* 支持异步刷新，可扩展(如配合RxAndroid)
 
-先给大家欣赏几张优美的动态图，网差的朋友赶紧把demo下载下来，运行运行，看看效果。
+## 效果
+### Rx线性排布
+![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/adapterHelper1.gif)
 
+### 一般线性排布
+![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/adapterHelper2.gif)
 
-![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/GIF_20170330_165026.gif)
+### 方格排布
+![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/adapterHelper3.gif)
 
+### 关键字高亮
+![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/adapterHelper4.gif)
 
-![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/GIF_20170330_170450.gif)
-
-
-![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/GIF_20170330_171326.gif)
-
-
-![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/GIF_20170330_172021.gif)
-
-
-库中依赖
+## gradle依赖
 
 ```
-compile fileTree(include: ['*.jar'], dir: 'libs')
-compile 'com.android.support:recyclerview-v7:24.2.0'
-compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.1'
-compile 'com.android.support:appcompat-v7:24.2.0'
+compile 'com.crazysunj:multitypeadapter:1.2.0'
 ```
 
-你可以自己设置相应的版本依赖，关于recyclerview的版本最好在24.2.0及以下，不然在异步刷新的时候可能会引起GapWork这货的异常问题，不用这家伙总没问题了把。
+## 感谢
 
+[shimmer-android](https://github.com/facebook/shimmer-android)
 
+## 版本([查看更多](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/wiki))
 
-Gradle依赖
+* 1.2.0：与Adapter形成组合，修复崩溃，支持关键字高亮，增加loading效果等
 
-```
-maven { url "https://jitpack.io" }
-compile 'com.crazysunj:multitypeadapter:1.1.0'
-```
+* 1.1.0：扩展方格布局等
 
-这里要说一下的是上面的maven地址，这是因为我们的库依赖于BaseRecyclerViewAdapterHelper。
+## 传送门
 
-介绍文章地址:
-[打造炫酷的多类型RecyclerView的Adapter](http://crazysunj.com/2017/04/01/%E6%89%93%E9%80%A0%E7%82%AB%E9%85%B7%E7%9A%84%E5%A4%9A%E7%B1%BB%E5%9E%8BRecyclerView%E7%9A%84Adapter/#more)
+博客:[http://crazysunj.com/](http://crazysunj.com/)
 
-本人博客地址:
-[http://crazysunj.com/](http://crazysunj.com/)
+邮箱:twsunj@gmail.com
 
-感谢:
-
-[https://github.com/CymChad/BaseRecyclerViewAdapterHelper](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)
-
-[https://github.com/edubarr/header-decor](https://github.com/edubarr/header-decor)
-
-### License
+## License
 
 > ```
 > Copyright 2017 Sun Jian
