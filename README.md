@@ -34,6 +34,8 @@ compile 'com.crazysunj:multitypeadapter:1.2.0'
 
 ## 版本([查看更多](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/wiki))
 
+* 1.2.1：默认DiffCallBack判别条件增加type，helper增加Diff刷新回调
+
 * 1.2.0：与Adapter形成组合，修复崩溃，支持关键字高亮，增加loading效果等
 
 * 1.1.0：扩展方格布局等
