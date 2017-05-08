@@ -19,6 +19,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.IntRange;
 import android.support.annotation.LayoutRes;
 import android.support.v7.util.DiffUtil;
+import android.support.v7.util.ListUpdateCallback;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -241,7 +242,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      *
      * @param preDataCount
      */
-    public void serPreDataCount(int preDataCount) {
+    public void setPreDataCount(int preDataCount) {
 
         mPreDataCount = preDataCount;
     }
@@ -417,12 +418,42 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     protected final void handleResult(DiffUtil.DiffResult diffResult) {
 
         if (mAdapter != null) {
-            diffResult.dispatchUpdatesTo(mAdapter);
+            diffResult.dispatchUpdatesTo(getListUpdateCallback(mAdapter));
         }
 
         mData.clear();
         mData.addAll(mNewData);
         isCanRefresh = true;
+    }
+
+    /**
+     * 提供刷新规则,可自定义
+     *
+     * @return
+     */
+    protected ListUpdateCallback getListUpdateCallback(final RecyclerView.Adapter adapter) {
+
+        return new ListUpdateCallback() {
+            @Override
+            public void onInserted(int position, int count) {
+                adapter.notifyItemRangeInserted(position, count);
+            }
+
+            @Override
+            public void onRemoved(int position, int count) {
+                adapter.notifyItemRangeRemoved(position, count);
+            }
+
+            @Override
+            public void onMoved(int fromPosition, int toPosition) {
+                adapter.notifyItemMoved(fromPosition, toPosition);
+            }
+
+            @Override
+            public void onChanged(int position, int count, Object payload) {
+                adapter.notifyItemRangeChanged(position, count, payload);
+            }
+        };
     }
 
     /**
