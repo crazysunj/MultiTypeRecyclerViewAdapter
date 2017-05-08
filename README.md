@@ -25,7 +25,7 @@ MultiTypeRecyclerViewAdapter for Recyclerview
 ## gradle依赖
 
 ```
-compile 'com.crazysunj:multitypeadapter:1.2.0'
+compile 'com.crazysunj:multitypeadapter:1.2.1'
 ```
 
 ## 感谢
