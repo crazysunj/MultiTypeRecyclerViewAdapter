@@ -28,6 +28,7 @@ import android.util.LruCache;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 
+import com.crazysunj.multitypeadapter.entity.ErrorEntity;
 import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
@@ -46,6 +47,7 @@ import java.util.regex.Pattern;
  * 头类型 [-1000,0)
  * shimmer数据类型 [-2000,-1000)
  * shimmer头类型 [-3000,-2000)
+ * error类型 [-4000,-3000)
  * Created by sunjian on 2017/5/4.
  */
 
@@ -53,7 +55,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
     private static final int DEFAULT_VIEW_TYPE = -0xff;
     //默认头的level，处理数据只跟type有关系
-    private static final int DEFAULT_HEADER_LEVEL = -1;
+    public static final int DEFAULT_HEADER_LEVEL = -1;
     //只刷新头
     private static final int REFRESH_HEADER = 0;
     //只刷新数据
@@ -95,6 +97,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     //跟data无关且在data之前的条目数量
     private int mPreDataCount = 0;
     private RecyclerView.Adapter mAdapter;
+    //资源管理
+    private ResourcesManager mResourcesManager;
 
     public RecyclerViewAdapterHelper(List<T> data) {
 
@@ -117,7 +121,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         }
 
         if (mConvertData == null) {
-            mConvertData = new ArrayList<T>(1);
+            mConvertData = new ArrayList<T>(CONVERT_LIST_SIZE);
         }
     }
 
@@ -149,6 +153,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * @param shimmerLayoutResId       loading 数据类型布局id
      * @param shimmerHeaderLayoutResId loading 头类型布局id
      */
+    @Deprecated
     public void registerMoudleWithShimmer(@IntRange(from = 0, to = 999) int type, @IntRange(from = 0) int level,
                                           @LayoutRes int layoutResId, @LayoutRes int headerResId,
                                           @LayoutRes int shimmerLayoutResId, @LayoutRes int shimmerHeaderLayoutResId) {
@@ -164,6 +169,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         mLayouts.put(shimmerHeaderType, shimmerHeaderLayoutResId);
     }
 
+    @Deprecated
     public void registerMoudleWithShimmer(@IntRange(from = 0, to = 999) int type, @IntRange(from = 0) int level,
                                           @LayoutRes int layoutResId, @LayoutRes int headerResId, @LayoutRes int shimmerHeaderLayoutResId) {
 
@@ -174,6 +180,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         mLayouts.put(shimmerHeaderType, shimmerHeaderLayoutResId);
     }
 
+    @Deprecated
     public void registerMoudleWithShimmer(@IntRange(from = 0, to = 999) int type, @IntRange(from = 0) int level,
                                           @LayoutRes int layoutResId, @LayoutRes int shimmerLayoutResId) {
 
@@ -184,6 +191,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         mLayouts.put(shimmerType, shimmerLayoutResId);
     }
 
+    @Deprecated
     public void registerMoudle(@IntRange(from = 0, to = 999) int type, @IntRange(from = 0) int level,
                                @LayoutRes int layoutResId, @LayoutRes int headerResId) {
 
@@ -194,11 +202,27 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         mLayouts.put(headerType, headerResId);
     }
 
+    @Deprecated
     public void registerMoudle(@IntRange(from = 0, to = 999) int type, @IntRange(from = 0) int level,
                                @LayoutRes int layoutResId) {
 
         mLevels.put(type, level);
         mLayouts.put(type, layoutResId);
+    }
+
+    /**
+     * 链式注册moudle
+     *
+     * @param type
+     * @return
+     */
+    public ResourcesManager.TypesManager registerMoudle(@IntRange(from = 0, to = 999) int type) {
+
+        if (mResourcesManager == null) {
+            mResourcesManager = new ResourcesManager();
+        }
+
+        return mResourcesManager.type(type);
     }
 
     /**
@@ -360,6 +384,25 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         mConvertData.set(CONVERT_LIST_INDEX, data);
         notifyMoudleChanged(mConvertData, header, type, REFRESH_HEADER_DATA);
+    }
+
+    /**
+     * 刷新相应类型错误界面
+     * 如果刷新没有跟数据属性关联，那么调用notifyMoudleErrorChanged(int type)
+     *
+     * @param errorData 错误数据
+     * @param type      错误数据类型
+     */
+    @SuppressWarnings("unchecked")
+    public void notifyMoudleErrorChanged(ErrorEntity errorData, int type) {
+
+        mConvertData.set(CONVERT_LIST_INDEX, (T) errorData);
+        notifyMoudleChanged(mConvertData, null, type, REFRESH_HEADER_DATA);
+    }
+
+    public void notifyMoudleErrorChanged(int type) {
+
+        notifyMoudleErrorChanged(new ErrorEntity(getRandomId(), type), type);
     }
 
     /**
@@ -559,12 +602,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
     public final int getLayoutId(int viewType) {
 
-        return mLayouts.get(viewType);
+        return mResourcesManager == null ? mLayouts.get(viewType) : mResourcesManager.getLayoutId(viewType);
     }
 
     private int getLevel(int type) {
 
-        int level = mLevels.get(type, DEFAULT_HEADER_LEVEL);
+        int level = mResourcesManager == null ? mLevels.get(type, DEFAULT_HEADER_LEVEL) : mResourcesManager.getLevel(type);
         if (level <= DEFAULT_HEADER_LEVEL) {
             throw new RuntimeException("boy , are you sure register this data type (not include header type) ?");
         }
@@ -594,12 +637,14 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         }
 
         int size = datas.size();
+        int diffSize = dataCount - size;
+        if (diffSize > 0) {
 
-        if (size < dataCount) {
-
-            for (int i = 0, n = dataCount - size; i < n; i++) {
+            for (int i = 0; i < diffSize; i++) {
                 datas.add((T) new ShimmerEntity());
             }
+        } else if (diffSize < 0) {
+            datas = datas.subList(0, dataCount);
         }
         long headerId = StickyHeaderDecoration.NO_HEADER_ID;
         LevelData<T> levelData = getDataWithType(type);
