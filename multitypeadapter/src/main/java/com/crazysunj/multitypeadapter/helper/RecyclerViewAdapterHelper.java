@@ -60,6 +60,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     private static final int REFRESH_DATA = 1;
     //同时刷新数据和头
     private static final int REFRESH_HEADER_DATA = 2;
+    //单数据转集合的默认容量
+    private static final int CONVERT_LIST_SIZE = 1;
+    //数据替换默认索引
+    private static final int CONVERT_LIST_INDEX = 0;
 
     //控制麒麟臂用户
     private boolean isCanRefresh = true;
@@ -86,6 +90,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     protected List<T> mNewData;
     //当前数据
     protected List<T> mData;
+    //单数据转集合
+    private List<T> mConvertData;
     //跟data无关且在data之前的条目数量
     private int mPreDataCount = 0;
     private RecyclerView.Adapter mAdapter;
@@ -108,6 +114,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         if (mLayouts == null) {
             mLayouts = new SparseIntArray();
+        }
+
+        if (mConvertData == null) {
+            mConvertData = new ArrayList<T>(1);
         }
     }
 
@@ -288,6 +298,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         notifyMoudleChanged(data, null, type, REFRESH_DATA);
     }
 
+    public void notifyMoudleDataChanged(T data, int type) {
+
+        mConvertData.set(CONVERT_LIST_INDEX, data);
+        notifyMoudleChanged(mConvertData, null, type, REFRESH_DATA);
+    }
+
     /**
      * 务必在调用之前确定缓存最大值，可调用setMaxHeaderCacheCount和setMaxHeaderCacheCount
      * 对应notifyMoudleHeaderChanged
@@ -338,6 +354,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     public void notifyMoudleDataAndHeaderChanged(List<T> data, T header, int type) {
 
         notifyMoudleChanged(data, header, type, REFRESH_HEADER_DATA);
+    }
+
+    public void notifyMoudleDataAndHeaderChanged(T data, T header, int type) {
+
+        mConvertData.set(CONVERT_LIST_INDEX, data);
+        notifyMoudleChanged(mConvertData, header, type, REFRESH_HEADER_DATA);
     }
 
     /**
