@@ -1,15 +1,19 @@
 package com.crazysunj.multityperecyclerviewadapter.helper;
 
+import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.crazysunj.multitypeadapter.entity.ErrorEntity;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
 import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
+import com.crazysunj.multityperecyclerviewadapter.data.SimpleErrorEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.ThirdItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFirstItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFourthItem;
@@ -30,6 +34,7 @@ public class SimpleRxHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, S
         implements StickyHeaderAdapter<ShimmerViewHolder> {
 
     private RxAdapterHelper mHelper;
+    private OnErrorCallback callback;
 
     public SimpleRxHelperAdapter(RxAdapterHelper helper) {
 
@@ -67,7 +72,58 @@ public class SimpleRxHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, S
             renderHeaderThird(helper, (HeaderThirdItem) item);
         } else if (item instanceof HeaderFourthItem) {
             renderHeaderFourth(helper, (HeaderFourthItem) item);
+        } else if (item instanceof ErrorEntity) {
+            Log.d(TAG, "ErrorEntity");
+            if (((ErrorEntity) item).getType() == SimpleHelper.TYPE_THREE) {
+                Log.d(TAG, "renderErrorSecond");
+                renderErrorSecond(helper, SimpleHelper.TYPE_THREE);
+            }
+
+            if (item instanceof SimpleErrorEntity) {
+                Log.d(TAG, "SimpleErrorEntity");
+                SimpleErrorEntity errorEntity = (SimpleErrorEntity) item;
+                if (errorEntity.getType() == SimpleHelper.TYPE_TWO) {
+                    Log.d(TAG, "renderErrorFourth");
+                    renderErrorFourth(helper, errorEntity, SimpleHelper.TYPE_TWO);
+                }
+            }
         }
+    }
+
+    private void renderErrorFourth(ShimmerViewHolder helper, SimpleErrorEntity item, int type) {
+        helper.setText(R.id.title, item.getTitle());
+        helper.setText(R.id.message, item.getMessage());
+        helper.getView(R.id.retry).setOnClickListener(new SimpleListener(type));
+    }
+
+    private void renderErrorSecond(final ShimmerViewHolder helper, int type) {
+
+        helper.getView(R.id.retry).setOnClickListener(new SimpleListener(type));
+    }
+
+    private class SimpleListener implements View.OnClickListener {
+
+        private int type;
+
+        public SimpleListener(int type) {
+            this.type = type;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (callback != null) {
+                Log.d(TAG, "type:" + type);
+                callback.onClick(v, type);
+            }
+        }
+    }
+
+    public void setOnErrorCallback(OnErrorCallback callback) {
+        this.callback = callback;
+    }
+
+    public interface OnErrorCallback {
+        void onClick(View v, int type);
     }
 
     @Override

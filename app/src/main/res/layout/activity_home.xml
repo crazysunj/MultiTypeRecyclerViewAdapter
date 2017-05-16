@@ -28,6 +28,12 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="click7"
+        android:text="Rx错误线性排布" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:onClick="click3"
         android:text="方格排布" />
 

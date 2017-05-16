@@ -10,23 +10,27 @@ import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
  * <p>
  * Created by sunjian on 2017/5/15.
  */
-public final class ErrorEntity implements MultiHeaderEntity {
+public class ErrorEntity implements MultiHeaderEntity {
 
-    private long id;
-    private int type;
+    protected long id;
+    protected int type;
 
     public ErrorEntity(long id, int type) {
         this.id = id;
         this.type = type;
     }
 
+    public final int getType() {
+        return type;
+    }
+
     @Override
-    public int getItemType() {
+    public final int getItemType() {
         return type - 4000;
     }
 
     @Override
-    public long getId() {
+    public final long getId() {
         return id;
     }
 

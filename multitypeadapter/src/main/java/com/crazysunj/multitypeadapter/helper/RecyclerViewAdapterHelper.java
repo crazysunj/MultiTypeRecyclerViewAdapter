@@ -34,6 +34,7 @@ import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,10 +63,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     private static final int REFRESH_DATA = 1;
     //同时刷新数据和头
     private static final int REFRESH_HEADER_DATA = 2;
-    //单数据转集合的默认容量
-    private static final int CONVERT_LIST_SIZE = 1;
-    //数据替换默认索引
-    private static final int CONVERT_LIST_INDEX = 0;
 
     //控制麒麟臂用户
     private boolean isCanRefresh = true;
@@ -92,8 +89,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     protected List<T> mNewData;
     //当前数据
     protected List<T> mData;
-    //单数据转集合
-    private List<T> mConvertData;
     //跟data无关且在data之前的条目数量
     private int mPreDataCount = 0;
     private RecyclerView.Adapter mAdapter;
@@ -120,21 +115,27 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
             mLayouts = new SparseIntArray();
         }
 
-        if (mConvertData == null) {
-            mConvertData = new ArrayList<T>(CONVERT_LIST_SIZE);
+        if (mResourcesManager == null) {
+            mResourcesManager = new ResourcesManager();
         }
     }
 
     /**
      * 绑定adapter
      *
-     * @param adapter
+     * @param adapter 绑定adapter
      */
     public void bindAdapter(RecyclerView.Adapter adapter) {
 
         mAdapter = adapter;
     }
 
+    /**
+     * 根据索引返回type
+     *
+     * @param position 索引
+     * @return type
+     */
     public int getItemViewType(int position) {
 
         T item = mData.get(position);
@@ -213,14 +214,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     /**
      * 链式注册moudle
      *
-     * @param type
-     * @return
+     * @param type 数据类型
+     * @return TypesManager
      */
     public ResourcesManager.TypesManager registerMoudle(@IntRange(from = 0, to = 999) int type) {
-
-        if (mResourcesManager == null) {
-            mResourcesManager = new ResourcesManager();
-        }
 
         return mResourcesManager.type(type);
     }
@@ -228,14 +225,19 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     /**
      * 提供粘性头headerId
      *
-     * @param position
-     * @return
+     * @param position 索引
+     * @return headerId
      */
     public long getHeaderId(int position) {
 
         return mData.get(position).getHeaderId();
     }
 
+    /**
+     * 获取依赖的数据集合
+     *
+     * @return 数据集合
+     */
     public List<T> getData() {
         return mData;
     }
@@ -243,8 +245,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     /**
      * 传头部的type是拿不到数据的
      *
-     * @param type
-     * @return
+     * @param type 数据类型
+     * @return 获取LevelData
      */
     public LevelData<T> getDataWithType(int type) {
 
@@ -254,7 +256,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     /**
      * 设置随机id的最大值
      *
-     * @param maxRandomId
+     * @param maxRandomId 随机id的最大值
      */
     public void setMaxRandomId(long maxRandomId) {
 
@@ -264,7 +266,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     /**
      * 设置随机id的最小值
      *
-     * @param minRandomId
+     * @param minRandomId 随机id的最小值
      */
     public void setMinRandomId(long minRandomId) {
 
@@ -274,7 +276,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     /**
      * 设置刷新数据前自定义的条目数量，防止混乱
      *
-     * @param preDataCount
+     * @param preDataCount 刷新数据前自定义的条目数量
      */
     public void setPreDataCount(int preDataCount) {
 
@@ -285,8 +287,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * 不断向下取值，如果抛异常，你可以重新设置最大值，但切记不能重复啊，报错我可不负责啊，这么多的值都用完了，是在下输了
      * 有特殊要求的同学可以自己设计
      * 是不是随机有待商量
+     * 注意并发问题
      *
-     * @return
+     * @return 返回不重复Id
      */
     public long getRandomId() {
 
@@ -301,8 +304,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * 务必在调用之前确定缓存最大值，可调用setMaxHeaderCacheCount和setMaxHeaderCacheCount
      * 对应notifyMoudleDataChanged
      *
-     * @param type
-     * @param dataCount
+     * @param type      数据类型
+     * @param dataCount 刷新条目数
      */
     public void notifyShimmerDataChanged(int type, @IntRange(from = 1) int dataCount) {
 
@@ -314,8 +317,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     /**
      * 只刷新数据
      *
-     * @param data
-     * @param type
+     * @param data 数据
+     * @param type 数据类型
      */
     public void notifyMoudleDataChanged(List<T> data, int type) {
 
@@ -324,15 +327,14 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
     public void notifyMoudleDataChanged(T data, int type) {
 
-        mConvertData.set(CONVERT_LIST_INDEX, data);
-        notifyMoudleChanged(mConvertData, null, type, REFRESH_DATA);
+        notifyMoudleChanged(Collections.singletonList(data), null, type, REFRESH_DATA);
     }
 
     /**
      * 务必在调用之前确定缓存最大值，可调用setMaxHeaderCacheCount和setMaxHeaderCacheCount
      * 对应notifyMoudleHeaderChanged
      *
-     * @param type
+     * @param type 数据类型
      */
     public void notifyShimmerHeaderChanged(int type) {
 
@@ -344,8 +346,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     /**
      * 只刷新头
      *
-     * @param header
-     * @param type
+     * @param header 头
+     * @param type   数据类型
      */
     public void notifyMoudleHeaderChanged(T header, int type) {
 
@@ -356,8 +358,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * 务必在调用之前确定缓存最大值，可调用setMaxHeaderCacheCount和setMaxHeaderCacheCount
      * 对应notifyMoudleDataAndHeaderChanged
      *
-     * @param type
-     * @param dataCount
+     * @param type      数据类型
+     * @param dataCount 刷新条目数
      */
     public void notifyShimmerDataAndHeaderChanged(int type, @IntRange(from = 1) int dataCount) {
 
@@ -371,9 +373,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     /**
      * 同时刷新头和数据
      *
-     * @param data
-     * @param header
-     * @param type
+     * @param data   数据
+     * @param header 头
+     * @param type   数据类型
      */
     public void notifyMoudleDataAndHeaderChanged(List<T> data, T header, int type) {
 
@@ -382,8 +384,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
     public void notifyMoudleDataAndHeaderChanged(T data, T header, int type) {
 
-        mConvertData.set(CONVERT_LIST_INDEX, data);
-        notifyMoudleChanged(mConvertData, header, type, REFRESH_HEADER_DATA);
+        notifyMoudleChanged(Collections.singletonList(data), header, type, REFRESH_HEADER_DATA);
     }
 
     /**
@@ -396,8 +397,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     @SuppressWarnings("unchecked")
     public void notifyMoudleErrorChanged(ErrorEntity errorData, int type) {
 
-        mConvertData.set(CONVERT_LIST_INDEX, (T) errorData);
-        notifyMoudleChanged(mConvertData, null, type, REFRESH_HEADER_DATA);
+        notifyMoudleChanged(Collections.singletonList((T) errorData), null, type, REFRESH_HEADER_DATA);
     }
 
     public void notifyMoudleErrorChanged(int type) {
@@ -408,7 +408,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     /**
      * 设置loadview的数据集合缓存最大值
      *
-     * @param maxDataCacheCount
+     * @param maxDataCacheCount 缓存最大值
      */
     public void setMaxDataCacheCount(int maxDataCacheCount) {
 
@@ -418,7 +418,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     /**
      * 设置loadview的头集合缓存最大值
      *
-     * @param maxHeaderCacheCount
+     * @param maxHeaderCacheCount 缓存最大值
      */
     public void setMaxHeaderCacheCount(int maxHeaderCacheCount) {
 
@@ -427,10 +427,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
     /**
      * 返回比较的callback对象，提供新老数据
+     * 默认比较id和type,id设为long是为了比较效率,你可以使用字符串的hashCode，注意冲突，甚至你可以自定义Callback
      *
-     * @param oldData
-     * @param newData
-     * @return
+     * @param oldData 老数据
+     * @param newData 新数据
+     * @return 返回Callback
      */
     protected DiffUtil.Callback getDiffCallBack(List<T> oldData, List<T> newData) {
 
@@ -438,9 +439,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     }
 
     /**
-     * 是否要移动
-     *
-     * @return
+     * @return 是否要移动
      */
     protected boolean isDetectMoves() {
         return true;
@@ -468,17 +467,17 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * 异步效果好，但可能会异常
      * 根据实际情况选择相应的刷新机制
      *
-     * @param newData
-     * @param newHeader
-     * @param type
-     * @param refreshType
+     * @param newData     新数据
+     * @param newHeader   新头
+     * @param type        数据类型
+     * @param refreshType 刷新类型
      */
     protected abstract void startRefresh(List<T> newData, T newHeader, int type, int refreshType);
 
     /**
      * 开始刷新
      *
-     * @param diffResult
+     * @param diffResult 返回的diffResult
      */
     protected final void handleResult(DiffUtil.DiffResult diffResult) {
 
@@ -494,7 +493,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     /**
      * 提供刷新规则,可自定义
      *
-     * @return
+     * @return ListUpdateCallback
      */
     protected ListUpdateCallback getListUpdateCallback(final RecyclerView.Adapter adapter) {
 
@@ -524,11 +523,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     /**
      * 核心部分，新老数据比较
      *
-     * @param newData
-     * @param newHeader
-     * @param type
-     * @param refreshType
-     * @return
+     * @param newData     新数据
+     * @param newHeader   新头
+     * @param type        数据类型
+     * @param refreshType 刷新类型
+     * @return DiffResult
      */
     protected final DiffUtil.DiffResult handleRefresh(List<T> newData, T newHeader, int type, int refreshType) {
 
@@ -600,14 +599,31 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         return result;
     }
 
+    /**
+     * 获取layoutId
+     *
+     * @param viewType 数据类型
+     * @return layoutId
+     */
     public final int getLayoutId(int viewType) {
 
-        return mResourcesManager == null ? mLayouts.get(viewType) : mResourcesManager.getLayoutId(viewType);
+        int layoutId = mLayouts.get(viewType, 0);
+        if (layoutId == 0) {
+            return mResourcesManager.getLayoutId(viewType);
+        }
+        return layoutId;
     }
 
+    /**
+     * @param type 数据类型
+     * @return 数据类型等级
+     */
     private int getLevel(int type) {
 
-        int level = mResourcesManager == null ? mLevels.get(type, DEFAULT_HEADER_LEVEL) : mResourcesManager.getLevel(type);
+        int level = mLevels.get(type, DEFAULT_HEADER_LEVEL);
+        if (level <= DEFAULT_HEADER_LEVEL) {
+            level = mResourcesManager.getLevel(type);
+        }
         if (level <= DEFAULT_HEADER_LEVEL) {
             throw new RuntimeException("boy , are you sure register this data type (not include header type) ?");
         }
@@ -616,11 +632,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     }
 
     /**
-     * 根据type产生loading的数据集合
-     *
-     * @param type
-     * @param dataCount
-     * @return
+     * @param type      数据类型
+     * @param dataCount 显示条目数
+     * @return 根据type产生loading的数据集合
      */
     @SuppressWarnings("unchecked")
     private List<T> createShimmerDatas(int type, @IntRange(from = 1) int dataCount) {
@@ -669,10 +683,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     }
 
     /**
-     * 根据type产生loading的头
-     *
-     * @param type
-     * @return
+     * @param type 数据类型
+     * @return 根据type产生loading的头
      */
     @SuppressWarnings("unchecked")
     private T createShimmerHeader(int type) {
