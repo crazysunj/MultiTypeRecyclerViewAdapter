@@ -15,6 +15,7 @@
  */
 package com.crazysunj.multitypeadapter.helper;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.util.DiffUtil;
@@ -44,7 +45,7 @@ public class AsynAdapterHelper<T extends MultiHeaderEntity> extends RecyclerView
     protected ScheduledExecutorService mExecutor = Executors.newSingleThreadScheduledExecutor();
     protected ScheduledFuture<?> mFuture;
 
-
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -64,12 +65,12 @@ public class AsynAdapterHelper<T extends MultiHeaderEntity> extends RecyclerView
     }
 
     @Override
-    protected void startRefresh(List<T> newData, T newHeader, int type, int refreshType) {
-
+    protected void startRefresh(HandleBase<T> refreshData) {
         cancelFuture();
-        mFuture = mExecutor.schedule(new HandleTask(new HandleBase<T>(newData, newHeader, type, refreshType)),
+        mFuture = mExecutor.schedule(new HandleTask(refreshData),
                 0, TimeUnit.MILLISECONDS);
     }
+
 
     protected void cancelFuture() {
 

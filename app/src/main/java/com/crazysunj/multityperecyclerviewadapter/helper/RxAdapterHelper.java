@@ -7,8 +7,6 @@ import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.R;
 
-import java.util.List;
-
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -88,9 +86,8 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
     }
 
     @Override
-    protected void startRefresh(List<MultiHeaderEntity> newData, MultiHeaderEntity newHeader, int type, int refreshType) {
-
-        Flowable.just(new HandleBase<MultiHeaderEntity>(newData, newHeader, type, refreshType))
+    protected void startRefresh(HandleBase<MultiHeaderEntity> refreshData) {
+        Flowable.just(refreshData)
                 .onBackpressureDrop()
                 .observeOn(Schedulers.computation())
                 .map(new Function<HandleBase<MultiHeaderEntity>, DiffUtil.DiffResult>() {

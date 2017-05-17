@@ -15,6 +15,7 @@
  */
 package com.crazysunj.multitypeadapter.helper;
 
+import com.crazysunj.multitypeadapter.entity.HandleBase;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 
 import java.util.List;
@@ -33,8 +34,9 @@ public class SynAdapterHelper<T extends MultiHeaderEntity> extends RecyclerViewA
     }
 
     @Override
-    protected void startRefresh(List<T> newData, T newHeader, int type, int refreshType) {
-        handleResult(handleRefresh(newData, newHeader, type, refreshType));
+    protected void startRefresh(HandleBase<T> refreshData) {
+        handleResult(handleRefresh(refreshData.getNewData(), refreshData.getNewHeader(),
+                refreshData.getType(), refreshData.getRefreshType()));
     }
 
 }

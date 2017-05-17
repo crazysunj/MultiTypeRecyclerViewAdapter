@@ -29,13 +29,16 @@ import android.util.SparseArray;
 import android.util.SparseIntArray;
 
 import com.crazysunj.multitypeadapter.entity.ErrorEntity;
+import com.crazysunj.multitypeadapter.entity.HandleBase;
 import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -94,6 +97,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     private RecyclerView.Adapter mAdapter;
     //资源管理
     private ResourcesManager mResourcesManager;
+    //List<T> newData, T newHeader, int type, int refreshType
+    private Queue<HandleBase<T>> mRefreshQueue;
 
     public RecyclerViewAdapterHelper(List<T> data) {
 
@@ -117,6 +122,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         if (mResourcesManager == null) {
             mResourcesManager = new ResourcesManager();
+        }
+
+        if (mRefreshQueue == null) {
+            mRefreshQueue = new LinkedList<HandleBase<T>>();
         }
     }
 
@@ -406,6 +415,28 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     }
 
     /**
+     * 清除单个type数据
+     *
+     * @param type 数据类型
+     */
+    public void clearMoudle(int type) {
+
+        notifyMoudleChanged(null, null, type, REFRESH_HEADER_DATA);
+    }
+
+    /**
+     * 清除所有数据
+     */
+    public void clear() {
+
+        mData.clear();
+
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
      * 设置loadview的数据集合缓存最大值
      *
      * @param maxDataCacheCount 缓存最大值
@@ -446,6 +477,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     }
 
     /**
+     * 采用队列形式防止异步数据混乱
+     *
      * @param newData     刷新的数据
      * @param newHeader   刷新数据顶部的头,如果不需要传空就行了
      * @param type        刷新数据的类型,切忌,传头部类型是报错的,只要关心数据类型就行了
@@ -453,12 +486,25 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      */
     protected void notifyMoudleChanged(List<T> newData, T newHeader, int type, int refreshType) {
 
-        if (!isCanRefresh) {
+        boolean offer = mRefreshQueue.offer(new HandleBase<T>(newData, newHeader, type, refreshType));
+
+        if (!isCanRefresh || !offer) {
             return;
         }
         isCanRefresh = false;
 
-        startRefresh(newData, newHeader, type, refreshType);
+        HandleBase<T> pollData = mRefreshQueue.poll();
+        if (pollData != null) {
+            startRefresh(pollData);
+        }
+    }
+
+    /**
+     * 如果需要，清除队列
+     */
+    public void clearQueue() {
+
+        mRefreshQueue.clear();
     }
 
     /**
@@ -467,12 +513,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * 异步效果好，但可能会异常
      * 根据实际情况选择相应的刷新机制
      *
-     * @param newData     新数据
-     * @param newHeader   新头
-     * @param type        数据类型
-     * @param refreshType 刷新类型
+     * @param refreshData 刷新数据合
      */
-    protected abstract void startRefresh(List<T> newData, T newHeader, int type, int refreshType);
+    protected abstract void startRefresh(HandleBase<T> refreshData);
 
     /**
      * 开始刷新
@@ -487,7 +530,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         mData.clear();
         mData.addAll(mNewData);
-        isCanRefresh = true;
+
+        HandleBase<T> pollData = mRefreshQueue.poll();
+        if (pollData != null) {
+            startRefresh(pollData);
+        } else {
+            isCanRefresh = true;
+        }
     }
 
     /**
