@@ -57,9 +57,10 @@ import java.util.regex.Pattern;
 
 public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
-    private static final int DEFAULT_VIEW_TYPE = -0xff;
+    //默认viewType
+    private static final int DEFAULT_VIEW_TYPE = -1;
     //默认头的level，处理数据只跟type有关系
-    public static final int DEFAULT_HEADER_LEVEL = -1;
+    static final int DEFAULT_HEADER_LEVEL = -1;
     //只刷新头
     private static final int REFRESH_HEADER = 0;
     //只刷新数据
@@ -68,7 +69,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     private static final int REFRESH_HEADER_DATA = 2;
 
     //控制麒麟臂用户
-    private boolean isCanRefresh = true;
+    private boolean mIsCanRefresh = true;
     //随机id的默认最大值
     private long mMaxRandomId = -1;
     //随机id的默认最小值
@@ -94,10 +95,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     protected List<T> mData;
     //跟data无关且在data之前的条目数量
     private int mPreDataCount = 0;
+    //绑定Adapter
     private RecyclerView.Adapter mAdapter;
     //资源管理
     private ResourcesManager mResourcesManager;
-    //List<T> newData, T newHeader, int type, int refreshType
+    //刷新队列
     private Queue<HandleBase<T>> mRefreshQueue;
 
     public RecyclerViewAdapterHelper(List<T> data) {
@@ -391,6 +393,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         notifyMoudleChanged(data, header, type, REFRESH_HEADER_DATA);
     }
 
+    /**
+     * 同时刷新头和数据
+     *
+     * @param data   数据
+     * @param header 头
+     * @param type   数据类型
+     */
     public void notifyMoudleDataAndHeaderChanged(T data, T header, int type) {
 
         notifyMoudleChanged(Collections.singletonList(data), header, type, REFRESH_HEADER_DATA);
@@ -488,10 +497,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         boolean offer = mRefreshQueue.offer(new HandleBase<T>(newData, newHeader, type, refreshType));
 
-        if (!isCanRefresh || !offer) {
+        if (!mIsCanRefresh || !offer) {
             return;
         }
-        isCanRefresh = false;
+        mIsCanRefresh = false;
 
         HandleBase<T> pollData = mRefreshQueue.poll();
         if (pollData != null) {
@@ -535,7 +544,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         if (pollData != null) {
             startRefresh(pollData);
         } else {
-            isCanRefresh = true;
+            mIsCanRefresh = true;
         }
     }
 

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ConcurrentActivity extends AppCompatActivity {
+public class RxConcurrentActivity extends AppCompatActivity {
 
     private TextView textView1;
     private TextView textView2;
@@ -37,7 +37,7 @@ public class ConcurrentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_concurrent);
-        setTitle("并发线性排布");
+        setTitle("Rx并发线性排布");
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         textView1 = (TextView) findViewById(R.id.text1);
         textView2 = (TextView) findViewById(R.id.text2);
