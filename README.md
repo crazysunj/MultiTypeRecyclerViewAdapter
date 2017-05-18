@@ -1,5 +1,5 @@
 # MultiTypeRecyclerViewAdapter
-MultiTypeRecyclerViewAdapter for Recyclerview
+一个专注于RecyclerView刷新的库，可配合大多数Adapter
 
 ## 特点
 
