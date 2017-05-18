@@ -327,6 +327,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * @param data 数据
      * @param type 数据类型
      */
+    @SuppressWarnings("unchecked")
     public void notifyMoudleDataChanged(List<? extends T> data, int type) {
 
         notifyMoudleChanged((List<T>) data, null, type, REFRESH_DATA);
@@ -384,6 +385,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * @param header 头
      * @param type   数据类型
      */
+    @SuppressWarnings("unchecked")
     public void notifyMoudleDataAndHeaderChanged(List<? extends T> data, T header, int type) {
 
         notifyMoudleChanged((List<T>) data, header, type, REFRESH_HEADER_DATA);
