@@ -22,7 +22,7 @@
         <activity android:name=".HighLightActivity" />
         <activity android:name=".RxLinearActivity" />
         <activity android:name=".RxErrorLinearActivity" />
-        <activity android:name=".RxConcurrentActivity" />
+        <activity android:name=".RxContinuityActivity" />
     </application>
 
 </manifest>

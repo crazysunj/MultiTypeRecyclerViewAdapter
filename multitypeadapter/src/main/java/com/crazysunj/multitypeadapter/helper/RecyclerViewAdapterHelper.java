@@ -26,7 +26,6 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.LruCache;
 import android.util.SparseArray;
-import android.util.SparseIntArray;
 
 import com.crazysunj.multitypeadapter.entity.ErrorEntity;
 import com.crazysunj.multitypeadapter.entity.HandleBase;
@@ -57,6 +56,15 @@ import java.util.regex.Pattern;
 
 public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
+    //头类型差值
+    public static final int HEADER_TYPE_DIFFER = 1000;
+    //shimmer数据类型差值
+    public static final int SHIMMER_DATA_TYPE_DIFFER = 2000;
+    //shimmer头类型差值
+    public static final int SHIMMER_HEADER_TYPE_DIFFER = 3000;
+    //错误类型差值
+    public static final int ERROR_TYPE_DIFFER = 4000;
+
     //默认viewType
     private static final int DEFAULT_VIEW_TYPE = -1;
     //默认头的level，处理数据只跟type有关系
@@ -79,10 +87,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     //loadingview关于头方面的最大缓存值
     private int mMaxHeaderCacheCount = 6;
 
-    //根据type存储layoutId
-    private SparseIntArray mLayouts;
-    //根据type存储等级
-    private SparseIntArray mLevels;
     //根据level存储的数据
     private SparseArray<LevelData<T>> mLevelOldData;
     //数据的缓存
@@ -99,7 +103,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     private RecyclerView.Adapter mAdapter;
     //资源管理
     private ResourcesManager mResourcesManager;
-    //刷新队列
+    //刷新队列，支持高频率刷新
     private Queue<HandleBase<T>> mRefreshQueue;
 
     public RecyclerViewAdapterHelper(List<T> data) {
@@ -112,14 +116,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         if (mLevelOldData == null) {
             mLevelOldData = new SparseArray<LevelData<T>>();
-        }
-
-        if (mLevels == null) {
-            mLevels = new SparseIntArray();
-        }
-
-        if (mLayouts == null) {
-            mLayouts = new SparseIntArray();
         }
 
         if (mResourcesManager == null) {
@@ -172,13 +168,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         registerMoudle(type, level, layoutResId, headerResId);
 
-        int shimmerType = type - 2000;
-        mLevels.put(shimmerType, level);
-        mLayouts.put(shimmerType, shimmerLayoutResId);
+        int shimmerType = type - SHIMMER_DATA_TYPE_DIFFER;
+        mResourcesManager.putLevel(shimmerType, level);
+        mResourcesManager.putLayoutId(shimmerType, shimmerLayoutResId);
 
-        int shimmerHeaderType = type - 3000;
-        mLevels.put(shimmerHeaderType, DEFAULT_HEADER_LEVEL);
-        mLayouts.put(shimmerHeaderType, shimmerHeaderLayoutResId);
+        int shimmerHeaderType = type - SHIMMER_HEADER_TYPE_DIFFER;
+        mResourcesManager.putLevel(shimmerHeaderType, DEFAULT_HEADER_LEVEL);
+        mResourcesManager.putLayoutId(shimmerHeaderType, shimmerHeaderLayoutResId);
     }
 
     @Deprecated
@@ -187,9 +183,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         registerMoudle(type, level, layoutResId, headerResId);
 
-        int shimmerHeaderType = type - 3000;
-        mLevels.put(shimmerHeaderType, DEFAULT_HEADER_LEVEL);
-        mLayouts.put(shimmerHeaderType, shimmerHeaderLayoutResId);
+        int shimmerHeaderType = type - SHIMMER_HEADER_TYPE_DIFFER;
+        mResourcesManager.putLevel(shimmerHeaderType, DEFAULT_HEADER_LEVEL);
+        mResourcesManager.putLayoutId(shimmerHeaderType, shimmerHeaderLayoutResId);
     }
 
     @Deprecated
@@ -198,9 +194,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         registerMoudle(type, level, layoutResId);
 
-        int shimmerType = type - 2000;
-        mLevels.put(shimmerType, level);
-        mLayouts.put(shimmerType, shimmerLayoutResId);
+        int shimmerType = type - SHIMMER_DATA_TYPE_DIFFER;
+        mResourcesManager.putLevel(shimmerType, level);
+        mResourcesManager.putLayoutId(shimmerType, shimmerLayoutResId);
     }
 
     @Deprecated
@@ -209,17 +205,17 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         registerMoudle(type, level, layoutResId);
 
-        int headerType = type - 1000;
-        mLevels.put(headerType, DEFAULT_HEADER_LEVEL);
-        mLayouts.put(headerType, headerResId);
+        int headerType = type - HEADER_TYPE_DIFFER;
+        mResourcesManager.putLevel(headerType, DEFAULT_HEADER_LEVEL);
+        mResourcesManager.putLayoutId(headerType, headerResId);
     }
 
     @Deprecated
     public void registerMoudle(@IntRange(from = 0, to = 999) int type, @IntRange(from = 0) int level,
                                @LayoutRes int layoutResId) {
 
-        mLevels.put(type, level);
-        mLayouts.put(type, layoutResId);
+        mResourcesManager.putLevel(type, level);
+        mResourcesManager.putLayoutId(type, layoutResId);
     }
 
     /**
@@ -331,9 +327,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * @param data 数据
      * @param type 数据类型
      */
-    public void notifyMoudleDataChanged(List<T> data, int type) {
+    public void notifyMoudleDataChanged(List<? extends T> data, int type) {
 
-        notifyMoudleChanged(data, null, type, REFRESH_DATA);
+        notifyMoudleChanged((List<T>) data, null, type, REFRESH_DATA);
     }
 
     public void notifyMoudleDataChanged(T data, int type) {
@@ -388,9 +384,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * @param header 头
      * @param type   数据类型
      */
-    public void notifyMoudleDataAndHeaderChanged(List<T> data, T header, int type) {
+    public void notifyMoudleDataAndHeaderChanged(List<? extends T> data, T header, int type) {
 
-        notifyMoudleChanged(data, header, type, REFRESH_HEADER_DATA);
+        notifyMoudleChanged((List<T>) data, header, type, REFRESH_HEADER_DATA);
     }
 
     /**
@@ -665,11 +661,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      */
     public final int getLayoutId(int viewType) {
 
-        int layoutId = mLayouts.get(viewType, 0);
-        if (layoutId == 0) {
-            return mResourcesManager.getLayoutId(viewType);
-        }
-        return layoutId;
+        return mResourcesManager.getLayoutId(viewType);
     }
 
     /**
@@ -678,10 +670,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      */
     private int getLevel(int type) {
 
-        int level = mLevels.get(type, DEFAULT_HEADER_LEVEL);
-        if (level <= DEFAULT_HEADER_LEVEL) {
-            level = mResourcesManager.getLevel(type);
-        }
+        int level = mResourcesManager.getLevel(type);
         if (level <= DEFAULT_HEADER_LEVEL) {
             throw new RuntimeException("boy , are you sure register this data type (not include header type) ?");
         }
@@ -733,7 +722,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
                 ShimmerEntity head = (ShimmerEntity) entity;
                 head.setId(getRandomId());
                 head.setHeaderId(headerId);
-                head.setType(type - 2000);
+                head.setType(type - SHIMMER_DATA_TYPE_DIFFER);
             }
         }
 
@@ -770,7 +759,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
             ShimmerEntity head = (ShimmerEntity) header;
             head.setId(getRandomId());
             head.setHeaderId(headerId);
-            head.setType(type - 3000);
+            head.setType(type - SHIMMER_HEADER_TYPE_DIFFER);
         }
 
         return header;

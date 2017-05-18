@@ -43,6 +43,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void click8(View view) {
-        startActivity(new Intent(this, RxConcurrentActivity.class));
+        startActivity(new Intent(this, RxContinuityActivity.class));
     }
 }

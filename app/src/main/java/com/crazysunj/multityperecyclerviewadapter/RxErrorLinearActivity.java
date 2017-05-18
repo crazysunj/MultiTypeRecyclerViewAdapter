@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
@@ -60,7 +59,7 @@ public class RxErrorLinearActivity extends AppCompatActivity {
                         public void run() {
                             Random random = new Random();
                             int rand = random.nextInt(6);
-                            List<MultiHeaderEntity> list = new ArrayList<>();
+                            List<SecondItem> list = new ArrayList<>();
                             for (int i = 0, size = rand + 1; i < size; i++) {
                                 list.add(new SecondItem(String.format("我是第二种类型%d", i), 6 + i));
                             }
@@ -75,7 +74,7 @@ public class RxErrorLinearActivity extends AppCompatActivity {
                         public void run() {
                             Random random = new Random();
                             int rand = random.nextInt(6);
-                            List<MultiHeaderEntity> list = new ArrayList<>();
+                            List<FourthItem> list = new ArrayList<>();
                             for (int i = 0, size = rand + 1; i < size; i++) {
                                 list.add(new FourthItem(String.format("我是第四种类型%d", i), 18 + i));
                             }
@@ -93,7 +92,7 @@ public class RxErrorLinearActivity extends AppCompatActivity {
             public void run() {
                 Random random = new Random();
                 int rand = random.nextInt(6);
-                final List<MultiHeaderEntity> list = new ArrayList<>();
+                final List<FirstItem> list = new ArrayList<>();
                 for (int i = 0, size = rand + 1; i < size; i++) {
                     list.add(new FirstItem(String.format("我是第一种类型%d", i), i));
                 }
@@ -109,7 +108,7 @@ public class RxErrorLinearActivity extends AppCompatActivity {
             public void run() {
                 Random random = new Random();
                 int rand = random.nextInt(6);
-                List<MultiHeaderEntity> list = new ArrayList<>();
+                List<ThirdItem> list = new ArrayList<>();
                 for (int i = 0, size = rand + 1; i < size; i++) {
                     list.add(new ThirdItem(String.format("我是第三种类型%d", i), 12 + i));
                 }

@@ -1,5 +1,6 @@
 package com.crazysunj.multitypeadapter.entity;
 
+import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 
 /**
@@ -26,7 +27,7 @@ public class ErrorEntity implements MultiHeaderEntity {
 
     @Override
     public final int getItemType() {
-        return type - 4000;
+        return type - RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER;
     }
 
     @Override

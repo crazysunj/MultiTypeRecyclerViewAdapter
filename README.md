@@ -3,11 +3,13 @@ MultiTypeRecyclerViewAdapter for Recyclerview
 
 ## 特点
 
-* 与Adapter为组合关系
+* 与Adapter为组合关系，可配合大多数Adapter
 * 一行代码刷新相应viewType
 * 支持facebook的shimmer加载效果
 * 支持粘性头
 * 支持异步刷新，可扩展(如配合RxAndroid)
+* 支持加载相应type错误页面
+* 支持高频率刷新(流畅,异步执行)
 
 ## 效果
 ### Rx线性排布
@@ -22,7 +24,13 @@ MultiTypeRecyclerViewAdapter for Recyclerview
 ### 关键字高亮
 ![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/adapterHelper4.gif)
 
-## gradle依赖
+### 刷新错误页面
+![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/adapterHelper5.gif)
+
+### 高频率刷新
+![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/adapterHelper6.gif)
+
+## gradle依赖(1.3.0还没传)
 
 ```
 compile 'com.crazysunj:multitypeadapter:1.2.1'
@@ -33,6 +41,8 @@ compile 'com.crazysunj:multitypeadapter:1.2.1'
 [shimmer-android](https://github.com/facebook/shimmer-android)
 
 ## 版本([查看更多](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/wiki))
+
+* 1.3.0：支持刷新type错误页面(可自定义)，支持同时刷新多个type(异步)，链式注册资源，支持刷新单个数据，支持清除单个type等
 
 * 1.2.1：默认DiffCallBack判别条件增加type，helper增加Diff刷新回调
 

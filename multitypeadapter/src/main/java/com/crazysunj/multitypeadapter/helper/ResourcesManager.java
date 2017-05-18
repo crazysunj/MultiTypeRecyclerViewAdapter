@@ -114,9 +114,19 @@ final class ResourcesManager {
 
     }
 
+    void putLayoutId(int type, int layoutId) {
+
+        mLayouts.put(type, layoutId);
+    }
+
     int getLayoutId(int type) {
 
         return mLayouts.get(type);
+    }
+
+    void putLevel(int type, int level) {
+
+        mLevels.put(type, level);
     }
 
     int getLevel(int type) {
