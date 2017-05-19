@@ -30,10 +30,10 @@
 ### 高频率刷新
 ![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/adapterHelper6.gif)
 
-## gradle依赖(1.3.0还没传)
+## gradle依赖
 
 ```
-compile 'com.crazysunj:multitypeadapter:1.2.1'
+compile 'com.crazysunj:multitypeadapter:1.3.0'
 ```
 
 ## 感谢
