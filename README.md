@@ -58,6 +58,8 @@ compile 'com.crazysunj:multitypeadapter:1.3.0'
 
 邮箱:twsunj@gmail.com
 
+**欢迎大家的star(fork)和反馈(可发issues或者我的邮箱）。**
+
 ## License
 
 > ```
