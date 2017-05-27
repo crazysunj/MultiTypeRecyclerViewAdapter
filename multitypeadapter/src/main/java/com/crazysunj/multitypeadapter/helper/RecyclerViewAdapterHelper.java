@@ -16,6 +16,7 @@
 package com.crazysunj.multitypeadapter.helper;
 
 import android.support.annotation.ColorInt;
+import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
 import android.support.annotation.LayoutRes;
 import android.support.v7.util.DiffUtil;
@@ -33,6 +34,8 @@ import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -56,6 +59,19 @@ import java.util.regex.Pattern;
 
 public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
+    //标准刷新，相应的type集合在一起
+    public static final int MODE_STANDARD = 0;
+    //随机模式，操作一般的数据
+    public static final int MODE_RANDOM = 1;
+
+    @IntDef({MODE_STANDARD, MODE_RANDOM})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface RefreshMode {
+    }
+
+    //默认数量为0
+    private static final int PRE_DATA_COUNT = 0;
+
     //头类型差值
     public static final int HEADER_TYPE_DIFFER = 1000;
     //shimmer数据类型差值
@@ -75,6 +91,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     private static final int REFRESH_DATA = 1;
     //同时刷新数据和头
     private static final int REFRESH_HEADER_DATA = 2;
+    //刷新全部
+    private static final int REFRESH_ALL = 3;
 
     //控制麒麟臂用户
     private boolean mIsCanRefresh = true;
@@ -97,14 +115,15 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     protected List<T> mNewData;
     //当前数据
     protected List<T> mData;
-    //跟data无关且在data之前的条目数量
-    private int mPreDataCount = 0;
     //绑定Adapter
     private RecyclerView.Adapter mAdapter;
     //资源管理
     private ResourcesManager mResourcesManager;
     //刷新队列，支持高频率刷新
     private Queue<HandleBase<T>> mRefreshQueue;
+
+    //当前模式
+    private int mCurrentMode;
 
     public RecyclerViewAdapterHelper(List<T> data) {
 
@@ -237,7 +256,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      */
     public long getHeaderId(int position) {
 
-        return mData.get(position).getHeaderId();
+        return mData.get(position - getPreDataCount()).getHeaderId();
     }
 
     /**
@@ -281,16 +300,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     }
 
     /**
-     * 设置刷新数据前自定义的条目数量，防止混乱
-     *
-     * @param preDataCount 刷新数据前自定义的条目数量
-     */
-    public void setPreDataCount(int preDataCount) {
-
-        mPreDataCount = preDataCount;
-    }
-
-    /**
      * 不断向下取值，如果抛异常，你可以重新设置最大值，但切记不能重复啊，报错我可不负责啊，这么多的值都用完了，是在下输了
      * 有特殊要求的同学可以自己设计
      * 是不是随机有待商量
@@ -301,7 +310,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     public long getRandomId() {
 
         if (mMaxRandomId <= mMinRandomId) {
-            throw new RuntimeException("boy,you win !");
+            throw new DataException("boy,you win !");
         }
 
         return mMaxRandomId--;
@@ -422,11 +431,78 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     }
 
     /**
+     * 刷新全局数据
+     *
+     * @param newData     新数据集合
+     * @param refreshMode 刷新模式
+     */
+    @SuppressWarnings("unchecked")
+    public void notifyDataSetChanged(List<? extends T> newData, @RefreshMode int refreshMode) {
+
+        checkAdapterBind();
+
+        mData.clear();
+
+        if (refreshMode == MODE_STANDARD) {
+            mData.addAll(initStandardNewData((List<T>) newData));
+        } else {
+            mData.addAll(newData);
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+
+    /**
+     * 默认标准刷新
+     *
+     * @param newData 新数据集合
+     */
+    public void notifyDataSetChanged(List<? extends T> newData) {
+
+        notifyDataSetChanged(newData, MODE_STANDARD);
+    }
+
+
+    /**
+     * 数据比较后刷新，可支持异步，与Type刷新用法一样
+     *
+     * @param newData     刷新数据集合
+     * @param refreshMode 刷新模式
+     */
+    @SuppressWarnings("unchecked")
+    public void notifyDataByDiff(List<? extends T> newData, @RefreshMode int refreshMode) {
+
+        mNewData.clear();
+
+        if (refreshMode == MODE_STANDARD) {
+            mNewData.addAll(initStandardNewData((List<T>) newData));
+        } else {
+            mNewData.addAll(newData);
+        }
+
+        notifyMoudleChanged(mNewData, null, DEFAULT_VIEW_TYPE, REFRESH_ALL);
+
+    }
+
+    public void notifyDataByDiff(List<? extends T> newData) {
+
+        notifyDataByDiff(newData, MODE_STANDARD);
+    }
+
+
+    /**
      * 清除单个type数据
      *
      * @param type 数据类型
      */
     public void clearMoudle(int type) {
+
+        checkStandardMode();
+
+        LevelData<T> data = getDataWithType(type);
+        if (data == null || data.getData() == null) {
+            return;
+        }
 
         notifyMoudleChanged(null, null, type, REFRESH_HEADER_DATA);
     }
@@ -436,11 +512,162 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      */
     public void clear() {
 
+        if (mData.isEmpty()) {
+            return;
+        }
+
+        checkAdapterBind();
+
         mData.clear();
 
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 在position位置添加数据
+     *
+     * @param position 添加的位置
+     */
+    public void addData(int position, T data) {
+
+        checkRandomMode();
+
+        checkAdapterBind();
+
+        mData.add(position, data);
+        mAdapter.notifyItemInserted(position + getPreDataCount());
+        compatibilityDataSizeChanged(1);
+    }
+
+    /**
+     * 添加数据
+     *
+     * @param data 添加的数据
+     */
+    public void addData(T data) {
+
+        checkRandomMode();
+
+        checkAdapterBind();
+
+        mData.add(data);
+        mAdapter.notifyItemInserted(mData.size() + getPreDataCount());
+        compatibilityDataSizeChanged(1);
+    }
+
+    /**
+     * 移除position位置的数据
+     *
+     * @param position 移除位置
+     */
+    public void removeData(int position) {
+
+        checkAdapterBind();
+
+        T removeData = mData.remove(position);
+        int internalPosition = position + getPreDataCount();
+        mAdapter.notifyItemRemoved(internalPosition);
+        compatibilityDataSizeChanged(0);
+        mAdapter.notifyItemRangeChanged(internalPosition, mData.size() - internalPosition);
+
+        if (mCurrentMode == MODE_STANDARD) {
+            LevelData<T> levelData = getDataWithType(removeData.getItemType());
+            if (levelData == null) {
+                return;
+            }
+            List<T> list = levelData.getData();
+            if (list == null || list.isEmpty()) {
+                return;
+            }
+            list.remove(removeData);
         }
+    }
+
+    /**
+     * 修改position位置数据
+     *
+     * @param position 修改位置
+     * @param data     修改数据
+     */
+    public void setData(int position, T data) {
+
+        checkAdapterBind();
+
+        if (mCurrentMode == MODE_STANDARD) {
+            T currentData = mData.get(position);
+            if (currentData != null && currentData.getItemType() == data.getItemType()) {
+                T oldData = mData.set(position, data);
+                mAdapter.notifyItemChanged(position + getPreDataCount());
+
+                LevelData<T> levelData = getDataWithType(data.getItemType());
+                if (levelData == null) {
+                    return;
+                }
+                List<T> list = levelData.getData();
+                if (list == null || list.isEmpty()) {
+                    return;
+                }
+                int oldIndex = list.indexOf(oldData);
+                list.set(oldIndex, data);
+            }
+
+            return;
+        }
+
+        mData.set(position, data);
+        mAdapter.notifyItemChanged(position + getPreDataCount());
+    }
+
+    /**
+     * 在position位置插入数据集合
+     *
+     * @param position 插入位置
+     */
+    public void addData(int position, List<? extends T> data) {
+
+        checkRandomMode();
+
+        checkAdapterBind();
+
+        mData.addAll(position, data);
+        mAdapter.notifyItemRangeInserted(position + getPreDataCount(), data.size());
+        compatibilityDataSizeChanged(data.size());
+    }
+
+    /**
+     * 添加数据集合
+     *
+     * @param newData 添加的新数据集合
+     */
+    public void addData(List<? extends T> newData) {
+
+        checkRandomMode();
+
+        checkAdapterBind();
+
+        mData.addAll(newData);
+        mAdapter.notifyItemRangeInserted(mData.size() - newData.size() + getPreDataCount(), newData.size());
+        compatibilityDataSizeChanged(newData.size());
+    }
+
+    /**
+     * 切换模式
+     *
+     * @param mode 模式
+     */
+    public void switchMode(@RefreshMode int mode) {
+
+        mCurrentMode = mode;
+    }
+
+    /**
+     * 返回当前刷新模式
+     *
+     * @return RefreshMode
+     */
+    public int getCurrentRefreshMode() {
+
+        return mCurrentMode;
     }
 
     /**
@@ -461,6 +688,17 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     public void setMaxHeaderCacheCount(int maxHeaderCacheCount) {
 
         mMaxHeaderCacheCount = maxHeaderCacheCount;
+    }
+
+    /**
+     * 获取数据前条目数量，保持数据与adapter一致
+     * 比如adapter的position=0添加的是headerview
+     * 如果你的adapter有这样的条件，请重写该方法或者自己处理数据的时候注意，否则数据混乱，甚至崩溃都是有可能的
+     *
+     * @return int
+     */
+    protected int getPreDataCount() {
+        return PRE_DATA_COUNT;
     }
 
     /**
@@ -531,9 +769,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      */
     protected final void handleResult(DiffUtil.DiffResult diffResult) {
 
-        if (mAdapter != null) {
-            diffResult.dispatchUpdatesTo(getListUpdateCallback(mAdapter));
-        }
+        checkAdapterBind();
+
+        diffResult.dispatchUpdatesTo(getListUpdateCallback(mAdapter));
 
         mData.clear();
         mData.addAll(mNewData);
@@ -553,25 +791,27 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      */
     protected ListUpdateCallback getListUpdateCallback(final RecyclerView.Adapter adapter) {
 
+        final int preDataCount = getPreDataCount();
+
         return new ListUpdateCallback() {
             @Override
             public void onInserted(int position, int count) {
-                adapter.notifyItemRangeInserted(position, count);
+                adapter.notifyItemRangeInserted(position + preDataCount, count);
             }
 
             @Override
             public void onRemoved(int position, int count) {
-                adapter.notifyItemRangeRemoved(position, count);
+                adapter.notifyItemRangeRemoved(position + preDataCount, count);
             }
 
             @Override
             public void onMoved(int fromPosition, int toPosition) {
-                adapter.notifyItemMoved(fromPosition, toPosition);
+                adapter.notifyItemMoved(fromPosition + preDataCount, toPosition + preDataCount);
             }
 
             @Override
             public void onChanged(int position, int count, Object payload) {
-                adapter.notifyItemRangeChanged(position, count, payload);
+                adapter.notifyItemRangeChanged(position + preDataCount, count, payload);
             }
         };
     }
@@ -586,6 +826,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * @return DiffResult
      */
     protected final DiffUtil.DiffResult handleRefresh(List<T> newData, T newHeader, int type, int refreshType) {
+
+        if (refreshType == REFRESH_ALL) {
+
+            return DiffUtil.calculateDiff(getDiffCallBack(mData, newData), isDetectMoves());
+        }
+
+        checkStandardMode();
 
         mNewData.clear();
         mNewData.addAll(mData);
@@ -638,7 +885,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
             }
         }
 
-        int positionStart = sum + mPreDataCount;
+        int positionStart = sum;
         boolean isDataEmpty = newData == null || newData.isEmpty();
         boolean isHeaderEmpty = newHeader == null;
 
@@ -674,7 +921,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         int level = mResourcesManager.getLevel(type);
         if (level <= DEFAULT_HEADER_LEVEL) {
-            throw new RuntimeException("boy , are you sure register this data type (not include header type) ?");
+            throw new DataException("boy , are you sure register this data type (not include header type) ?");
         }
 
         return level;
@@ -765,6 +1012,92 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         }
 
         return header;
+    }
+
+    /**
+     * 兼容其他库postion与实际position不一致的情况
+     *
+     * @param size 修改数据数量
+     */
+    private void compatibilityDataSizeChanged(int size) {
+
+        final int dataSize = mData == null ? 0 : mData.size();
+        if (dataSize == size) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 检查标准模式刷新
+     */
+    private void checkStandardMode() {
+
+        if (mCurrentMode == MODE_RANDOM) {
+            mIsCanRefresh = true;
+            mRefreshQueue.clear();
+            throw new RefreshException("current refresh mode can't support random refresh mode !");
+        }
+    }
+
+    /**
+     * 检查随机模式刷新
+     */
+    private void checkRandomMode() {
+
+        if (mCurrentMode == MODE_STANDARD) {
+            throw new RefreshException("current refresh mode can't support standard refresh mode !");
+        }
+    }
+
+    /**
+     * 检查Adapter是否为绑定
+     */
+    private void checkAdapterBind() {
+
+        if (mAdapter == null) {
+            throw new AdapterBindException("are you sure bind the adapter ?");
+        }
+    }
+
+    /**
+     * 初始化标准模式数据
+     *
+     * @param newData 新数据
+     */
+    private List<T> initStandardNewData(List<T> newData) {
+
+        mLevelOldData.clear();
+        SparseArray<List<T>> temDatas = new SparseArray<List<T>>();
+        SparseArray<T> temHeaders = new SparseArray<T>();
+        for (T data : newData) {
+
+            int itemType = data.getItemType();
+            if (itemType >= 0 && itemType < 1000) {
+                List<T> dataList = temDatas.get(itemType);
+                if (dataList == null) {
+                    dataList = new ArrayList<T>();
+                    temDatas.put(itemType, dataList);
+                }
+                dataList.add(data);
+
+            } else if (itemType >= -1000 && itemType < 0) {
+                temHeaders.put(itemType + HEADER_TYPE_DIFFER, data);
+            }
+        }
+
+        List<T> addData = new ArrayList<T>();
+        for (int i = 0, size = temDatas.size(); i < size; i++) {
+            int type = temDatas.keyAt(i);
+            List<T> data = temDatas.get(type);
+            T header = temHeaders.get(type);
+            mLevelOldData.put(type, new LevelData<T>(data, header));
+            if (header != null) {
+                addData.add(header);
+            }
+            addData.addAll(data);
+        }
+
+        return addData;
     }
 
     /**

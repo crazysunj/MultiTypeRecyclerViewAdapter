@@ -82,7 +82,7 @@ final class ResourcesManager {
 
         int headerResId = mTypeManager.headerResId;
         if (headerResId != 0) {
-            int headerType = type - 1000;
+            int headerType = type - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER;
             mLevels.put(headerType, DEFAULT_HEADER_LEVEL);
             mLayouts.put(headerType, headerResId);
         }
@@ -90,14 +90,14 @@ final class ResourcesManager {
         if (mLoadingManager != null) {
             int loadingLayoutResId = mLoadingManager.loadingLayoutResId;
             if (loadingLayoutResId != 0) {
-                int loadingLayoutType = type - 2000;
+                int loadingLayoutType = type - RecyclerViewAdapterHelper.SHIMMER_DATA_TYPE_DIFFER;
                 mLevels.put(loadingLayoutType, level);
                 mLayouts.put(loadingLayoutType, loadingLayoutResId);
             }
 
             int loadingHeaderResId = mLoadingManager.loadingHeaderResId;
             if (loadingHeaderResId != 0) {
-                int loadingHeaderType = type - 3000;
+                int loadingHeaderType = type - RecyclerViewAdapterHelper.SHIMMER_HEADER_TYPE_DIFFER;
                 mLevels.put(loadingHeaderType, DEFAULT_HEADER_LEVEL);
                 mLayouts.put(loadingHeaderType, loadingHeaderResId);
             }
@@ -106,7 +106,7 @@ final class ResourcesManager {
         if (mErrorManager != null) {
             int errorLayoutResId = mErrorManager.errorLayoutResId;
             if (errorLayoutResId != 0) {
-                int errorType = type - 4000;
+                int errorType = type - RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER;
                 mLevels.put(errorType, level);
                 mLayouts.put(errorType, errorLayoutResId);
             }
