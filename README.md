@@ -40,17 +40,10 @@ compile 'com.crazysunj:multitypeadapter:1.3.0'
 
 [shimmer-android](https://github.com/facebook/shimmer-android)
 
-## 版本([查看更多](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/wiki))
+## [版本介绍](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/wiki)
 
-* 1.4.0（努力开发中）：支持add,set,remove,全局等方法刷新，支持空页面，优化清除数据，优化异常命名等。
-
+## [版本](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/releases)
 * 1.3.0：支持刷新type错误页面(可自定义)，支持同时刷新多个type(异步)，链式注册资源，支持刷新单个数据，支持清除单个type等
-
-* 1.2.1：默认DiffCallBack判别条件增加type，helper增加Diff刷新回调
-
-* 1.2.0：与Adapter形成组合，修复崩溃，支持关键字高亮，增加loading效果等
-
-* 1.1.0：扩展方格布局等
 
 ## 传送门
 
