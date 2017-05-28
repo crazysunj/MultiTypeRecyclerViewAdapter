@@ -19,6 +19,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.util.ListUpdateCallback;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +38,7 @@ import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,9 +64,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     //标准刷新，相应的type集合在一起
     public static final int MODE_STANDARD = 0;
     //随机模式，操作一般的数据
-    public static final int MODE_RANDOM = 1;
+    public static final int MODE_MIXED = 1;
 
-    @IntDef({MODE_STANDARD, MODE_RANDOM})
+    @IntDef({MODE_STANDARD, MODE_MIXED})
     @Retention(RetentionPolicy.SOURCE)
     public @interface RefreshMode {
     }
@@ -126,8 +128,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     private int mCurrentMode;
 
     public RecyclerViewAdapterHelper(List<T> data) {
+        this(data, MODE_STANDARD);
+    }
+
+    public RecyclerViewAdapterHelper(List<T> data, @RefreshMode int mode) {
 
         mData = data == null ? new ArrayList<T>() : data;
+        mCurrentMode = mode;
 
         if (mNewData == null) {
             mNewData = new ArrayList<T>();
@@ -143,6 +150,14 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         if (mRefreshQueue == null) {
             mRefreshQueue = new LinkedList<HandleBase<T>>();
+        }
+
+        registerMoudle();
+
+        if (mCurrentMode == MODE_STANDARD && !mData.isEmpty()) {
+            List<T> newData = initStandardNewData(mData);
+            mData.clear();
+            mData.addAll(newData);
         }
     }
 
@@ -530,7 +545,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      */
     public void addData(int position, T data) {
 
-        checkRandomMode();
+        checkMixedMode();
 
         checkAdapterBind();
 
@@ -546,7 +561,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      */
     public void addData(T data) {
 
-        checkRandomMode();
+        checkMixedMode();
 
         checkAdapterBind();
 
@@ -560,7 +575,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      *
      * @param position 移除位置
      */
-    public void removeData(int position) {
+    public T removeData(int position) {
 
         checkAdapterBind();
 
@@ -571,16 +586,32 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
         mAdapter.notifyItemRangeChanged(internalPosition, mData.size() - internalPosition);
 
         if (mCurrentMode == MODE_STANDARD) {
-            LevelData<T> levelData = getDataWithType(removeData.getItemType());
+
+            int itemType = removeData.getItemType();
+            boolean isHeader = itemType >= -1000 && itemType < 0;
+            if (isHeader) {
+                itemType += HEADER_TYPE_DIFFER;
+            }
+            LevelData<T> levelData = getDataWithType(itemType);
             if (levelData == null) {
-                return;
+                return removeData;
             }
-            List<T> list = levelData.getData();
-            if (list == null || list.isEmpty()) {
-                return;
+
+            if (isHeader) {
+
+                levelData.removeHeader();
+            } else {
+
+                List<T> list = levelData.getData();
+                if (list == null || list.isEmpty()) {
+                    return removeData;
+                }
+                list.remove(removeData);
             }
-            list.remove(removeData);
+
         }
+
+        return removeData;
     }
 
     /**
@@ -589,20 +620,35 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * @param position 修改位置
      * @param data     修改数据
      */
-    public void setData(int position, T data) {
+    public void setData(int position, @NonNull T data) {
 
         checkAdapterBind();
 
         if (mCurrentMode == MODE_STANDARD) {
             T currentData = mData.get(position);
-            if (currentData != null && currentData.getItemType() == data.getItemType()) {
-                T oldData = mData.set(position, data);
-                mAdapter.notifyItemChanged(position + getPreDataCount());
 
-                LevelData<T> levelData = getDataWithType(data.getItemType());
-                if (levelData == null) {
-                    return;
-                }
+            if (currentData == null) {
+                throw new DataException("please your data !");
+            }
+
+            int itemType = data.getItemType();
+            if (currentData.getItemType() != itemType) {
+                throw new DataException("please check your updated data's type !");
+            }
+
+            T oldData = mData.set(position, data);
+            mAdapter.notifyItemChanged(position + getPreDataCount());
+            boolean isHeader = itemType >= -1000 && itemType < 0;
+            LevelData<T> levelData = getDataWithType(isHeader ? itemType + HEADER_TYPE_DIFFER : itemType);
+            if (levelData == null) {
+                return;
+            }
+
+            if (isHeader) {
+                
+                levelData.setHeader(data);
+            } else {
+
                 List<T> list = levelData.getData();
                 if (list == null || list.isEmpty()) {
                     return;
@@ -610,7 +656,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
                 int oldIndex = list.indexOf(oldData);
                 list.set(oldIndex, data);
             }
-
             return;
         }
 
@@ -625,7 +670,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      */
     public void addData(int position, List<? extends T> data) {
 
-        checkRandomMode();
+        checkMixedMode();
 
         checkAdapterBind();
 
@@ -641,7 +686,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      */
     public void addData(List<? extends T> newData) {
 
-        checkRandomMode();
+        checkMixedMode();
 
         checkAdapterBind();
 
@@ -761,6 +806,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      * @param refreshData 刷新数据合
      */
     protected abstract void startRefresh(HandleBase<T> refreshData);
+
+    /**
+     * 防止未注册的情况发生以及更好地利用注册资源，提供抽象方法
+     */
+    protected abstract void registerMoudle();
 
     /**
      * 开始刷新
@@ -1032,7 +1082,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      */
     private void checkStandardMode() {
 
-        if (mCurrentMode == MODE_RANDOM) {
+        if (mCurrentMode == MODE_MIXED) {
             mIsCanRefresh = true;
             mRefreshQueue.clear();
             throw new RefreshException("current refresh mode can't support random refresh mode !");
@@ -1042,7 +1092,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     /**
      * 检查随机模式刷新
      */
-    private void checkRandomMode() {
+    private void checkMixedMode() {
 
         if (mCurrentMode == MODE_STANDARD) {
             throw new RefreshException("current refresh mode can't support standard refresh mode !");
@@ -1073,24 +1123,34 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
             int itemType = data.getItemType();
             if (itemType >= 0 && itemType < 1000) {
-                List<T> dataList = temDatas.get(itemType);
+                int level = getLevel(itemType);
+                List<T> dataList = temDatas.get(level);
                 if (dataList == null) {
                     dataList = new ArrayList<T>();
-                    temDatas.put(itemType, dataList);
+                    temDatas.put(level, dataList);
                 }
                 dataList.add(data);
 
             } else if (itemType >= -1000 && itemType < 0) {
-                temHeaders.put(itemType + HEADER_TYPE_DIFFER, data);
+                temHeaders.put(getLevel(itemType + HEADER_TYPE_DIFFER), data);
             }
         }
 
         List<T> addData = new ArrayList<T>();
-        for (int i = 0, size = temDatas.size(); i < size; i++) {
-            int type = temDatas.keyAt(i);
-            List<T> data = temDatas.get(type);
-            T header = temHeaders.get(type);
-            mLevelOldData.put(type, new LevelData<T>(data, header));
+        int size = temDatas.size();
+        int[] levels = new int[size];
+        for (int i = 0; i < size; i++) {
+            levels[i] = temDatas.keyAt(i);
+        }
+
+        Arrays.sort(levels);
+
+        for (int i = 0; i < size; i++) {
+            int level = levels[i];
+
+            List<T> data = temDatas.get(level);
+            T header = temHeaders.get(level);
+            mLevelOldData.put(level, new LevelData<T>(data, header));
             if (header != null) {
                 addData.add(header);
             }

@@ -4,6 +4,8 @@ import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 import com.crazysunj.multityperecyclerviewadapter.sticky.ThirdStickyItem;
 
+import java.util.UUID;
+
 /**
  * Created by sunjian on 2017/3/28.
  */
@@ -14,6 +16,10 @@ public class ThirdItem implements ThirdStickyItem {
     private long id;
     private int img = R.mipmap.ic_launcher;
     private String stickyName = "第三条粘性";
+
+    public ThirdItem(String name) {
+        this.name = name;
+    }
 
     public ThirdItem(String name, long id) {
         this.name = name;
@@ -30,6 +36,9 @@ public class ThirdItem implements ThirdStickyItem {
 
     @Override
     public long getId() {
+        if (id == 0) {
+            return id = UUID.nameUUIDFromBytes((name + stickyName).getBytes()).hashCode();
+        }
         return id;
     }
 

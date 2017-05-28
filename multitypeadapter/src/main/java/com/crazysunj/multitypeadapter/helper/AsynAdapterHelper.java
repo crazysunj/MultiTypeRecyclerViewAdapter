@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
  * Created by sunjian on 2017/4/1.
  */
 
-public class AsynAdapterHelper<T extends MultiHeaderEntity> extends RecyclerViewAdapterHelper<T> {
+public abstract class AsynAdapterHelper<T extends MultiHeaderEntity> extends RecyclerViewAdapterHelper<T> {
 
     private static final int HANDLE_DATA_UPDATE = 1;
 
@@ -62,6 +62,10 @@ public class AsynAdapterHelper<T extends MultiHeaderEntity> extends RecyclerView
 
     public AsynAdapterHelper(List<T> data) {
         super(data);
+    }
+
+    public AsynAdapterHelper(List<T> data, @RefreshMode int mode) {
+        super(data, mode);
     }
 
     @Override

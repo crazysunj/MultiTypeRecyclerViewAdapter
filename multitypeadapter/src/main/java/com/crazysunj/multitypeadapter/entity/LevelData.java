@@ -39,4 +39,12 @@ public class LevelData<T> {
     public T getHeader() {
         return header;
     }
+
+    public void removeHeader() {
+        header = null;
+    }
+
+    public void setHeader(T newHeader) {
+        header = newHeader;
+    }
 }

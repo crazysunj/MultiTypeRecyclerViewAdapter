@@ -3,6 +3,8 @@ package com.crazysunj.multityperecyclerviewadapter.header;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 import com.crazysunj.multityperecyclerviewadapter.sticky.FirstStickyItem;
 
+import java.util.UUID;
+
 /**
  * Created by sunjian on 2017/3/28.
  */
@@ -12,6 +14,10 @@ public class HeaderFirstItem implements FirstStickyItem {
     private String name;
     private long id;
     private String stickyName = "第一条粘性";
+
+    public HeaderFirstItem(String name) {
+        this.name = name;
+    }
 
     public HeaderFirstItem(String name, long id) {
         this.name = name;
@@ -24,6 +30,9 @@ public class HeaderFirstItem implements FirstStickyItem {
 
     @Override
     public long getId() {
+        if (id == 0) {
+            return id = UUID.nameUUIDFromBytes((name + stickyName).getBytes()).hashCode();
+        }
         return id;
     }
 

@@ -4,6 +4,8 @@ import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 import com.crazysunj.multityperecyclerviewadapter.sticky.SecondStickyItem;
 
+import java.util.UUID;
+
 /**
  * Created by sunjian on 2017/3/28.
  */
@@ -15,6 +17,10 @@ public class SecondItem implements SecondStickyItem {
     private int img = R.mipmap.ic_launcher;
 
     private String stickyName = "第二条粘性";
+
+    public SecondItem(String name) {
+        this.name = name;
+    }
 
     public SecondItem(String name, long id) {
         this.name = name;
@@ -31,6 +37,9 @@ public class SecondItem implements SecondStickyItem {
 
     @Override
     public long getId() {
+        if (id == 0) {
+            return id = UUID.nameUUIDFromBytes((name + stickyName).getBytes()).hashCode();
+        }
         return id;
     }
 

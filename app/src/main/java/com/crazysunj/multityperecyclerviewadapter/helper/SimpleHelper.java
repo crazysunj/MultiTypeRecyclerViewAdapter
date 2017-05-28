@@ -24,6 +24,10 @@ public class SimpleHelper extends AsynAdapterHelper<MultiHeaderEntity> {
 
     public SimpleHelper() {
         super(null);
+    }
+
+    @Override
+    protected void registerMoudle() {
         registerMoudleWithShimmer(TYPE_ONE, LEVEL_FIRST, R.layout.item_first,
                 R.layout.item_header, R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
         registerMoudleWithShimmer(TYPE_TWO, LEVEL_FOURTH, R.layout.item_fourth, R.layout.item_header_img,

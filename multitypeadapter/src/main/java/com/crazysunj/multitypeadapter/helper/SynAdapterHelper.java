@@ -26,11 +26,15 @@ import java.util.List;
  * Created by sunjian on 2017/4/1.
  */
 
-public class SynAdapterHelper<T extends MultiHeaderEntity> extends RecyclerViewAdapterHelper<T> {
+public abstract class SynAdapterHelper<T extends MultiHeaderEntity> extends RecyclerViewAdapterHelper<T> {
 
 
     public SynAdapterHelper(List<T> data) {
         super(data);
+    }
+
+    public SynAdapterHelper(List<T> data, @RefreshMode int mode) {
+        super(data, mode);
     }
 
     @Override

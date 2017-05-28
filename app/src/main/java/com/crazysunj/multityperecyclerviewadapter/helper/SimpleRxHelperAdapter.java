@@ -56,6 +56,7 @@ public class SimpleRxHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, S
     @Override
     protected void convert(ShimmerViewHolder helper, MultiHeaderEntity item) {
 
+        Log.d(TAG, "item.getId():" + item.getId());
         if (item instanceof FirstItem) {
             renderFirst(helper, (FirstItem) item);
         } else if (item instanceof SecondItem) {

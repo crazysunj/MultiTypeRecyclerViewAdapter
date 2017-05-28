@@ -7,6 +7,8 @@ import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.R;
 
+import java.util.List;
+
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -32,8 +34,36 @@ import static com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper.TYP
 public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity> {
 
     public RxAdapterHelper() {
+        this(null);
+    }
 
-        super(null);
+    public RxAdapterHelper(List<MultiHeaderEntity> data) {
+        super(data);
+    }
+
+    @Override
+    protected void startRefresh(HandleBase<MultiHeaderEntity> refreshData) {
+        Flowable.just(refreshData)
+                .onBackpressureDrop()
+                .observeOn(Schedulers.computation())
+                .map(new Function<HandleBase<MultiHeaderEntity>, DiffUtil.DiffResult>() {
+                    @Override
+                    public DiffUtil.DiffResult apply(@NonNull HandleBase<MultiHeaderEntity> handleBase) throws Exception {
+                        return handleRefresh(handleBase.getNewData(), handleBase.getNewHeader(), handleBase.getType(), handleBase.getRefreshType());
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<DiffUtil.DiffResult>() {
+                    @Override
+                    public void accept(@NonNull DiffUtil.DiffResult diffResult) throws Exception {
+                        handleResult(diffResult);
+                    }
+                });
+    }
+
+    @Override
+    protected void registerMoudle() {
+
         registerMoudleWithShimmer(TYPE_ONE, LEVEL_FIRST, R.layout.item_first,
                 R.layout.item_header, R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
 //        registerMoudleWithShimmer(TYPE_TWO, LEVEL_FOURTH, R.layout.item_fourth, R.layout.item_header_img,
@@ -82,26 +112,5 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
 //                .loadingLayoutResId(R.layout.layout_default_shimmer_view)
 //                .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
 //                .register();
-
-    }
-
-    @Override
-    protected void startRefresh(HandleBase<MultiHeaderEntity> refreshData) {
-        Flowable.just(refreshData)
-                .onBackpressureDrop()
-                .observeOn(Schedulers.computation())
-                .map(new Function<HandleBase<MultiHeaderEntity>, DiffUtil.DiffResult>() {
-                    @Override
-                    public DiffUtil.DiffResult apply(@NonNull HandleBase<MultiHeaderEntity> handleBase) throws Exception {
-                        return handleRefresh(handleBase.getNewData(), handleBase.getNewHeader(), handleBase.getType(), handleBase.getRefreshType());
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<DiffUtil.DiffResult>() {
-                    @Override
-                    public void accept(@NonNull DiffUtil.DiffResult diffResult) throws Exception {
-                        handleResult(diffResult);
-                    }
-                });
     }
 }

@@ -4,6 +4,8 @@ import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 import com.crazysunj.multityperecyclerviewadapter.sticky.FourthStickyItem;
 
+import java.util.UUID;
+
 /**
  * Created by sunjian on 2017/3/28.
  */
@@ -16,6 +18,10 @@ public class FourthItem implements FourthStickyItem {
 
     private long id;
     private String stickyName = "第四条粘性";
+
+    public FourthItem(String name) {
+        this.name = name;
+    }
 
     public FourthItem(String name, long id) {
         this.name = name;
@@ -32,6 +38,9 @@ public class FourthItem implements FourthStickyItem {
 
     @Override
     public long getId() {
+        if (id == 0) {
+            return id = UUID.nameUUIDFromBytes((name + stickyName).getBytes()).hashCode();
+        }
         return id;
     }
 

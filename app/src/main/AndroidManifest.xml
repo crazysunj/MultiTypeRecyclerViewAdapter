@@ -23,6 +23,8 @@
         <activity android:name=".RxLinearActivity" />
         <activity android:name=".RxErrorLinearActivity" />
         <activity android:name=".RxContinuityActivity" />
+        <activity android:name=".RxStandardLinearActivity" />
+        <activity android:name=".RxMixedLinearActivity" />
     </application>
 
 </manifest>

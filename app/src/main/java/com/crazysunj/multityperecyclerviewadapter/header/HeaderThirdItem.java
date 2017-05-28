@@ -3,6 +3,8 @@ package com.crazysunj.multityperecyclerviewadapter.header;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 import com.crazysunj.multityperecyclerviewadapter.sticky.ThirdStickyItem;
 
+import java.util.UUID;
+
 /**
  * Created by sunjian on 2017/3/28.
  */
@@ -13,6 +15,9 @@ public class HeaderThirdItem implements ThirdStickyItem {
     private long id;
     private String stickyName = "第三条粘性";
 
+    public HeaderThirdItem(String name) {
+        this.name = name;
+    }
 
     public HeaderThirdItem(String name, long id) {
         this.name = name;
@@ -25,6 +30,9 @@ public class HeaderThirdItem implements ThirdStickyItem {
 
     @Override
     public long getId() {
+        if (id == 0) {
+            return id = UUID.nameUUIDFromBytes((name + stickyName).getBytes()).hashCode();
+        }
         return id;
     }
 
