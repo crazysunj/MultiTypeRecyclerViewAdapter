@@ -40,15 +40,15 @@ compile 'com.crazysunj:multitypeadapter:1.3.0'
 
 [shimmer-android](https://github.com/facebook/shimmer-android)
 
-## [版本介绍](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/wiki)
-
-## [版本](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/releases)
-
 ## 传送门
 
 博客:[http://crazysunj.com/](http://crazysunj.com/)
 
 邮箱:twsunj@gmail.com
+
+[版本具体介绍](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/wiki)
+
+[所有版本](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/releases)
 
 **欢迎大家的star(fork)和反馈(可发issues或者我的邮箱）。**
 
