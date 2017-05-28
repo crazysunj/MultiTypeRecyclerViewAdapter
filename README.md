@@ -43,7 +43,6 @@ compile 'com.crazysunj:multitypeadapter:1.3.0'
 ## [版本介绍](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/wiki)
 
 ## [版本](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/releases)
-* 1.3.0：支持刷新type错误页面(可自定义)，支持同时刷新多个type(异步)，链式注册资源，支持刷新单个数据，支持清除单个type等
 
 ## 传送门
 
