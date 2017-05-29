@@ -38,6 +38,7 @@ final class ResourcesManager {
     private TypesManager mTypeManager;
     private LoadingsManager mLoadingManager;
     private ErrorsManager mErrorManager;
+    private EmptysManager mEmptysManager;
 
     ResourcesManager() {
 
@@ -61,6 +62,10 @@ final class ResourcesManager {
 
     private ErrorsManager error(@IntRange(from = 0, to = 999) int type) {
         return mErrorManager = new ErrorsManager(type);
+    }
+
+    private EmptysManager empty(@IntRange(from = 0, to = 999) int type) {
+        return mEmptysManager = new EmptysManager(type);
     }
 
     private void register() {
@@ -109,6 +114,15 @@ final class ResourcesManager {
                 int errorType = type - RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER;
                 mLevels.put(errorType, level);
                 mLayouts.put(errorType, errorLayoutResId);
+            }
+        }
+
+        if (mEmptysManager != null) {
+            int emptyLayoutResId = mEmptysManager.emptyLayoutResId;
+            if (emptyLayoutResId != 0) {
+                int emptyType = type - RecyclerViewAdapterHelper.EMPTY_TYPE_DIFFER;
+                mLevels.put(emptyType, level);
+                mLayouts.put(emptyType, emptyLayoutResId);
             }
         }
 
@@ -177,6 +191,11 @@ final class ResourcesManager {
             return ResourcesManager.this.error(type);
         }
 
+        public EmptysManager empty() {
+
+            return ResourcesManager.this.empty(type);
+        }
+
         public void register() {
 
             ResourcesManager.this.register();
@@ -215,6 +234,11 @@ final class ResourcesManager {
             return ResourcesManager.this.error(type);
         }
 
+        public EmptysManager empty() {
+
+            return ResourcesManager.this.empty(type);
+        }
+
         public void register() {
 
             ResourcesManager.this.register();
@@ -238,6 +262,36 @@ final class ResourcesManager {
         public ErrorsManager errorLayoutResId(@LayoutRes int errorLayoutResId) {
 
             this.errorLayoutResId = errorLayoutResId;
+            return this;
+        }
+
+        public EmptysManager empty() {
+
+            return ResourcesManager.this.empty(type);
+        }
+
+        public void register() {
+
+            ResourcesManager.this.register();
+        }
+    }
+
+    /**
+     * empty管理
+     */
+    public class EmptysManager {
+
+        private int type;
+        private int emptyLayoutResId;
+
+        EmptysManager(int type) {
+
+            this.type = type;
+        }
+
+        public EmptysManager emptyLayoutResId(@LayoutRes int emptyLayoutResId) {
+
+            this.emptyLayoutResId = emptyLayoutResId;
             return this;
         }
 

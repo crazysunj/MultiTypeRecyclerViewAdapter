@@ -21,7 +21,7 @@
         <activity android:name=".CommonGridActivity" />
         <activity android:name=".HighLightActivity" />
         <activity android:name=".RxLinearActivity" />
-        <activity android:name=".RxErrorLinearActivity" />
+        <activity android:name=".RxErrorAndEmptyLinearActivity" />
         <activity android:name=".RxContinuityActivity" />
         <activity android:name=".RxStandardLinearActivity" />
         <activity android:name=".RxMixedLinearActivity" />

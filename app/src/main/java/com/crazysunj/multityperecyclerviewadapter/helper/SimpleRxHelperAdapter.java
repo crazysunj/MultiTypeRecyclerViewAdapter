@@ -13,6 +13,7 @@ import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
+import com.crazysunj.multityperecyclerviewadapter.data.SimpleEmptyEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.SimpleErrorEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.ThirdItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFirstItem;
@@ -88,7 +89,13 @@ public class SimpleRxHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, S
                     renderErrorFourth(helper, errorEntity, SimpleHelper.TYPE_TWO);
                 }
             }
+        } else if (item instanceof SimpleEmptyEntity) {
+            renderEmptyThird(helper, (SimpleEmptyEntity) item, SimpleHelper.TYPE_FOUR);
         }
+    }
+
+    private void renderEmptyThird(ShimmerViewHolder helper, SimpleEmptyEntity item, int type) {
+        helper.setText(R.id.empty_title, item.getTitle());
     }
 
     private void renderErrorFourth(ShimmerViewHolder helper, SimpleErrorEntity item, int type) {

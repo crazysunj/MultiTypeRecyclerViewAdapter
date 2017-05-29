@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void click7(View view) {
-        startActivity(new Intent(this, RxErrorLinearActivity.class));
+        startActivity(new Intent(this, RxErrorAndEmptyLinearActivity.class));
     }
 
     public void click8(View view) {

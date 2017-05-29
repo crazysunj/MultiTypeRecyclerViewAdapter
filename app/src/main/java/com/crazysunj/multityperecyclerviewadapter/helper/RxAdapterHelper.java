@@ -37,6 +37,10 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
         this(null);
     }
 
+    public RxAdapterHelper(List<MultiHeaderEntity> data, @RefreshMode int mode) {
+        super(data, mode);
+    }
+
     public RxAdapterHelper(List<MultiHeaderEntity> data) {
         super(data);
     }
@@ -70,8 +74,8 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
 //                R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
 //        registerMoudleWithShimmer(TYPE_THREE, LEVEL_SENCOND, R.layout.item_second, R.layout.item_header_img,
 //                R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
-        registerMoudleWithShimmer(TYPE_FOUR, LEVEL_THIRD, R.layout.item_third,
-                R.layout.item_header_img, R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
+//        registerMoudleWithShimmer(TYPE_FOUR, LEVEL_THIRD, R.layout.item_third,
+//                R.layout.item_header_img, R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
 
 //        registerMoudle(TYPE_ONE)
 //                .level(LEVEL_FIRST)
@@ -81,6 +85,17 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
 //                .loadingLayoutResId(R.layout.layout_default_shimmer_view)
 //                .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
 //                .register();
+
+        registerMoudle(TYPE_FOUR)
+                .level(LEVEL_THIRD)
+                .layoutResId(R.layout.item_third)
+                .headerResId(R.layout.item_header_img)
+                .loading()
+                .loadingLayoutResId(R.layout.layout_default_shimmer_view)
+                .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
+                .empty()
+                .emptyLayoutResId(R.layout.layout_empty)
+                .register();
 //
         registerMoudle(TYPE_TWO)
                 .level(LEVEL_FOURTH)

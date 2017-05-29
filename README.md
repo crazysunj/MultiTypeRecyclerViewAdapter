@@ -1,60 +1,100 @@
 # MultiTypeRecyclerViewAdapter
-一个专注于RecyclerView刷新的库，可配合大多数Adapter
+一个专注于RecyclerView优雅刷新的库，可配合大多数Adapter
 
 ## 特点
 
-* 与Adapter为组合关系，可配合大多数Adapter
+* 简单快捷，可配合大多数Adapter
 * 一行代码刷新相应viewType
-* 支持facebook的shimmer加载效果
 * 支持粘性头
 * 支持异步刷新，可扩展(如配合RxAndroid)
-* 支持加载相应type错误页面
 * 支持高频率刷新(流畅,异步执行)
+* 支持加载facebook的shimmer效果loading页面
+* 支持加载相应type错误页面
+* 支持加载相应type空页面
+* 支持标准(一个type对应一个集合)和混合(一般的多类型集合)自如切换(自动排序集合)
+* 支持集合set,add,remove,clear等操作刷新
 
 ## 效果
-### Rx线性排布
-![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/adapterHelper1.gif)
-
-### 一般线性排布
-![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/adapterHelper2.gif)
+### 线性排布
+![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper1.gif)
 
 ### 方格排布
-![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/adapterHelper3.gif)
+![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper3.gif)
 
 ### 关键字高亮
-![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/adapterHelper4.gif)
+![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper4.gif)
 
-### 刷新错误页面
-![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/adapterHelper5.gif)
+### 错误页面
+![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper5.gif)
+
+### 空页面
+![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper7.gif)
 
 ### 高频率刷新
-![](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/blob/master/img/adapterHelper6.gif)
+![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper6.gif)
+
+## 注意点
+### Type 取值范围
+
+* level [0,+∞)
+* 数据类型 [0,1000)
+* 头类型 [-1000,0)
+* shimmer数据类型 [-2000,-1000)
+* shimmer头类型 [-3000,-2000)
+* error类型 [-4000,-3000)
+* empty类型 [-5000,-4000)
+
+### 差值常量
+
+```
+//头类型差值
+public static final int HEADER_TYPE_DIFFER = 1000;
+//shimmer数据类型差值
+public static final int SHIMMER_DATA_TYPE_DIFFER = 2000;
+//shimmer头类型差值
+public static final int SHIMMER_HEADER_TYPE_DIFFER = 3000;
+//错误类型差值
+public static final int ERROR_TYPE_DIFFER = 4000;
+//空类型差值
+public static final int EMPTY_TYPE_DIFFER = 5000;
+```
+
+### 其他
+
+```
+protected int getPreDataCount();
+```
+获取数据前条目数量，保持数据与adapter一致，比如adapter的position=0添加的是headerview，如果你的adapter有这样的条件，请重写该方法或者自己处理数据的时候注意，否则数据混乱，甚至崩溃都是有可能的。
+
+调用刷新方法的时候请注意刷新模式，有些方法只支持相应刷新模式，需要注意的都加有check语句。
+
+关于entity的id为long类型是考虑刷新效率，你大可采用多类型的UUID的hashcode或者就是普通hashcode作为主键（注意缓存）。倘若还支持不了你的数据，就自定义DiffCallback。
+
+具体可参考Demo。
 
 ## gradle依赖
 
 ```
-compile 'com.crazysunj:multitypeadapter:1.3.0'
+compile 'com.crazysunj:multitypeadapter:1.4.0'
 ```
 
 ## 感谢
 
 [shimmer-android](https://github.com/facebook/shimmer-android)
 
-## 版本([查看更多](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/wiki))
-
-* 1.3.0：支持刷新type错误页面(可自定义)，支持同时刷新多个type(异步)，链式注册资源，支持刷新单个数据，支持清除单个type等
-
-* 1.2.1：默认DiffCallBack判别条件增加type，helper增加Diff刷新回调
-
-* 1.2.0：与Adapter形成组合，修复崩溃，支持关键字高亮，增加loading效果等
-
-* 1.1.0：扩展方格布局等
-
 ## 传送门
 
 博客:[http://crazysunj.com/](http://crazysunj.com/)
 
-邮箱:twsunj@gmail.com
+谷歌邮箱:twsunj@gmail.com
+
+QQ邮箱:387953660@qq.com
+
+[版本具体介绍](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/wiki)
+
+[所有版本](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/releases)
+
+**欢迎大家的star(fork)和反馈(可发issues或者我的邮箱）。**
 
 ## License
 

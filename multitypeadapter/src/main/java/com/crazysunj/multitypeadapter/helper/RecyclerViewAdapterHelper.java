@@ -29,6 +29,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.LruCache;
 import android.util.SparseArray;
 
+import com.crazysunj.multitypeadapter.entity.EmptyEntity;
 import com.crazysunj.multitypeadapter.entity.ErrorEntity;
 import com.crazysunj.multitypeadapter.entity.HandleBase;
 import com.crazysunj.multitypeadapter.entity.LevelData;
@@ -56,6 +57,7 @@ import java.util.regex.Pattern;
  * shimmer数据类型 [-2000,-1000)
  * shimmer头类型 [-3000,-2000)
  * error类型 [-4000,-3000)
+ * empty类型 [-5000,-4000)
  * Created by sunjian on 2017/5/4.
  */
 
@@ -82,6 +84,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     public static final int SHIMMER_HEADER_TYPE_DIFFER = 3000;
     //错误类型差值
     public static final int ERROR_TYPE_DIFFER = 4000;
+    //空类型差值
+    public static final int EMPTY_TYPE_DIFFER = 5000;
 
     //默认viewType
     private static final int DEFAULT_VIEW_TYPE = -1;
@@ -428,6 +432,24 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     }
 
     /**
+     * 刷新相应类型空界面
+     * 如果刷新没有跟数据属性关联，notifyMoudleEmptyChanged(int type)
+     *
+     * @param emptyData 空数据
+     * @param type      空数据类型
+     */
+    @SuppressWarnings("unchecked")
+    public void notifyMoudleEmptyChanged(EmptyEntity emptyData, int type) {
+
+        notifyMoudleChanged(Collections.singletonList((T) emptyData), null, type, REFRESH_HEADER_DATA);
+    }
+
+    public void notifyMoudleEmptyChanged(int type) {
+
+        notifyMoudleEmptyChanged(new EmptyEntity(getRandomId(), type), type);
+    }
+
+    /**
      * 刷新相应类型错误界面
      * 如果刷新没有跟数据属性关联，那么调用notifyMoudleErrorChanged(int type)
      *
@@ -446,7 +468,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     }
 
     /**
-     * 刷新全局数据
+     * 刷新全局数据并切换刷新模式
+     * <p>
+     * 默认为当前刷新模式
      *
      * @param newData     新数据集合
      * @param refreshMode 刷新模式
@@ -456,6 +480,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         checkAdapterBind();
 
+        if (!mIsCanRefresh) {
+            return;
+        }
+        mIsCanRefresh = false;
         mData.clear();
 
         if (refreshMode == MODE_STANDARD) {
@@ -464,6 +492,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
             mData.addAll(newData);
         }
         mAdapter.notifyDataSetChanged();
+
+        mCurrentMode = refreshMode;
+        mIsCanRefresh = true;
     }
 
 
@@ -474,12 +505,29 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      */
     public void notifyDataSetChanged(List<? extends T> newData) {
 
-        notifyDataSetChanged(newData, MODE_STANDARD);
+        notifyDataSetChanged(newData, mCurrentMode);
+    }
+
+    /**
+     * 全局刷新
+     */
+    public void notifyDataSetChanged() {
+
+        checkAdapterBind();
+        if (!mIsCanRefresh) {
+            return;
+        }
+        mIsCanRefresh = false;
+        mAdapter.notifyDataSetChanged();
+        mIsCanRefresh = true;
     }
 
 
     /**
      * 数据比较后刷新，可支持异步，与Type刷新用法一样
+     * 同notifyDataSetChanged可切换模式
+     * <p>
+     * 默认为当前刷新模式
      *
      * @param newData     刷新数据集合
      * @param refreshMode 刷新模式
@@ -497,11 +545,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         notifyMoudleChanged(mNewData, null, DEFAULT_VIEW_TYPE, REFRESH_ALL);
 
+        mCurrentMode = refreshMode;
+
     }
 
     public void notifyDataByDiff(List<? extends T> newData) {
 
-        notifyDataByDiff(newData, MODE_STANDARD);
+        notifyDataByDiff(newData, mCurrentMode);
     }
 
 
@@ -533,9 +583,16 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         checkAdapterBind();
 
+        if (!mIsCanRefresh) {
+            return;
+        }
+        mIsCanRefresh = false;
+
         mData.clear();
 
         mAdapter.notifyDataSetChanged();
+
+        mIsCanRefresh = true;
     }
 
     /**
@@ -549,9 +606,15 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         checkAdapterBind();
 
+        if (!mIsCanRefresh) {
+            return;
+        }
+        mIsCanRefresh = false;
+
         mData.add(position, data);
         mAdapter.notifyItemInserted(position + getPreDataCount());
         compatibilityDataSizeChanged(1);
+        mIsCanRefresh = true;
     }
 
     /**
@@ -565,9 +628,16 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         checkAdapterBind();
 
+        if (!mIsCanRefresh) {
+            return;
+        }
+        mIsCanRefresh = false;
+
         mData.add(data);
         mAdapter.notifyItemInserted(mData.size() + getPreDataCount());
         compatibilityDataSizeChanged(1);
+
+        mIsCanRefresh = true;
     }
 
     /**
@@ -578,6 +648,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     public T removeData(int position) {
 
         checkAdapterBind();
+
+        if (!mIsCanRefresh) {
+            return null;
+        }
+        mIsCanRefresh = false;
 
         T removeData = mData.remove(position);
         int internalPosition = position + getPreDataCount();
@@ -594,6 +669,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
             }
             LevelData<T> levelData = getDataWithType(itemType);
             if (levelData == null) {
+                mIsCanRefresh = true;
+
                 return removeData;
             }
 
@@ -604,12 +681,15 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
                 List<T> list = levelData.getData();
                 if (list == null || list.isEmpty()) {
+                    mIsCanRefresh = true;
+
                     return removeData;
                 }
                 list.remove(removeData);
             }
 
         }
+        mIsCanRefresh = true;
 
         return removeData;
     }
@@ -623,6 +703,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     public void setData(int position, @NonNull T data) {
 
         checkAdapterBind();
+
+        if (!mIsCanRefresh) {
+            return;
+        }
+        mIsCanRefresh = false;
 
         if (mCurrentMode == MODE_STANDARD) {
             T currentData = mData.get(position);
@@ -641,26 +726,31 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
             boolean isHeader = itemType >= -1000 && itemType < 0;
             LevelData<T> levelData = getDataWithType(isHeader ? itemType + HEADER_TYPE_DIFFER : itemType);
             if (levelData == null) {
+                mIsCanRefresh = true;
                 return;
             }
 
             if (isHeader) {
-                
+
                 levelData.setHeader(data);
             } else {
 
                 List<T> list = levelData.getData();
                 if (list == null || list.isEmpty()) {
+                    mIsCanRefresh = true;
                     return;
                 }
                 int oldIndex = list.indexOf(oldData);
                 list.set(oldIndex, data);
             }
+            mIsCanRefresh = true;
             return;
         }
 
         mData.set(position, data);
         mAdapter.notifyItemChanged(position + getPreDataCount());
+
+        mIsCanRefresh = true;
     }
 
     /**
@@ -674,9 +764,15 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         checkAdapterBind();
 
+        if (!mIsCanRefresh) {
+            return;
+        }
+        mIsCanRefresh = false;
+
         mData.addAll(position, data);
         mAdapter.notifyItemRangeInserted(position + getPreDataCount(), data.size());
         compatibilityDataSizeChanged(data.size());
+        mIsCanRefresh = true;
     }
 
     /**
@@ -690,19 +786,45 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
 
         checkAdapterBind();
 
+        if (!mIsCanRefresh) {
+            return;
+        }
+        mIsCanRefresh = false;
         mData.addAll(newData);
         mAdapter.notifyItemRangeInserted(mData.size() - newData.size() + getPreDataCount(), newData.size());
         compatibilityDataSizeChanged(newData.size());
+        mIsCanRefresh = true;
     }
 
     /**
-     * 切换模式
+     * 切换模式，只切换模式以及对数据整理，并不会刷新，如果需要切换模式并刷新数据，请调用
+     * notifyDataSetChanged
      *
-     * @param mode 模式
+     * @param mode   模式
+     * @param isSort 是否整理数据，建议整理否则容易出现数据混乱，崩溃等问题
      */
-    public void switchMode(@RefreshMode int mode) {
+    public void switchMode(@RefreshMode int mode, boolean isSort) {
+
+        if (!mIsCanRefresh) {
+            return;
+        }
+        mIsCanRefresh = false;
 
         mCurrentMode = mode;
+
+        if (isSort && mCurrentMode == MODE_STANDARD) {
+            mNewData.clear();
+            mNewData.addAll(mData);
+            mData.clear();
+            mData.addAll(initStandardNewData(mNewData));
+        }
+
+        mIsCanRefresh = true;
+    }
+
+    public void switchMode(@RefreshMode int mode) {
+
+        switchMode(mode, true);
     }
 
     /**
