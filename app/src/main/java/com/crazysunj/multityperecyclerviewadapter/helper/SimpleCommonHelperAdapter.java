@@ -4,7 +4,6 @@ import android.view.ViewGroup;
 
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.helper.CommonHelperAdapter;
-import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
 import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
@@ -29,7 +28,8 @@ import com.crazysunj.multityperecyclerviewadapter.sticky.ThirdStickyItem;
 public class SimpleCommonHelperAdapter extends CommonHelperAdapter<MultiHeaderEntity, CommonShimmerVH>
         implements StickyHeaderAdapter<CommonShimmerVH> {
 
-    public SimpleCommonHelperAdapter(RecyclerViewAdapterHelper<MultiHeaderEntity> helper) {
+
+    public SimpleCommonHelperAdapter(SimpleCommonHelper helper) {
         super(helper);
     }
 
@@ -67,7 +67,7 @@ public class SimpleCommonHelperAdapter extends CommonHelperAdapter<MultiHeaderEn
     }
 
     @Override
-    public void onBindHeaderViewHolder(CommonShimmerVH holder, int position){
+    public void onBindHeaderViewHolder(CommonShimmerVH holder, int position) {
         MultiHeaderEntity stickyEntity = mData.get(position);
 
         if (stickyEntity instanceof FirstStickyItem) {

@@ -41,6 +41,7 @@ public class RxMixedLinearActivity extends AppCompatActivity {
 
         helper = new RxAdapterHelper(initData(), RxAdapterHelper.MODE_MIXED);
         SimpleRxHelperAdapter adapter = new SimpleRxHelperAdapter(helper);
+        adapter.addHeaderView(View.inflate(this, R.layout.layout_header, null));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 

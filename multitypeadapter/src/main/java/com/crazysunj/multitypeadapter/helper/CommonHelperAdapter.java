@@ -43,9 +43,9 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
     protected Context mContext;
     protected LayoutInflater mLayoutInflater;
     protected List<T> mData;
-    protected RecyclerViewAdapterHelper<T> mHelper;
+    protected RecyclerViewAdapterHelper<T, CommonHelperAdapter<T, K>> mHelper;
 
-    public CommonHelperAdapter(RecyclerViewAdapterHelper<T> helper) {
+    public <R extends RecyclerViewAdapterHelper<T, CommonHelperAdapter<T, K>>> CommonHelperAdapter(R helper) {
 
         mData = helper.getData();
         helper.bindAdapter(this);

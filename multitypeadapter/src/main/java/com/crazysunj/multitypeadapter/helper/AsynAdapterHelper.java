@@ -19,6 +19,7 @@ import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.RecyclerView;
 
 import com.crazysunj.multitypeadapter.entity.HandleBase;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
@@ -38,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  * Created by sunjian on 2017/4/1.
  */
 
-public abstract class AsynAdapterHelper<T extends MultiHeaderEntity> extends RecyclerViewAdapterHelper<T> {
+public abstract class AsynAdapterHelper<T extends MultiHeaderEntity, A extends RecyclerView.Adapter> extends RecyclerViewAdapterHelper<T, A> {
 
     private static final int HANDLE_DATA_UPDATE = 1;
 

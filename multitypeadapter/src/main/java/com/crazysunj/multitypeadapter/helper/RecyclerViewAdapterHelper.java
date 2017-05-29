@@ -61,7 +61,7 @@ import java.util.regex.Pattern;
  * Created by sunjian on 2017/5/4.
  */
 
-public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
+public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A extends RecyclerView.Adapter> {
 
     //标准刷新，相应的type集合在一起
     public static final int MODE_STANDARD = 0;
@@ -122,7 +122,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
     //当前数据
     protected List<T> mData;
     //绑定Adapter
-    private RecyclerView.Adapter mAdapter;
+    protected A mAdapter;
     //资源管理
     private ResourcesManager mResourcesManager;
     //刷新队列，支持高频率刷新
@@ -170,9 +170,18 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      *
      * @param adapter 绑定adapter
      */
-    public void bindAdapter(RecyclerView.Adapter adapter) {
+    public void bindAdapter(A adapter) {
 
         mAdapter = adapter;
+    }
+
+    /**
+     * 返回绑定adapter
+     *
+     * @return RecyclerView.Adapter
+     */
+    public A getBindAdapter() {
+        return mAdapter;
     }
 
     /**
@@ -275,7 +284,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity> {
      */
     public long getHeaderId(int position) {
 
-        return mData.get(position - getPreDataCount()).getHeaderId();
+        int preDataCount = getPreDataCount();
+        if (position < preDataCount) {
+            return StickyHeaderDecoration.NO_HEADER_ID;
+        }
+        return mData.get(position - preDataCount).getHeaderId();
     }
 
     /**

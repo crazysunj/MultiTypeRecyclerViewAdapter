@@ -15,6 +15,7 @@ import com.crazysunj.multityperecyclerviewadapter.data.ThirdItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFirstItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFourthItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderThirdItem;
+import com.crazysunj.multityperecyclerviewadapter.helper.SimpleCommonHelper;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleCommonHelperAdapter;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 
@@ -28,7 +29,7 @@ public class CommonLinearActivity extends AppCompatActivity {
     private TextView textView2;
     private TextView textView3;
     private TextView textView4;
-    private SimpleHelper helper;
+    private SimpleCommonHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class CommonLinearActivity extends AppCompatActivity {
         textView2 = (TextView) findViewById(R.id.text2);
         textView3 = (TextView) findViewById(R.id.text3);
         textView4 = (TextView) findViewById(R.id.text4);
-        helper = new SimpleHelper();
+        helper = new SimpleCommonHelper();
         SimpleCommonHelperAdapter adapter = new SimpleCommonHelperAdapter(helper);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);

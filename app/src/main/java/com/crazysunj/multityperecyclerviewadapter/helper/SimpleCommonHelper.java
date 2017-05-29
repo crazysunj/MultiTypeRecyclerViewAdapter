@@ -1,8 +1,8 @@
 package com.crazysunj.multityperecyclerviewadapter.helper;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.helper.AsynAdapterHelper;
+import com.crazysunj.multitypeadapter.helper.CommonHelperAdapter;
 import com.crazysunj.multityperecyclerviewadapter.R;
 
 /**
@@ -11,7 +11,7 @@ import com.crazysunj.multityperecyclerviewadapter.R;
  * Created by sunjian on 2017/5/4.
  */
 
-public class SimpleHelper extends AsynAdapterHelper<MultiHeaderEntity, BaseQuickAdapter> {
+public class SimpleCommonHelper extends AsynAdapterHelper<MultiHeaderEntity, CommonHelperAdapter<MultiHeaderEntity, CommonShimmerVH>> {
 
     public static final int TYPE_ONE = 0;
     public static final int TYPE_TWO = 1;
@@ -23,7 +23,7 @@ public class SimpleHelper extends AsynAdapterHelper<MultiHeaderEntity, BaseQuick
     public static final int LEVEL_THIRD = 2;
     public static final int LEVEL_FOURTH = 3;
 
-    public SimpleHelper() {
+    public SimpleCommonHelper() {
         super(null);
     }
 
@@ -37,10 +37,5 @@ public class SimpleHelper extends AsynAdapterHelper<MultiHeaderEntity, BaseQuick
                 R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
         registerMoudleWithShimmer(TYPE_FOUR, LEVEL_THIRD, R.layout.item_third,
                 R.layout.item_header_img, R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
-    }
-
-    @Override
-    protected int getPreDataCount() {
-        return mAdapter.getHeaderLayoutCount();
     }
 }

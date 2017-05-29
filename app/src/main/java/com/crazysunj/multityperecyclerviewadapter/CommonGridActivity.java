@@ -17,6 +17,7 @@ import com.crazysunj.multityperecyclerviewadapter.header.HeaderFirstItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFourthItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderSecondItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderThirdItem;
+import com.crazysunj.multityperecyclerviewadapter.helper.SimpleCommonHelper;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleCommonHelperAdapter;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 
@@ -31,7 +32,7 @@ public class CommonGridActivity extends AppCompatActivity {
     private TextView textView3;
     private TextView textView4;
     private GridLayoutManager layout;
-    private SimpleHelper helper;
+    private SimpleCommonHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class CommonGridActivity extends AppCompatActivity {
         textView2 = (TextView) findViewById(R.id.text2);
         textView3 = (TextView) findViewById(R.id.text3);
         textView4 = (TextView) findViewById(R.id.text4);
-        helper = new SimpleHelper();
+        helper = new SimpleCommonHelper();
         SimpleCommonHelperAdapter adapter = new SimpleCommonHelperAdapter(helper);
         layout = new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false);
 

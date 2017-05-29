@@ -2,6 +2,7 @@ package com.crazysunj.multityperecyclerviewadapter.helper;
 
 import android.support.v7.util.DiffUtil;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.crazysunj.multitypeadapter.entity.HandleBase;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
@@ -31,7 +32,7 @@ import static com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper.TYP
  * Created by sunjian on 2017/5/6.
  */
 
-public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity> {
+public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity, BaseQuickAdapter> {
 
     public RxAdapterHelper() {
         this(null);
@@ -127,5 +128,10 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
 //                .loadingLayoutResId(R.layout.layout_default_shimmer_view)
 //                .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
 //                .register();
+    }
+
+    @Override
+    protected int getPreDataCount() {
+        return mAdapter.getHeaderLayoutCount();
     }
 }
