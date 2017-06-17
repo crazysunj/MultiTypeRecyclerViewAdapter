@@ -110,9 +110,7 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 QQ邮箱:387953660@qq.com
 
-[版本具体介绍](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/wiki)
-
-[所有版本](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/releases)
+[版本记录](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/releases)
 
 **欢迎大家的star(fork)和反馈(可发issues或者我的邮箱）。**
 
