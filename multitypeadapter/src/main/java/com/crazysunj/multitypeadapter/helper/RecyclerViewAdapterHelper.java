@@ -28,6 +28,7 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.LruCache;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import com.crazysunj.multitypeadapter.entity.EmptyEntity;
 import com.crazysunj.multitypeadapter.entity.ErrorEntity;
@@ -39,7 +40,6 @@ import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,6 +63,8 @@ import java.util.regex.Pattern;
 
 public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A extends RecyclerView.Adapter> {
 
+    protected static final String TAG = RecyclerViewAdapterHelper.class.getSimpleName();
+
     //标准刷新，相应的type集合在一起
     public static final int MODE_STANDARD = 0;
     //随机模式，操作一般的数据
@@ -72,6 +74,15 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     @Retention(RetentionPolicy.SOURCE)
     public @interface RefreshMode {
     }
+
+    //闲置状态
+    public static final int REFRESH_TYPE_IDLE = -1;
+    //刷新全部
+    public static final int REFRESH_TYPE_ALL = -2;
+    //清除操作
+    public static final int REFRESH_TYPE_CLEAR = -3;
+    //其他
+    public static final int REFRESH_TYPE_OTHER = -4;
 
     //默认数量为0
     private static final int PRE_DATA_COUNT = 0;
@@ -88,7 +99,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     public static final int EMPTY_TYPE_DIFFER = 5000;
 
     //默认viewType
-    private static final int DEFAULT_VIEW_TYPE = -1;
+    public static final int DEFAULT_VIEW_TYPE = 0;
     //默认头的level，处理数据只跟type有关系
     static final int DEFAULT_HEADER_LEVEL = -1;
     //只刷新头
@@ -109,7 +120,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     //loadingview关于数据方面的最大缓存值
     private int mMaxDataCacheCount = 12;
     //loadingview关于头方面的最大缓存值
-    private int mMaxHeaderCacheCount = 6;
+    private int mMaxHeaderCacheCount = 4;
 
     //根据level存储的数据
     private SparseArray<LevelData<T>> mLevelOldData;
@@ -127,9 +138,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     private ResourcesManager mResourcesManager;
     //刷新队列，支持高频率刷新
     private Queue<HandleBase<T>> mRefreshQueue;
+    //全局loading刷新数据
+    private ArrayList<T> mGlobalLoadingEntitys;
 
     //当前模式
     private int mCurrentMode;
+    //当前刷新Type
+    private int mCurrentType;
 
     public RecyclerViewAdapterHelper(List<T> data) {
         this(data, MODE_STANDARD);
@@ -349,6 +364,49 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     }
 
     /**
+     * 全局初始化的loading集合进行刷新
+     */
+    public void notifyShimmerChanged() {
+
+        if (mGlobalLoadingEntitys == null) return;
+
+        mNewData.clear();
+        mNewData.addAll(mGlobalLoadingEntitys);
+
+        notifyMoudleChanged(mNewData, null, REFRESH_TYPE_ALL, REFRESH_ALL);
+    }
+
+    /**
+     * 全局初始化的loading集合根据type进行刷新
+     *
+     * @param type 数据类型
+     */
+    public void notifyShimmerChanged(int type) {
+
+        if (mGlobalLoadingEntitys == null) return;
+
+        int shimmerType = type - SHIMMER_DATA_TYPE_DIFFER;
+        int shimmerHeaderType = type - SHIMMER_HEADER_TYPE_DIFFER;
+        List<T> loadingEntitys = new ArrayList<T>();
+        boolean isHaveHeader = false;
+        for (T entity : mGlobalLoadingEntitys) {
+            int itemType = entity.getItemType();
+
+            if (itemType == shimmerType) {
+                loadingEntitys.add(entity);
+                continue;
+            }
+
+            if (itemType == shimmerHeaderType) {
+                isHaveHeader = true;
+                loadingEntitys.add(entity);
+            }
+        }
+        T header = isHaveHeader ? loadingEntitys.remove(0) : null;
+        notifyMoudleChanged(loadingEntitys, header, type, REFRESH_HEADER_DATA);
+    }
+
+    /**
      * 务必在调用之前确定缓存最大值，可调用setMaxHeaderCacheCount和setMaxHeaderCacheCount
      * 对应notifyMoudleDataChanged
      *
@@ -496,7 +554,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         if (!mIsCanRefresh) {
             return;
         }
-        mIsCanRefresh = false;
+        mCurrentType = REFRESH_TYPE_ALL;
+        onStart();
         mData.clear();
 
         if (refreshMode == MODE_STANDARD) {
@@ -507,7 +566,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         mAdapter.notifyDataSetChanged();
 
         mCurrentMode = refreshMode;
-        mIsCanRefresh = true;
+        onEnd();
     }
 
 
@@ -530,9 +589,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         if (!mIsCanRefresh) {
             return;
         }
-        mIsCanRefresh = false;
+        mCurrentType = REFRESH_TYPE_ALL;
+        onStart();
         mAdapter.notifyDataSetChanged();
-        mIsCanRefresh = true;
+        onEnd();
     }
 
 
@@ -556,7 +616,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
             mNewData.addAll(newData);
         }
 
-        notifyMoudleChanged(mNewData, null, DEFAULT_VIEW_TYPE, REFRESH_ALL);
+        notifyMoudleChanged(mNewData, null, REFRESH_TYPE_ALL, REFRESH_ALL);
 
         mCurrentMode = refreshMode;
 
@@ -599,13 +659,16 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         if (!mIsCanRefresh) {
             return;
         }
-        mIsCanRefresh = false;
+        mCurrentType = REFRESH_TYPE_CLEAR;
+        onStart();
 
         mData.clear();
 
+        mLevelOldData.clear();
+
         mAdapter.notifyDataSetChanged();
 
-        mIsCanRefresh = true;
+        onEnd();
     }
 
     /**
@@ -622,12 +685,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         if (!mIsCanRefresh) {
             return;
         }
-        mIsCanRefresh = false;
+        mCurrentType = REFRESH_TYPE_OTHER;
+        onStart();
 
         mData.add(position, data);
         mAdapter.notifyItemInserted(position + getPreDataCount());
         compatibilityDataSizeChanged(1);
-        mIsCanRefresh = true;
+        onEnd();
     }
 
     /**
@@ -644,13 +708,14 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         if (!mIsCanRefresh) {
             return;
         }
-        mIsCanRefresh = false;
+        mCurrentType = REFRESH_TYPE_OTHER;
+        onStart();
 
         mData.add(data);
         mAdapter.notifyItemInserted(mData.size() + getPreDataCount());
         compatibilityDataSizeChanged(1);
 
-        mIsCanRefresh = true;
+        onEnd();
     }
 
     /**
@@ -665,7 +730,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         if (!mIsCanRefresh) {
             return null;
         }
-        mIsCanRefresh = false;
+        mCurrentType = REFRESH_TYPE_OTHER;
+        onStart();
 
         T removeData = mData.remove(position);
         int internalPosition = position + getPreDataCount();
@@ -682,8 +748,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
             }
             LevelData<T> levelData = getDataWithType(itemType);
             if (levelData == null) {
-                mIsCanRefresh = true;
-
+                onEnd();
                 return removeData;
             }
 
@@ -694,16 +759,15 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
 
                 List<T> list = levelData.getData();
                 if (list == null || list.isEmpty()) {
-                    mIsCanRefresh = true;
-
+                    onEnd();
                     return removeData;
                 }
                 list.remove(removeData);
             }
 
         }
-        mIsCanRefresh = true;
 
+        onEnd();
         return removeData;
     }
 
@@ -711,7 +775,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
      * 修改position位置数据
      *
      * @param position 修改位置
-     * @param data     修改数据
+     * @param data     修改数据，数据不可为空，不然会引起不必要的麻烦
      */
     public void setData(int position, @NonNull T data) {
 
@@ -720,17 +784,20 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         if (!mIsCanRefresh) {
             return;
         }
-        mIsCanRefresh = false;
+        mCurrentType = REFRESH_TYPE_OTHER;
+        onStart();
 
         if (mCurrentMode == MODE_STANDARD) {
             T currentData = mData.get(position);
 
             if (currentData == null) {
-                throw new DataException("please your data !");
+                onEnd();
+                throw new DataException("please check your data !");
             }
 
             int itemType = data.getItemType();
             if (currentData.getItemType() != itemType) {
+                onEnd();
                 throw new DataException("please check your updated data's type !");
             }
 
@@ -739,7 +806,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
             boolean isHeader = itemType >= -1000 && itemType < 0;
             LevelData<T> levelData = getDataWithType(isHeader ? itemType + HEADER_TYPE_DIFFER : itemType);
             if (levelData == null) {
-                mIsCanRefresh = true;
+                onEnd();
                 return;
             }
 
@@ -750,20 +817,20 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
 
                 List<T> list = levelData.getData();
                 if (list == null || list.isEmpty()) {
-                    mIsCanRefresh = true;
+                    onEnd();
                     return;
                 }
                 int oldIndex = list.indexOf(oldData);
                 list.set(oldIndex, data);
             }
-            mIsCanRefresh = true;
+            onEnd();
             return;
         }
 
         mData.set(position, data);
         mAdapter.notifyItemChanged(position + getPreDataCount());
 
-        mIsCanRefresh = true;
+        onEnd();
     }
 
     /**
@@ -780,12 +847,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         if (!mIsCanRefresh) {
             return;
         }
-        mIsCanRefresh = false;
+        mCurrentType = REFRESH_TYPE_OTHER;
+        onStart();
 
         mData.addAll(position, data);
         mAdapter.notifyItemRangeInserted(position + getPreDataCount(), data.size());
         compatibilityDataSizeChanged(data.size());
-        mIsCanRefresh = true;
+        onEnd();
     }
 
     /**
@@ -802,11 +870,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         if (!mIsCanRefresh) {
             return;
         }
-        mIsCanRefresh = false;
+        mCurrentType = REFRESH_TYPE_OTHER;
+        onStart();
         mData.addAll(newData);
         mAdapter.notifyItemRangeInserted(mData.size() - newData.size() + getPreDataCount(), newData.size());
         compatibilityDataSizeChanged(newData.size());
-        mIsCanRefresh = true;
+        onEnd();
     }
 
     /**
@@ -821,7 +890,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         if (!mIsCanRefresh) {
             return;
         }
-        mIsCanRefresh = false;
+        mCurrentType = REFRESH_TYPE_ALL;
+        onStart();
 
         mCurrentMode = mode;
 
@@ -832,7 +902,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
             mData.addAll(initStandardNewData(mNewData));
         }
 
-        mIsCanRefresh = true;
+        onEnd();
     }
 
     public void switchMode(@RefreshMode int mode) {
@@ -848,6 +918,16 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     public int getCurrentRefreshMode() {
 
         return mCurrentMode;
+    }
+
+    /**
+     * 返回当前刷新Type
+     *
+     * @return RefreshMode
+     */
+    public int getCurrentRefreshType() {
+
+        return mCurrentType;
     }
 
     /**
@@ -916,7 +996,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         if (!mIsCanRefresh || !offer) {
             return;
         }
-        mIsCanRefresh = false;
+        mCurrentType = type;
+        onStart();
 
         HandleBase<T> pollData = mRefreshQueue.poll();
         if (pollData != null) {
@@ -948,6 +1029,21 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     protected abstract void registerMoudle();
 
     /**
+     * 刷新生命周期-开始
+     */
+    protected void onStart() {
+        mIsCanRefresh = false;
+    }
+
+    /**
+     * 刷新生命周期-结束
+     */
+    protected void onEnd() {
+        mIsCanRefresh = true;
+        mCurrentType = REFRESH_TYPE_IDLE;
+    }
+
+    /**
      * 开始刷新
      *
      * @param diffResult 返回的diffResult
@@ -965,7 +1061,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         if (pollData != null) {
             startRefresh(pollData);
         } else {
-            mIsCanRefresh = true;
+            onEnd();
         }
     }
 
@@ -1106,10 +1202,16 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
 
         int level = mResourcesManager.getLevel(type);
         if (level <= DEFAULT_HEADER_LEVEL) {
+            onEnd();
             throw new DataException("boy , are you sure register this data type (not include header type) ?");
         }
 
         return level;
+    }
+
+    private List<T> createShimmerDatas(int type, @IntRange(from = 1) int dataCount) {
+
+        return createShimmerDatas(type, dataCount, true);
     }
 
     /**
@@ -1118,7 +1220,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
      * @return 根据type产生loading的数据集合
      */
     @SuppressWarnings("unchecked")
-    private List<T> createShimmerDatas(int type, @IntRange(from = 1) int dataCount) {
+    private List<T> createShimmerDatas(int type, @IntRange(from = 1) int dataCount, boolean isSupportSticky) {
 
         if (mDataCache == null) {
             mDataCache = new LruCache<Integer, List<T>>(mMaxDataCacheCount);
@@ -1142,11 +1244,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
             datas = datas.subList(0, dataCount);
         }
         long headerId = StickyHeaderDecoration.NO_HEADER_ID;
-        LevelData<T> levelData = getDataWithType(type);
-        if (levelData != null) {
-            List<T> data = levelData.getData();
-            if (data != null && !data.isEmpty()) {
-                headerId = data.get(0).getHeaderId();
+        if (isSupportSticky) {
+            LevelData<T> levelData = getDataWithType(type);
+            if (levelData != null) {
+                List<T> data = levelData.getData();
+                if (data != null && !data.isEmpty()) {
+                    headerId = data.get(0).getHeaderId();
+                }
             }
         }
         for (int i = 0; i < dataCount; i++) {
@@ -1163,12 +1267,17 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         return datas;
     }
 
+    private T createShimmerHeader(int type) {
+
+        return createShimmerHeader(type, true);
+    }
+
     /**
      * @param type 数据类型
      * @return 根据type产生loading的头
      */
     @SuppressWarnings("unchecked")
-    private T createShimmerHeader(int type) {
+    private T createShimmerHeader(int type, boolean isSupportSticky) {
 
         if (mHeaderCache == null) {
             mHeaderCache = new LruCache<Integer, T>(mMaxHeaderCacheCount);
@@ -1183,11 +1292,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
 
         if (header instanceof ShimmerEntity) {
             long headerId = StickyHeaderDecoration.NO_HEADER_ID;
-            LevelData<T> levelData = getDataWithType(type);
-            if (levelData != null) {
-                List<T> data = levelData.getData();
-                if (data != null && !data.isEmpty()) {
-                    headerId = data.get(0).getHeaderId();
+            if (isSupportSticky) {
+                LevelData<T> levelData = getDataWithType(type);
+                if (levelData != null) {
+                    List<T> data = levelData.getData();
+                    if (data != null && !data.isEmpty()) {
+                        headerId = data.get(0).getHeaderId();
+                    }
                 }
             }
             ShimmerEntity head = (ShimmerEntity) header;
@@ -1197,6 +1308,49 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         }
 
         return header;
+    }
+
+    /**
+     * @param loadingConfig 配置项
+     */
+    public void initGlobalLoadingConfig(LoadingConfig loadingConfig) {
+
+        SparseArray<LoadingConfigEntity> configs = loadingConfig.getConfigs();
+        int size = configs.size();
+        if (size == 0) {
+            return;
+        }
+
+        SparseArray<LoadingConfigEntity> temConfigs = new SparseArray<LoadingConfigEntity>();
+        SparseIntArray types = new SparseIntArray();
+        for (int i = 0; i < size; i++) {
+            int type = configs.keyAt(i);
+            int level = getLevel(type);
+            temConfigs.put(level, configs.valueAt(i));
+            types.put(level, type);
+        }
+
+        if (mGlobalLoadingEntitys == null) {
+            mGlobalLoadingEntitys = new ArrayList<T>();
+        } else {
+            mGlobalLoadingEntitys.clear();
+        }
+
+        for (int i = 0; i < size; i++) {
+            LoadingConfigEntity entity = temConfigs.valueAt(i);
+
+            int level = temConfigs.keyAt(i);
+            int type = types.get(level);
+
+            if (entity.isHaveHeader) {
+                mGlobalLoadingEntitys.add(createShimmerHeader(type, entity.isSupportSticky));
+            }
+
+            if (entity.count > 0) {
+                mGlobalLoadingEntitys.addAll(createShimmerDatas(type, entity.count, entity.isSupportSticky));
+            }
+        }
+
     }
 
     /**
@@ -1218,7 +1372,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     private void checkStandardMode() {
 
         if (mCurrentMode == MODE_MIXED) {
-            mIsCanRefresh = true;
+            onEnd();
             mRefreshQueue.clear();
             throw new RefreshException("current refresh mode can't support random refresh mode !");
         }
@@ -1230,6 +1384,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     private void checkMixedMode() {
 
         if (mCurrentMode == MODE_STANDARD) {
+            onEnd();
             throw new RefreshException("current refresh mode can't support standard refresh mode !");
         }
     }
@@ -1240,6 +1395,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     private void checkAdapterBind() {
 
         if (mAdapter == null) {
+            onEnd();
             throw new AdapterBindException("are you sure bind the adapter ?");
         }
     }
@@ -1273,16 +1429,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
 
         List<T> addData = new ArrayList<T>();
         int size = temDatas.size();
-        int[] levels = new int[size];
         for (int i = 0; i < size; i++) {
-            levels[i] = temDatas.keyAt(i);
-        }
-
-        Arrays.sort(levels);
-
-        for (int i = 0; i < size; i++) {
-            int level = levels[i];
-
+            int level = temDatas.keyAt(i);
             List<T> data = temDatas.get(level);
             T header = temHeaders.get(level);
             mLevelOldData.put(level, new LevelData<T>(data, header));

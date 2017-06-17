@@ -1,6 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.helper;
 
 import android.support.v7.util.DiffUtil;
+import android.util.Log;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.crazysunj.multitypeadapter.entity.HandleBase;
@@ -64,6 +65,18 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
                         handleResult(diffResult);
                     }
                 });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "刷新开始---当前Type:" + getCurrentRefreshType());
+    }
+
+    @Override
+    protected void onEnd() {
+        super.onEnd();
+        Log.d(TAG, "刷新结束");
     }
 
     @Override

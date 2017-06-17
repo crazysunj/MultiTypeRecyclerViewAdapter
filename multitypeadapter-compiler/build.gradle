@@ -1,0 +1,21 @@
+apply plugin: 'java'
+apply plugin: 'bintray-release'
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.google.auto.service:auto-service:1.0-rc3'
+    compile 'com.squareup:javapoet:1.9.0'
+    compile project(':multitypeadapter-annotation')
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+publish {
+    artifactId = 'multitypeadapter-compiler'
+    userOrg = rootProject.ext.userOrg
+    groupId = rootProject.ext.groupId
+    uploadName = rootProject.ext.uploadName
+    publishVersion = rootProject.ext.publishVersion
+    desc = rootProject.ext.desc
+    website = rootProject.ext.website
+    licences = rootProject.ext.licences
+}

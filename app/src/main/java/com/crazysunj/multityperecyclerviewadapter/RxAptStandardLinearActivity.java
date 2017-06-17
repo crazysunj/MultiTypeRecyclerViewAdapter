@@ -6,15 +6,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
-import com.crazysunj.multitypeadapter.helper.LoadingConfig;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
+import com.crazysunj.multityperecyclerviewadapter.apt.RxAptHelperAdapter;
+import com.crazysunj.multityperecyclerviewadapter.apt.RxAptHelperAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
@@ -23,28 +23,26 @@ import com.crazysunj.multityperecyclerviewadapter.header.HeaderFirstItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFourthItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderSecondItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderThirdItem;
-import com.crazysunj.multityperecyclerviewadapter.helper.RxAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
-import com.crazysunj.multityperecyclerviewadapter.helper.SimpleRxHelperAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class RxStandardLinearActivity extends AppCompatActivity {
+public class RxAptStandardLinearActivity extends AppCompatActivity {
 
     private TextView textView1;
     private TextView textView2;
     private TextView textView3;
     private TextView textView4;
-    private RxAdapterHelper helper;
+    private RxAptHelperAdapterHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_standard);
-        setTitle("Rx标准刷新线性排布");
+        setContentView(R.layout.activity_standard_apt);
+        setTitle("RxApt标准刷新线性排布");
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         textView1 = (TextView) findViewById(R.id.text1);
         textView2 = (TextView) findViewById(R.id.text2);
@@ -54,14 +52,8 @@ public class RxStandardLinearActivity extends AppCompatActivity {
 
         List<MultiHeaderEntity> list = initData();
 
-        helper = new RxAdapterHelper(list);
-        helper.initGlobalLoadingConfig(new LoadingConfig.Builder()
-                .setLoading(true, SimpleHelper.TYPE_ONE, 3, true)
-                .setLoading(true, SimpleHelper.TYPE_TWO, 2)
-                .setLoading(true, SimpleHelper.TYPE_THREE, true)
-                .setLoading(true, SimpleHelper.TYPE_FOUR, 4, true)
-                .build());
-        SimpleRxHelperAdapter adapter = new SimpleRxHelperAdapter(helper);
+        helper = new RxAptHelperAdapterHelper(list);
+        RxAptHelperAdapter adapter = new RxAptHelperAdapter(helper);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
         recyclerView.setAdapter(adapter);
@@ -155,24 +147,11 @@ public class RxStandardLinearActivity extends AppCompatActivity {
 
     public void click1(View view) {
 
-        helper.notifyShimmerChanged();
-        view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                helper.notifyDataSetChanged(initData());
-            }
-        }, 3000);
-
+        helper.notifyDataSetChanged(initData());
     }
 
     public void click2(View view) {
-        helper.notifyShimmerChanged();
-        view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                helper.notifyDataByDiff(initData());
-            }
-        }, 8000);
+        helper.notifyDataByDiff(initData());
 
     }
 
@@ -209,11 +188,6 @@ public class RxStandardLinearActivity extends AppCompatActivity {
         return null;
     }
 
-    /**
-     * 修改数据不可为空
-     *
-     * @param view
-     */
     public void click4(View view) {
         try {
             Random random = new Random();
@@ -222,7 +196,6 @@ public class RxStandardLinearActivity extends AppCompatActivity {
             helper.setData(position, getChangeItem(itemType));
             Toast.makeText(this, "修改了第" + (position + 1) + "个数据,Type为" + itemType, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Log.d("RecyclerViewAdapter", e.getMessage());
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -247,7 +220,7 @@ public class RxStandardLinearActivity extends AppCompatActivity {
         } else if (itemType == SimpleHelper.TYPE_TWO - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER) {
             return new HeaderFourthItem("我的天，类型4的头被修改了 " + date);
         }
-        throw new RuntimeException("返回为空");
+        return null;
     }
 
     public void click5(View view) {
@@ -273,11 +246,5 @@ public class RxStandardLinearActivity extends AppCompatActivity {
     public void click9(View view) {
 
         helper.clear();
-    }
-
-    public void click10(View view) {
-        Random random = new Random();
-        int type = random.nextInt(4);
-        helper.notifyShimmerChanged(type);
     }
 }

@@ -1,16 +1,15 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
-version = "1.4.0"
+apply plugin: 'bintray-release'
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 12
         targetSdkVersion 25
-        versionCode 6
-        versionName version
+        versionCode 1
+        versionName rootProject.ext.publishVersion
     }
     buildTypes {
         release {
@@ -29,81 +28,18 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile project(':multitypeadapter-annotation')
 }
 
-def siteUrl = 'https://github.com/crazysunj/MultiTypeRecyclerViewAdapter'
-def gitUrl = 'https://github.com/crazysunj/MultiTypeRecyclerViewAdapter.git'
-group = "com.crazysunj"
-install {
-    repositories.mavenInstaller {
-        pom {
-            project {
-                packaging 'aar'
-                name 'MultiTypeRecyclerViewAdapter For Android'
-                url siteUrl
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'twsunj'
-                        name 'crazysunj'
-                        email 'twsunj@gmail.com'
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-            }
-        }
-    }
-}
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+publish {
+
+    artifactId = 'multitypeadapter'
+    userOrg = rootProject.ext.userOrg
+    groupId = rootProject.ext.groupId
+    uploadName = rootProject.ext.uploadName
+    publishVersion = rootProject.ext.publishVersion
+    desc = rootProject.ext.desc
+    website = rootProject.ext.website
+    licences = rootProject.ext.licences
 }
 
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    failOnError false
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        name = "MultiTypeAdapter"
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        publish = true
-    }
-}
-
-javadoc {
-    options {
-        encoding "UTF-8"
-        charSet 'UTF-8'
-        author true
-        version true
-        links "http://docs.oracle.com/javase/7/docs/api"
-    }
-}

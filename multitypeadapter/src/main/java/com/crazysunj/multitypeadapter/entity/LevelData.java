@@ -22,7 +22,7 @@ import java.util.List;
  * Created by sunjian on 2017/3/27.
  */
 
-public class LevelData<T> {
+public final class LevelData<T> {
 
     private List<T> data;
     private T header;

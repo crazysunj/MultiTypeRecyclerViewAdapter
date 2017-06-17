@@ -50,14 +50,24 @@ public class SimpleRxHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, S
     }
 
     @Override
+    public void onViewAttachedToWindow(ShimmerViewHolder holder) {
+        holder.startAnim();
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(ShimmerViewHolder holder) {
+        holder.stopAnim();
+    }
+
+
+    @Override
     protected int getDefItemViewType(int position) {
         return mHelper.getItemViewType(position);
     }
 
     @Override
     protected void convert(ShimmerViewHolder helper, MultiHeaderEntity item) {
-
-        Log.d(TAG, "item.getId():" + item.getId());
+        Log.d(TAG, "item.getId():" + item.getId() + "item.getItemType():" + item.getItemType());
         if (item instanceof FirstItem) {
             renderFirst(helper, (FirstItem) item);
         } else if (item instanceof SecondItem) {

@@ -81,6 +81,17 @@ public class SimpleCommonHelperAdapter extends CommonHelperAdapter<MultiHeaderEn
         }
     }
 
+    @Override
+    public void onViewAttachedToWindow(CommonShimmerVH holder) {
+        holder.startAnim();
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(CommonShimmerVH holder) {
+        holder.stopAnim();
+    }
+
+
     private void renderHeaderFourth(CommonShimmerVH holder, HeaderFourthItem item) {
         holder.getTextView(R.id.item_header_name).setText(item.getName());
         holder.getImageView(R.id.item_header_img).setImageResource(R.mipmap.ic_launcher);

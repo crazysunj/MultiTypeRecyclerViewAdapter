@@ -1,0 +1,19 @@
+apply plugin: 'java'
+apply plugin: 'bintray-release'
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+publish {
+    artifactId = 'multitypeadapter-annotation'
+    userOrg = rootProject.ext.userOrg
+    groupId = rootProject.ext.groupId
+    uploadName = rootProject.ext.uploadName
+    publishVersion = rootProject.ext.publishVersion
+    desc = rootProject.ext.desc
+    website = rootProject.ext.website
+    licences = rootProject.ext.licences
+}

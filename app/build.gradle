@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.neenbedankt.android-apt'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
@@ -26,7 +26,11 @@ dependencies {
     })
 
     compile project(':multitypeadapter')
-//    compile 'com.crazysunj:multitypeadapter:1.4.0'
+    apt project(':multitypeadapter-compiler')
+
+//    compile 'com.crazysunj:multitypeadapter:1.5.0'
+//    apt 'com.crazysunj:multitypeadapter-compiler:1.5.0'
+
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.1'
     testCompile 'junit:junit:4.12'

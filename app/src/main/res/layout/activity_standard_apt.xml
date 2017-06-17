@@ -78,13 +78,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="click10"
-            android:text="随机刷新某个type" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="click3"
             android:text="随机移除一个数据(包括头)" />
 

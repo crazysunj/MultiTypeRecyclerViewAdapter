@@ -25,6 +25,9 @@
         <activity android:name=".RxContinuityActivity" />
         <activity android:name=".RxStandardLinearActivity" />
         <activity android:name=".RxMixedLinearActivity" />
+        <activity android:name=".RxAptDefaultActivity" />
+        <activity android:name=".RxAptStandardLinearActivity" />
+        <activity android:name=".RxAptErrorAndEmptyLinearActivity" />
     </application>
 
 </manifest>

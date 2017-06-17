@@ -54,4 +54,16 @@ public class MainActivity extends AppCompatActivity {
     public void click10(View view) {
         startActivity(new Intent(this, RxMixedLinearActivity.class));
     }
+
+    public void click11(View view) {
+        startActivity(new Intent(this, RxAptDefaultActivity.class));
+    }
+
+    public void click12(View view) {
+        startActivity(new Intent(this, RxAptStandardLinearActivity.class));
+    }
+
+    public void click13(View view) {
+        startActivity(new Intent(this, RxAptErrorAndEmptyLinearActivity.class));
+    }
 }
