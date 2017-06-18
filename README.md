@@ -75,7 +75,7 @@ protected int getPreDataCount();
 
 关于entity的id为long类型是考虑刷新效率，你大可采用多种属性的UUID的hashCode或者就是普通hashCode作为主键（参考demo，注意缓存）。倘若还支持不了你的数据，就自定义DiffCallback。
 
-具体可参考Demo，建议把helper封装在Adapter中。
+具体可参考Demo，建议把helper封装在Adapter中，helper的实体泛型为MultiHeaderEntity。
 
 ## gradle依赖
 
