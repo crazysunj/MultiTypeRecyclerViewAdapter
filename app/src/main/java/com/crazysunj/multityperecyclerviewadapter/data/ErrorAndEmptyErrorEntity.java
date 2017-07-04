@@ -1,6 +1,5 @@
 package com.crazysunj.multityperecyclerviewadapter.data;
 
-import com.crazysunj.multitypeadapter.entity.DefaultMultiHeaderEntity;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 
 import java.util.UUID;
@@ -11,12 +10,12 @@ import java.util.UUID;
  * Created by sunjian on 2017/5/16.
  */
 
-public class SimpleErrorEntity extends DefaultMultiHeaderEntity {
+public class ErrorAndEmptyErrorEntity extends NoStickyEntity {
 
     private long id;
     private int type;
 
-    public SimpleErrorEntity(int type) {
+    public ErrorAndEmptyErrorEntity(int type) {
         this.id = UUID.nameUUIDFromBytes(("error_" + type).getBytes()).hashCode();
         this.type = type;
     }

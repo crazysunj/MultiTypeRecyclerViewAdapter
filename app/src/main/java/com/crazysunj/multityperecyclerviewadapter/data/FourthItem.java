@@ -55,6 +55,16 @@ public class FourthItem implements FourthStickyItem {
     }
 
     @Override
+    public void setHeaderId(long headerId) {
+
+    }
+
+    @Override
+    public void setStickyName(String stickyName) {
+
+    }
+
+    @Override
     public String getStickyName() {
         return stickyName;
     }

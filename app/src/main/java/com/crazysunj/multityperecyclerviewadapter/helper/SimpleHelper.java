@@ -29,14 +29,42 @@ public class SimpleHelper extends AsynAdapterHelper<MultiHeaderEntity, BaseQuick
 
     @Override
     protected void registerMoudle() {
-        registerMoudleWithShimmer(TYPE_ONE, LEVEL_FIRST, R.layout.item_first,
-                R.layout.item_header, R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
-        registerMoudleWithShimmer(TYPE_TWO, LEVEL_FOURTH, R.layout.item_fourth, R.layout.item_header_img,
-                R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
-        registerMoudleWithShimmer(TYPE_THREE, LEVEL_SENCOND, R.layout.item_second, R.layout.item_header_img,
-                R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
-        registerMoudleWithShimmer(TYPE_FOUR, LEVEL_THIRD, R.layout.item_third,
-                R.layout.item_header_img, R.layout.layout_default_shimmer_view, R.layout.layout_default_shimmer_header_view);
+        registerMoudle(TYPE_ONE)
+                .level(LEVEL_FIRST)
+                .layoutResId(R.layout.item_first)
+                .headerResId(R.layout.item_header)
+                .loading()
+                .loadingLayoutResId(R.layout.layout_default_shimmer_view)
+                .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
+                .register();
+
+
+        registerMoudle(TYPE_TWO)
+                .level(LEVEL_FOURTH)
+                .layoutResId(R.layout.item_fourth)
+                .headerResId(R.layout.item_header_img)
+                .loading()
+                .loadingLayoutResId(R.layout.layout_default_shimmer_view)
+                .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
+                .register();
+
+        registerMoudle(TYPE_THREE)
+                .level(LEVEL_SENCOND)
+                .layoutResId(R.layout.item_second)
+                .headerResId(R.layout.item_header_img)
+                .loading()
+                .loadingLayoutResId(R.layout.layout_default_shimmer_view)
+                .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
+                .register();
+
+        registerMoudle(TYPE_FOUR)
+                .level(LEVEL_THIRD)
+                .layoutResId(R.layout.item_third)
+                .headerResId(R.layout.item_header_img)
+                .loading()
+                .loadingLayoutResId(R.layout.layout_default_shimmer_view)
+                .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
+                .register();
     }
 
     @Override

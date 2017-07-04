@@ -26,10 +26,12 @@ public final class LevelData<T> {
 
     private List<T> data;
     private T header;
+    private T footer;
 
-    public LevelData(List<T> data, T header) {
+    public LevelData(List<T> data, T header, T footer) {
         this.data = data;
         this.header = header;
+        this.footer = footer;
     }
 
     public List<T> getData() {
@@ -46,5 +48,17 @@ public final class LevelData<T> {
 
     public void setHeader(T newHeader) {
         header = newHeader;
+    }
+
+    public T getFooter() {
+        return footer;
+    }
+
+    public void removeFooter() {
+        footer = null;
+    }
+
+    public void setFooter(T newFooter) {
+        footer = newFooter;
     }
 }

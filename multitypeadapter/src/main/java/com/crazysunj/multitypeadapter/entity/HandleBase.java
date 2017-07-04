@@ -23,19 +23,17 @@ import java.util.List;
  */
 public final class HandleBase<T> {
     private List<T> newData;
-    private T newHeader;
+    private T header;
+    private T footer;
     private int refreshType;
     private int type;
 
-    public HandleBase(List<T> newData, T newHeader, int type, int refreshType) {
+    public HandleBase(List<T> newData, T header, T footer, int type, int refreshType) {
         this.newData = newData;
-        this.newHeader = newHeader;
+        this.header = header;
+        this.footer = footer;
         this.type = type;
         this.refreshType = refreshType;
-    }
-
-    public int getType() {
-        return type;
     }
 
     public List<T> getNewData() {
@@ -43,7 +41,15 @@ public final class HandleBase<T> {
     }
 
     public T getNewHeader() {
-        return newHeader;
+        return header;
+    }
+
+    public T getNewFooter() {
+        return footer;
+    }
+
+    public int getType() {
+        return type;
     }
 
     public int getRefreshType() {

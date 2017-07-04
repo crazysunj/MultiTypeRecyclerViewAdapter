@@ -10,16 +10,16 @@ import android.widget.TextView;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
+import com.crazysunj.multityperecyclerviewadapter.data.MyErrorAndEmptyEmptyEntity;
+import com.crazysunj.multityperecyclerviewadapter.data.MyErrorAndEmptyErrorEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
-import com.crazysunj.multityperecyclerviewadapter.data.SimpleEmptyEntity;
-import com.crazysunj.multityperecyclerviewadapter.data.SimpleErrorEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.ThirdItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFirstItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFourthItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderThirdItem;
-import com.crazysunj.multityperecyclerviewadapter.helper.RxAdapterHelper;
+import com.crazysunj.multityperecyclerviewadapter.helper.ErrorAndEmptyAdapterHelper;
+import com.crazysunj.multityperecyclerviewadapter.helper.ErrorAndrEmptyHelperAdapter;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
-import com.crazysunj.multityperecyclerviewadapter.helper.SimpleRxHelperAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +31,9 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
     private TextView textView2;
     private TextView textView3;
     private TextView textView4;
-    private RxAdapterHelper helper;
-    private SimpleErrorEntity errorfourthEntity = new SimpleErrorEntity("我是第四种错误title", "我是第四种错误message", "我是第四种错误message".hashCode(), SimpleHelper.TYPE_TWO);
-    private SimpleEmptyEntity emptyEntity = new SimpleEmptyEntity("我肚子好饿啊", SimpleHelper.TYPE_FOUR);
+    private ErrorAndEmptyAdapterHelper helper;
+    private MyErrorAndEmptyErrorEntity errorfourthEntity = new MyErrorAndEmptyErrorEntity(SimpleHelper.TYPE_TWO, "我是第四种错误title", "我是第四种错误message");
+    private MyErrorAndEmptyEmptyEntity emptyEntity = new MyErrorAndEmptyEmptyEntity(SimpleHelper.TYPE_FOUR, "我肚子好饿啊");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +45,12 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
         textView2 = (TextView) findViewById(R.id.text2);
         textView3 = (TextView) findViewById(R.id.text3);
         textView4 = (TextView) findViewById(R.id.text4);
-        helper = new RxAdapterHelper();
-        SimpleRxHelperAdapter adapter = new SimpleRxHelperAdapter(helper);
+        helper = new ErrorAndEmptyAdapterHelper();
+        ErrorAndrEmptyHelperAdapter adapter = new ErrorAndrEmptyHelperAdapter(helper);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
         recyclerView.setAdapter(adapter);
-        adapter.setOnErrorCallback(new SimpleRxHelperAdapter.OnErrorCallback() {
+        adapter.setOnErrorCallback(new ErrorAndrEmptyHelperAdapter.OnErrorCallback() {
             @Override
             public void onClick(View v, int type) {
                 int id = v.getId();
@@ -146,9 +146,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
 
     }
 
-    private int refreshThirdCount = 0;
     private int refreshFirstCount = 0;
-
 
     public void click3(View view) {
 

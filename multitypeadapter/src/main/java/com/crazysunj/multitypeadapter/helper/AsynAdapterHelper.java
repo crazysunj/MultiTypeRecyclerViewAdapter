@@ -97,9 +97,10 @@ public abstract class AsynAdapterHelper<T extends MultiHeaderEntity, A extends R
         public void run() {
             List<T> newData = mHandleBase.getNewData();
             T newHeader = mHandleBase.getNewHeader();
+            T newFooter = mHandleBase.getNewFooter();
             int refreshType = mHandleBase.getRefreshType();
             int type = mHandleBase.getType();
-            DiffUtil.DiffResult result = handleRefresh(newData, newHeader, type, refreshType);
+            DiffUtil.DiffResult result = handleRefresh(newData, newHeader, newFooter, type, refreshType);
             Message message = mHandler.obtainMessage(HANDLE_DATA_UPDATE);
             message.obj = result;
             message.sendToTarget();

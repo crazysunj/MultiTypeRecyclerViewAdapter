@@ -42,7 +42,7 @@ public abstract class SynAdapterHelper<T extends MultiHeaderEntity, A extends Re
     @Override
     protected void startRefresh(HandleBase<T> refreshData) {
         handleResult(handleRefresh(refreshData.getNewData(), refreshData.getNewHeader(),
-                refreshData.getType(), refreshData.getRefreshType()));
+                refreshData.getNewFooter(), refreshData.getType(), refreshData.getRefreshType()));
     }
 
 }

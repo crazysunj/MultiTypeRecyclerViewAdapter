@@ -12,9 +12,9 @@ import com.crazysunj.multityperecyclerviewadapter.apt.RxAptHelperAdapter;
 import com.crazysunj.multityperecyclerviewadapter.apt.RxAptHelperAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
+import com.crazysunj.multityperecyclerviewadapter.data.MyEmptyEntity;
+import com.crazysunj.multityperecyclerviewadapter.data.MyErrorEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
-import com.crazysunj.multityperecyclerviewadapter.data.SimpleEmptyEntity;
-import com.crazysunj.multityperecyclerviewadapter.data.SimpleErrorEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.ThirdItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFirstItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFourthItem;
@@ -33,8 +33,8 @@ public class RxAptErrorAndEmptyLinearActivity extends AppCompatActivity {
     private TextView textView3;
     private TextView textView4;
     private RxAptHelperAdapterHelper helper;
-    private SimpleErrorEntity errorfourthEntity = new SimpleErrorEntity("我是第四种错误title", "我是第四种错误message", "我是第四种错误message".hashCode(), SimpleHelper.TYPE_TWO);
-    private SimpleEmptyEntity emptyEntity = new SimpleEmptyEntity("我肚子好饿啊", SimpleHelper.TYPE_FOUR);
+    private MyErrorEntity errorfourthEntity = new MyErrorEntity(SimpleHelper.TYPE_TWO, "我是第四种错误title", "我是第四种错误message");
+    private MyEmptyEntity emptyEntity = new MyEmptyEntity(SimpleHelper.TYPE_FOUR, "我肚子好饿啊");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

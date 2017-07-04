@@ -2,13 +2,20 @@ package com.crazysunj.multityperecyclerviewadapter.helper;
 
 import android.view.ViewGroup;
 
+import com.crazysunj.multitypeadapter.adapter.EmptyEntityAdapter;
+import com.crazysunj.multitypeadapter.adapter.ErrorEntityAdapter;
+import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.helper.CommonHelperAdapter;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
 import com.crazysunj.multityperecyclerviewadapter.R;
+import com.crazysunj.multityperecyclerviewadapter.apt.RxAptHelperAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
+import com.crazysunj.multityperecyclerviewadapter.data.LoadingEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
+import com.crazysunj.multityperecyclerviewadapter.data.SimpleEmptyEntity;
+import com.crazysunj.multityperecyclerviewadapter.data.SimpleErrorEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.ThirdItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFirstItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFourthItem;
@@ -31,6 +38,47 @@ public class SimpleCommonHelperAdapter extends CommonHelperAdapter<MultiHeaderEn
 
     public SimpleCommonHelperAdapter(SimpleCommonHelper helper) {
         super(helper);
+        helper.setEmptyAdapter(new EmptyEntityAdapter<MultiHeaderEntity>() {
+            @Override
+            public MultiHeaderEntity createEmptyEntity(int type) {
+                return new SimpleEmptyEntity(type);
+            }
+        });
+        helper.setErrorAdapter(new ErrorEntityAdapter<MultiHeaderEntity>() {
+            @Override
+            public MultiHeaderEntity createErrorEntity(int type) {
+                return new SimpleErrorEntity(type);
+            }
+        });
+        helper.setLoadingAdapter(new LoadingEntityAdapter<MultiHeaderEntity>() {
+            @Override
+            public MultiHeaderEntity createLoadingEntity(int type) {
+                return new LoadingEntity(type - RxAptHelperAdapterHelper.SHIMMER_DATA_TYPE_DIFFER);
+            }
+
+            @Override
+            public MultiHeaderEntity createLoadingHeaderEntity(int type) {
+                return new LoadingEntity(type - RxAptHelperAdapterHelper.SHIMMER_HEADER_TYPE_DIFFER);
+            }
+
+            @Override
+            public void bindLoadingEntity(MultiHeaderEntity loadingEntity, int position) {
+//                int itemType = loadingEntity.getItemType();
+//                int type = position < 0 ? itemType + RxAptHelperAdapterHelper.SHIMMER_HEADER_TYPE_DIFFER : itemType + RxAptHelperAdapterHelper.SHIMMER_DATA_TYPE_DIFFER;
+//                switch (type) {
+//                    case TYPE_ONE:
+//                        break;
+//                    case TYPE_TWO:
+//                        break;
+//                    case TYPE_THREE:
+//                        break;
+//                    case TYPE_FOUR:
+//                        break;
+//                    default:
+//                        break;
+//                }
+            }
+        });
     }
 
     @Override

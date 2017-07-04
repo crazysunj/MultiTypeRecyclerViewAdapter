@@ -27,24 +27,12 @@ public class LoadingConfig {
         mConfigs.put(type, new LoadingConfigEntity(count, isHaveHeader));
     }
 
-    public void setLoading(boolean isSupportSticky, int type, @IntRange(from = 1) int count, boolean isHaveHeader) {
-        mConfigs.put(type, new LoadingConfigEntity(isSupportSticky, count, isHaveHeader));
-    }
-
     public void setLoading(int type, @IntRange(from = 1) int count) {
         mConfigs.put(type, new LoadingConfigEntity(count));
     }
 
-    public void setLoading(boolean isSupportSticky, int type, @IntRange(from = 1) int count) {
-        mConfigs.put(type, new LoadingConfigEntity(isSupportSticky, count));
-    }
-
     public void setLoading(int type, boolean isHaveHeader) {
         mConfigs.put(type, new LoadingConfigEntity(isHaveHeader));
-    }
-
-    public void setLoading(boolean isSupportSticky, int type, boolean isHaveHeader) {
-        mConfigs.put(type, new LoadingConfigEntity(isSupportSticky, isHaveHeader));
     }
 
     public static class Builder {
@@ -62,28 +50,13 @@ public class LoadingConfig {
             return this;
         }
 
-        public Builder setLoading(boolean isSupportSticky, int type, @IntRange(from = 1) int count, boolean isHaveHeader) {
-            mBuilderConfigs.put(type, new LoadingConfigEntity(isSupportSticky, count, isHaveHeader));
-            return this;
-        }
-
         public Builder setLoading(int type, @IntRange(from = 1) int count) {
             mBuilderConfigs.put(type, new LoadingConfigEntity(count));
             return this;
         }
 
-        public Builder setLoading(boolean isSupportSticky, int type, @IntRange(from = 1) int count) {
-            mBuilderConfigs.put(type, new LoadingConfigEntity(isSupportSticky, count));
-            return this;
-        }
-
         public Builder setLoading(int type, boolean isHaveHeader) {
             mBuilderConfigs.put(type, new LoadingConfigEntity(isHaveHeader));
-            return this;
-        }
-
-        public Builder setLoading(boolean isSupportSticky, int type, boolean isHaveHeader) {
-            mBuilderConfigs.put(type, new LoadingConfigEntity(isSupportSticky, isHaveHeader));
             return this;
         }
 

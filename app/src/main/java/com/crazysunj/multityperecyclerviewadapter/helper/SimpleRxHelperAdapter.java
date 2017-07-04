@@ -6,12 +6,19 @@ import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.crazysunj.multitypeadapter.entity.ErrorEntity;
+import com.crazysunj.multitypeadapter.adapter.EmptyEntityAdapter;
+import com.crazysunj.multitypeadapter.adapter.ErrorEntityAdapter;
+import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
+import com.crazysunj.multitypeadapter.helper.LoadingConfig;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
 import com.crazysunj.multityperecyclerviewadapter.R;
+import com.crazysunj.multityperecyclerviewadapter.apt.RxAptHelperAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
+import com.crazysunj.multityperecyclerviewadapter.data.LoadingEntity;
+import com.crazysunj.multityperecyclerviewadapter.data.MyEmptyEntity;
+import com.crazysunj.multityperecyclerviewadapter.data.MyErrorEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
 import com.crazysunj.multityperecyclerviewadapter.data.SimpleEmptyEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.SimpleErrorEntity;
@@ -41,6 +48,53 @@ public class SimpleRxHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, S
 
         super(helper.getData());
         helper.bindAdapter(this);
+        helper.setEmptyAdapter(new EmptyEntityAdapter<MultiHeaderEntity>() {
+            @Override
+            public MultiHeaderEntity createEmptyEntity(int type) {
+                return new SimpleEmptyEntity(type);
+            }
+        });
+        helper.setErrorAdapter(new ErrorEntityAdapter<MultiHeaderEntity>() {
+            @Override
+            public MultiHeaderEntity createErrorEntity(int type) {
+                return new SimpleErrorEntity(type);
+            }
+        });
+        helper.setLoadingAdapter(new LoadingEntityAdapter<MultiHeaderEntity>() {
+            @Override
+            public MultiHeaderEntity createLoadingEntity(int type) {
+                return new LoadingEntity(type - RxAptHelperAdapterHelper.SHIMMER_DATA_TYPE_DIFFER);
+            }
+
+            @Override
+            public MultiHeaderEntity createLoadingHeaderEntity(int type) {
+                return new LoadingEntity(type - RxAptHelperAdapterHelper.SHIMMER_HEADER_TYPE_DIFFER);
+            }
+
+            @Override
+            public void bindLoadingEntity(MultiHeaderEntity loadingEntity, int position) {
+//                int itemType = loadingEntity.getItemType();
+//                int type = position < 0 ? itemType + RxAptHelperAdapterHelper.SHIMMER_HEADER_TYPE_DIFFER : itemType + RxAptHelperAdapterHelper.SHIMMER_DATA_TYPE_DIFFER;
+//                switch (type) {
+//                    case TYPE_ONE:
+//                        break;
+//                    case TYPE_TWO:
+//                        break;
+//                    case TYPE_THREE:
+//                        break;
+//                    case TYPE_FOUR:
+//                        break;
+//                    default:
+//                        break;
+//                }
+            }
+        });
+        helper.initGlobalLoadingConfig(new LoadingConfig.Builder()
+                .setLoading(SimpleHelper.TYPE_ONE, 3, true)
+                .setLoading(SimpleHelper.TYPE_TWO, 2)
+                .setLoading(SimpleHelper.TYPE_THREE, true)
+                .setLoading(SimpleHelper.TYPE_FOUR, 4, true)
+                .build());
         mHelper = helper;
     }
 
@@ -84,31 +138,27 @@ public class SimpleRxHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, S
             renderHeaderThird(helper, (HeaderThirdItem) item);
         } else if (item instanceof HeaderFourthItem) {
             renderHeaderFourth(helper, (HeaderFourthItem) item);
-        } else if (item instanceof ErrorEntity) {
-            Log.d(TAG, "ErrorEntity");
-            if (((ErrorEntity) item).getType() == SimpleHelper.TYPE_THREE) {
-                Log.d(TAG, "renderErrorSecond");
+        } else if (item instanceof SimpleErrorEntity) {
+            if (item.getItemType() == SimpleHelper.TYPE_THREE - SimpleHelper.ERROR_TYPE_DIFFER) {
                 renderErrorSecond(helper, SimpleHelper.TYPE_THREE);
             }
 
-            if (item instanceof SimpleErrorEntity) {
-                Log.d(TAG, "SimpleErrorEntity");
-                SimpleErrorEntity errorEntity = (SimpleErrorEntity) item;
-                if (errorEntity.getType() == SimpleHelper.TYPE_TWO) {
-                    Log.d(TAG, "renderErrorFourth");
+            if (item instanceof MyErrorEntity) {
+                MyErrorEntity errorEntity = (MyErrorEntity) item;
+                if (errorEntity.getItemType() == SimpleHelper.TYPE_TWO - SimpleHelper.ERROR_TYPE_DIFFER) {
                     renderErrorFourth(helper, errorEntity, SimpleHelper.TYPE_TWO);
                 }
             }
-        } else if (item instanceof SimpleEmptyEntity) {
-            renderEmptyThird(helper, (SimpleEmptyEntity) item, SimpleHelper.TYPE_FOUR);
+        } else if (item instanceof MyEmptyEntity) {
+            renderEmptyThird(helper, (MyEmptyEntity) item, SimpleHelper.TYPE_FOUR);
         }
     }
 
-    private void renderEmptyThird(ShimmerViewHolder helper, SimpleEmptyEntity item, int type) {
+    private void renderEmptyThird(ShimmerViewHolder helper, MyEmptyEntity item, int type) {
         helper.setText(R.id.empty_title, item.getTitle());
     }
 
-    private void renderErrorFourth(ShimmerViewHolder helper, SimpleErrorEntity item, int type) {
+    private void renderErrorFourth(ShimmerViewHolder helper, MyErrorEntity item, int type) {
         helper.setText(R.id.title, item.getTitle());
         helper.setText(R.id.message, item.getMessage());
         helper.getView(R.id.retry).setOnClickListener(new SimpleListener(type));

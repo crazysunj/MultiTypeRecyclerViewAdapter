@@ -5,9 +5,9 @@ import android.util.Log;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.crazysunj.multitypeadapter.entity.HandleBase;
-import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.R;
+import com.crazysunj.multityperecyclerviewadapter.sticky.StickyItem;
 
 import java.util.List;
 
@@ -33,28 +33,28 @@ import static com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper.TYP
  * Created by sunjian on 2017/5/6.
  */
 
-public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity, BaseQuickAdapter> {
+public class ErrorAndEmptyAdapterHelper extends RecyclerViewAdapterHelper<StickyItem, BaseQuickAdapter> {
 
-    public RxAdapterHelper() {
+    public ErrorAndEmptyAdapterHelper() {
         this(null);
     }
 
-    public RxAdapterHelper(List<MultiHeaderEntity> data, @RefreshMode int mode) {
+    public ErrorAndEmptyAdapterHelper(List<StickyItem> data, @RefreshMode int mode) {
         super(data, mode);
     }
 
-    public RxAdapterHelper(List<MultiHeaderEntity> data) {
+    public ErrorAndEmptyAdapterHelper(List<StickyItem> data) {
         super(data);
     }
 
     @Override
-    protected void startRefresh(HandleBase<MultiHeaderEntity> refreshData) {
+    protected void startRefresh(HandleBase<StickyItem> refreshData) {
         Flowable.just(refreshData)
                 .onBackpressureDrop()
                 .observeOn(Schedulers.computation())
-                .map(new Function<HandleBase<MultiHeaderEntity>, DiffUtil.DiffResult>() {
+                .map(new Function<HandleBase<StickyItem>, DiffUtil.DiffResult>() {
                     @Override
-                    public DiffUtil.DiffResult apply(@NonNull HandleBase<MultiHeaderEntity> handleBase) throws Exception {
+                    public DiffUtil.DiffResult apply(@NonNull HandleBase<StickyItem> handleBase) throws Exception {
                         return handleRefresh(handleBase.getNewData(), handleBase.getNewHeader(), handleBase.getNewFooter(), handleBase.getType(), handleBase.getRefreshType());
                     }
                 })
@@ -89,7 +89,7 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
                 .loadingLayoutResId(R.layout.layout_default_shimmer_view)
                 .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
                 .register();
-        
+
         registerMoudle(TYPE_FOUR)
                 .level(LEVEL_THIRD)
                 .layoutResId(R.layout.item_third)

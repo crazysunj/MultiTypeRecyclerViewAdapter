@@ -40,7 +40,7 @@ public abstract class SimpleRxAdapterHelper<T extends MultiHeaderEntity, A exten
                 .map(new Function<HandleBase<T>, DiffUtil.DiffResult>() {
                     @Override
                     public DiffUtil.DiffResult apply(@NonNull HandleBase<T> handleBase) throws Exception {
-                        return handleRefresh(handleBase.getNewData(), handleBase.getNewHeader(), handleBase.getType(), handleBase.getRefreshType());
+                        return handleRefresh(handleBase.getNewData(), handleBase.getNewHeader(), handleBase.getNewFooter(), handleBase.getType(), handleBase.getRefreshType());
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())

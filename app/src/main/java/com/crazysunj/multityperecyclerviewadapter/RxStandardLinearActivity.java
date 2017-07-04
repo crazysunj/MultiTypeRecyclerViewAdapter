@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
-import com.crazysunj.multitypeadapter.helper.LoadingConfig;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
@@ -55,12 +54,6 @@ public class RxStandardLinearActivity extends AppCompatActivity {
         List<MultiHeaderEntity> list = initData();
 
         helper = new RxAdapterHelper(list);
-        helper.initGlobalLoadingConfig(new LoadingConfig.Builder()
-                .setLoading(true, SimpleHelper.TYPE_ONE, 3, true)
-                .setLoading(true, SimpleHelper.TYPE_TWO, 2)
-                .setLoading(true, SimpleHelper.TYPE_THREE, true)
-                .setLoading(true, SimpleHelper.TYPE_FOUR, 4, true)
-                .build());
         SimpleRxHelperAdapter adapter = new SimpleRxHelperAdapter(helper);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
