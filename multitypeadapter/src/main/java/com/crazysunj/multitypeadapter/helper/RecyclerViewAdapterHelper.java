@@ -438,6 +438,27 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     }
 
     /**
+     * 只刷新底
+     *
+     * @param footer 底
+     * @param type   数据类型
+     */
+    public void notifyMoudleFooterChanged(T footer, int type) {
+        notifyMoudleChanged(null, null, footer, type, REFRESH_FOOTER);
+    }
+
+    /**
+     * 同时刷新头和底
+     *
+     * @param header 头
+     * @param footer 底
+     * @param type   数据类型
+     */
+    public void notifyMoudleHeaderAndFooterChanged(T header, T footer, int type) {
+        notifyMoudleChanged(null, header, footer, type, REFRESH_HEADER_FOOTER);
+    }
+
+    /**
      * 务必在调用之前确定缓存最大值，可调用setMaxHeaderCacheCount和setMaxHeaderCacheCount
      * 对应notifyMoudleDataAndHeaderChanged
      *
@@ -466,6 +487,18 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     }
 
     /**
+     * 同时刷新底和数据
+     *
+     * @param data   数据
+     * @param footer 底
+     * @param type   数据类型
+     */
+    @SuppressWarnings("unchecked")
+    public void notifyMoudleDataAndFooterChanged(List<? extends T> data, T footer, int type) {
+        notifyMoudleChanged((List<T>) data, null, footer, type, REFRESH_FOOTER_DATA);
+    }
+
+    /**
      * 同时刷新头和数据
      *
      * @param data   数据
@@ -474,6 +507,42 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
      */
     public void notifyMoudleDataAndHeaderChanged(T data, T header, int type) {
         notifyMoudleChanged(Collections.singletonList(data), header, null, type, REFRESH_HEADER_DATA);
+    }
+
+    /**
+     * 同时刷新底和数据
+     *
+     * @param data   数据
+     * @param footer 底
+     * @param type   数据类型
+     */
+    public void notifyMoudleDataAndFooterChanged(T data, T footer, int type) {
+        notifyMoudleChanged(Collections.singletonList(data), null, footer, type, REFRESH_FOOTER_DATA);
+    }
+
+    /**
+     * 同时刷新头和底和数据
+     *
+     * @param header 头
+     * @param data   数据
+     * @param footer 底
+     * @param type   数据类型
+     */
+    @SuppressWarnings("unchecked")
+    public void notifyMoudleHeaderAndDataAndFooterChanged(T header, List<? extends T> data, T footer, int type) {
+        notifyMoudleChanged((List<T>) data, header, footer, type, REFRESH_HEADER_FOOTER_DATA);
+    }
+
+    /**
+     * 同时刷新头和底和数据
+     *
+     * @param header 头
+     * @param data   数据
+     * @param footer 底
+     * @param type   数据类型
+     */
+    public void notifyMoudleHeaderAndDataAndFooterChanged(T header, T data, T footer, int type) {
+        notifyMoudleChanged(Collections.singletonList(data), header, footer, type, REFRESH_HEADER_FOOTER_DATA);
     }
 
     /**
@@ -885,6 +954,43 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         onEnd();
     }
 
+    public void openData(int type) {
+
+        LevelData<T> levelData = getDataWithType(type);
+        if (levelData == null) {
+            return;
+        }
+
+        List<T> data = levelData.getData();
+        if (data == null || data.isEmpty()) {
+            return;
+        }
+        int size = data.size();
+
+        int level = getLevel(type);
+        ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(level);
+
+        if (attrsEntity == null || !attrsEntity.isFolded || size <= attrsEntity.minSize) {
+            return;
+        }
+
+        checkAdapterBind();
+        if (!mIsCanRefresh) {
+            return;
+        }
+        mCurrentType = type;
+        onStart();
+
+        int headerCount = levelData.getHeader() == null ? 0 : 1;
+        int positionStart = getPositionStart(level) + headerCount + attrsEntity.minSize;
+        List<T> intsertData = data.subList(attrsEntity.minSize, size - 1);
+        mData.addAll(positionStart, intsertData);
+        mAdapter.notifyItemRangeInserted(positionStart + getPreDataCount(), intsertData.size());
+        compatibilityDataSizeChanged(intsertData.size());
+        attrsEntity.isFolded = false;
+        onEnd();
+    }
+
     /**
      * 切换模式，只切换模式以及对数据整理，并不会刷新，如果需要切换模式并刷新数据，请调用
      * notifyDataSetChanged
@@ -1120,37 +1226,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         mNewData.addAll(mData);
 
         int level = getLevel(type);
-        int sum = 0;
-
-        for (int i = 0; i < level; i++) {
-
-            LevelData<T> data = mLevelOldData.get(i);
-
-            if (data == null) {
-                continue;
-            }
-
-            if (data.getHeader() != null) {
-                sum++;
-            }
-
-            if (data.getFooter() != null) {
-                sum++;
-            }
-
-            List<T> list = data.getData();
-            if (list == null || list.isEmpty()) {
-                continue;
-            }
-
-            ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(i);
-            int size = list.size();
-            if (attrsEntity == null || !attrsEntity.isFolded || size <= attrsEntity.minSize) {
-                sum += size;
-            } else {
-                sum += attrsEntity.minSize;
-            }
-        }
 
         LevelData<T> oldLevelData = mLevelOldData.get(level);
         List<T> data = null;
@@ -1190,7 +1265,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
             }
         }
 
-        int positionStart = sum;
+        int positionStart = getPositionStart(level);
 
         if (!(newData == null || newData.isEmpty()) && isRefreshData) {
             data = newData;
@@ -1222,6 +1297,41 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         mLevelOldData.put(level, new LevelData<T>(data, header, footer));
 
         return result;
+    }
+
+    private int getPositionStart(int level) {
+        int sum = 0;
+
+        for (int i = 0; i < level; i++) {
+
+            LevelData<T> data = mLevelOldData.get(i);
+
+            if (data == null) {
+                continue;
+            }
+
+            if (data.getHeader() != null) {
+                sum++;
+            }
+
+            if (data.getFooter() != null) {
+                sum++;
+            }
+
+            List<T> list = data.getData();
+            if (list == null || list.isEmpty()) {
+                continue;
+            }
+
+            ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(i);
+            int size = list.size();
+            if (attrsEntity == null || !attrsEntity.isFolded || size <= attrsEntity.minSize) {
+                sum += size;
+            } else {
+                sum += attrsEntity.minSize;
+            }
+        }
+        return sum;
     }
 
     /**

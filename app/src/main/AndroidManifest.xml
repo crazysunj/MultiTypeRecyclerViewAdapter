@@ -28,6 +28,7 @@
         <activity android:name=".RxAptDefaultActivity" />
         <activity android:name=".RxAptStandardLinearActivity" />
         <activity android:name=".RxAptErrorAndEmptyLinearActivity" />
+        <activity android:name=".OpenCloseActivity"></activity>
     </application>
 
 </manifest>
