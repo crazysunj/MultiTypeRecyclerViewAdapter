@@ -2,6 +2,7 @@ package com.crazysunj.multityperecyclerviewadapter.expand;
 
 
 import android.view.View;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multitypeadapter.adapter.EmptyEntityAdapter;
@@ -21,6 +22,7 @@ import java.util.List;
 public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenCloseAdapterHelper> {
 
     private OnErrorCallback mErrorCallback;
+    private OnFooterClickListener mOnFooterClickListener;
 
     public OpenCloseAdapter() {
         super(new OpenCloseAdapterHelper());
@@ -70,40 +72,51 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
         }
     }
 
-    public void openFirst() {
-        mHelper.openData(FirstOCEntity.OC_FIRST_TYPE);
+    public void open(int type, boolean isFold) {
+        mHelper.foldType(type, isFold);
     }
 
-    public void openSecond() {
-        mHelper.openData(SecondOCEntity.OC_SECOND_TYPE);
+    public void notifyAll(List<OpenCloseItem> data) {
+        mHelper.notifyDataByDiff(data);
     }
 
-    public void openThird() {
-        mHelper.openData(ThirdOCEntity.OC_THIRD_TYPE);
+    public void notifyFirstEmpty() {
+        mHelper.notifyMoudleEmptyChanged(FirstOCEntity.OC_FIRST_TYPE);
+    }
+
+    public void notifyFirstError() {
+        mHelper.notifyMoudleErrorChanged(FirstOCEntity.OC_FIRST_TYPE);
     }
 
     public void notifyFirst(List<FirstOCEntity> entities) {
+        int firstType = FirstOCEntity.OC_FIRST_TYPE;
         mHelper.notifyMoudleHeaderAndDataAndFooterChanged(
-                new TitleOCEntity(FirstOCEntity.OC_FIRST_TYPE, "类型1"),
+                new TitleOCEntity(firstType, "类型1"),
                 entities,
-                new FooterOCEntity(FirstOCEntity.OC_FIRST_TYPE, "查看更多"),
-                FirstOCEntity.OC_FIRST_TYPE);
+                new FooterOCEntity(firstType, getFooterTitle(firstType)),
+                firstType);
+    }
+
+    public String getFooterTitle(int type) {
+        return mHelper.isDataFolded(type) ? "查看更多" : "点击收回";
     }
 
     public void notifySecond(List<SecondOCEntity> entities) {
+        int secondType = SecondOCEntity.OC_SECOND_TYPE;
         mHelper.notifyMoudleHeaderAndDataAndFooterChanged(
-                new TitleOCEntity(SecondOCEntity.OC_SECOND_TYPE, "类型2"),
+                new TitleOCEntity(secondType, "类型2"),
                 entities,
-                new FooterOCEntity(SecondOCEntity.OC_SECOND_TYPE, "查看更多"),
-                SecondOCEntity.OC_SECOND_TYPE);
+                new FooterOCEntity(secondType, getFooterTitle(secondType)),
+                secondType);
     }
 
     public void notifyThird(List<ThirdOCEntity> entities) {
+        int thirdType = ThirdOCEntity.OC_THIRD_TYPE;
         mHelper.notifyMoudleHeaderAndDataAndFooterChanged(
-                new TitleOCEntity(ThirdOCEntity.OC_THIRD_TYPE, "类型3"),
+                new TitleOCEntity(thirdType, "类型3"),
                 entities,
-                new FooterOCEntity(ThirdOCEntity.OC_THIRD_TYPE, "查看更多"),
-                ThirdOCEntity.OC_THIRD_TYPE);
+                new FooterOCEntity(thirdType, getFooterTitle(thirdType)),
+                thirdType);
     }
 
     private void renderError(BaseViewHolder helper, ErrorOCEntity item) {
@@ -134,8 +147,34 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
         helper.setText(R.id.empty_title, String.format("我是空 title:%s flag:%s type:%s", item.getTitle(), item.getFlag(), (item.getItemType() + RecyclerViewAdapterHelper.EMPTY_TYPE_DIFFER)));
     }
 
-    private void renderFooter(BaseViewHolder helper, FooterOCEntity item) {
-        helper.setText(R.id.item_footer, String.format("我是底 title:%s flag:%s type:%s", item.getTitle(), item.getFlag(), (item.getItemType() + RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER)));
+    private void renderFooter(BaseViewHolder helper, final FooterOCEntity item) {
+        final int type = item.getItemType() + RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER;
+        final TextView footer = helper.getView(R.id.item_footer);
+        footer.setText(String.format("我是底 title:%s flag:%s type:%s", item.getTitle(), item.getFlag(), type));
+        footer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnFooterClickListener != null) {
+                    if ("查看更多".equals(item.getTitle())) {
+                        mOnFooterClickListener.onFooterClick(type, false);
+                        item.setTitle("点击收回");
+                    } else {
+                        mOnFooterClickListener.onFooterClick(type, true);
+                        item.setTitle("查看更多");
+                    }
+                    footer.setText(String.format("我是底 title:%s flag:%s type:%s", item.getTitle(), item.getFlag(), type));
+                }
+            }
+        });
+
+    }
+
+    public void setOnFooterClickListener(OnFooterClickListener listener) {
+        mOnFooterClickListener = listener;
+    }
+
+    public interface OnFooterClickListener {
+        void onFooterClick(int type, boolean isFlod);
     }
 
     private void renderHeader(BaseViewHolder helper, TitleOCEntity item) {

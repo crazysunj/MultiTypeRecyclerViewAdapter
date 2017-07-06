@@ -28,7 +28,11 @@
         <activity android:name=".RxAptDefaultActivity" />
         <activity android:name=".RxAptStandardLinearActivity" />
         <activity android:name=".RxAptErrorAndEmptyLinearActivity" />
-        <activity android:name=".OpenCloseActivity"></activity>
+        <activity
+            android:name=".OpenCloseActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

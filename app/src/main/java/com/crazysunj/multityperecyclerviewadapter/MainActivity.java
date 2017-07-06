@@ -66,4 +66,8 @@ public class MainActivity extends AppCompatActivity {
     public void click13(View view) {
         startActivity(new Intent(this, RxAptErrorAndEmptyLinearActivity.class));
     }
+
+    public void click14(View view) {
+        startActivity(new Intent(this, OpenCloseActivity.class));
+    }
 }

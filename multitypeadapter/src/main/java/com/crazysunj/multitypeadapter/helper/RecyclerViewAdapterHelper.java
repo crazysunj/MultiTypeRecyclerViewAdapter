@@ -954,7 +954,35 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         onEnd();
     }
 
-    public void openData(int type) {
+    /**
+     * 判断数据是否处于折叠状态
+     *
+     * @param type 数据类型
+     * @return boolean ture为已折叠状态，false为展开状态
+     */
+    public boolean isDataFolded(int type) {
+
+        LevelData<T> levelData = getDataWithType(type);
+        if (levelData == null) {
+            return false;
+        }
+
+        List<T> data = levelData.getData();
+        if (data == null || data.isEmpty()) {
+            return false;
+        }
+
+        int size = data.size();
+        ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(getLevel(type));
+        return !(attrsEntity == null || !attrsEntity.isFolded || size <= attrsEntity.minSize);
+    }
+
+    /**
+     * 展开type数据
+     *
+     * @param type 数据类型
+     */
+    public void foldType(int type, boolean isFold) {
 
         LevelData<T> levelData = getDataWithType(type);
         if (levelData == null) {
@@ -970,7 +998,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         int level = getLevel(type);
         ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(level);
 
-        if (attrsEntity == null || !attrsEntity.isFolded || size <= attrsEntity.minSize) {
+        if ((attrsEntity == null || !attrsEntity.isFolded || size <= attrsEntity.minSize) && !isFold) {
+            return;
+        }
+
+        if ((attrsEntity == null || attrsEntity.isFolded || size <= attrsEntity.minSize) && isFold) {
             return;
         }
 
@@ -980,14 +1012,21 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         }
         mCurrentType = type;
         onStart();
-
         int headerCount = levelData.getHeader() == null ? 0 : 1;
         int positionStart = getPositionStart(level) + headerCount + attrsEntity.minSize;
-        List<T> intsertData = data.subList(attrsEntity.minSize, size - 1);
-        mData.addAll(positionStart, intsertData);
-        mAdapter.notifyItemRangeInserted(positionStart + getPreDataCount(), intsertData.size());
-        compatibilityDataSizeChanged(intsertData.size());
-        attrsEntity.isFolded = false;
+        List<T> handleData = data.subList(attrsEntity.minSize, size);
+
+        if (isFold) {
+            mData.removeAll(handleData);
+            mAdapter.notifyItemRangeRemoved(positionStart + getPreDataCount(), handleData.size());
+            compatibilityDataSizeChanged(handleData.size());
+            attrsEntity.isFolded = true;
+        } else {
+            mData.addAll(positionStart, handleData);
+            mAdapter.notifyItemRangeInserted(positionStart + getPreDataCount(), handleData.size());
+            compatibilityDataSizeChanged(handleData.size());
+            attrsEntity.isFolded = false;
+        }
         onEnd();
     }
 
@@ -1273,7 +1312,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
             if (attrsEntity == null || !attrsEntity.isFolded || data.size() <= attrsEntity.minSize) {
                 mNewData.addAll(header == null ? positionStart : positionStart + 1, data);
             } else {
-                mNewData.addAll(header == null ? positionStart : positionStart + 1, data.subList(0, attrsEntity.minSize - 1));
+                mNewData.addAll(header == null ? positionStart : positionStart + 1, data.subList(0, attrsEntity.minSize));
             }
         }
 
@@ -1592,7 +1631,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
             if (attrsEntity == null || !attrsEntity.isFolded || data.size() <= attrsEntity.minSize) {
                 addData.addAll(data);
             } else {
-                addData.addAll(data.subList(0, attrsEntity.minSize - 1));
+                addData.addAll(data.subList(0, attrsEntity.minSize));
             }
             if (footer != null) {
                 addData.add(footer);

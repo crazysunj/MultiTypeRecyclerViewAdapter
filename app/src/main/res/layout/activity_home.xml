@@ -89,6 +89,12 @@
             android:layout_height="wrap_content"
             android:onClick="click13"
             android:text="RxApt错误和空线性排布" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="click14"
+            android:text="展开合拢" />
     </LinearLayout>
 
 </ScrollView>

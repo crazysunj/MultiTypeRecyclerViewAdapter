@@ -33,7 +33,7 @@ public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem, Ope
 
         registerMoudle(SecondOCEntity.OC_SECOND_TYPE)
                 .level(1)
-                .layoutResId(R.layout.item_first)
+                .layoutResId(R.layout.item_second)
                 .headerResId(R.layout.item_header)
                 .footerResId(R.layout.item_footer)
                 .minSize(2)
@@ -41,7 +41,7 @@ public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem, Ope
 
         registerMoudle(ThirdOCEntity.OC_THIRD_TYPE)
                 .level(2)
-                .layoutResId(R.layout.item_first)
+                .layoutResId(R.layout.item_third)
                 .headerResId(R.layout.item_header)
                 .footerResId(R.layout.item_footer)
                 .minSize(4)

@@ -12,54 +12,37 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <EditText
+            android:id="@+id/input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="click1"
-            android:text="类型1展开" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="click2"
-            android:text="类型1合拢" />
+            android:background="@null"
+            android:gravity="center"
+            android:hint="输入长度"
+            android:inputType="number"
+            android:text="15" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="click3"
-            android:text="类型2展开" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:text="刷新" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="click4"
-            android:text="类型2合拢" />
+            android:onClick="click1"
+            android:text="类型1空" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="click5"
-            android:text="类型3展开" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="click6"
-            android:text="类型3合拢" />
+            android:onClick="click2"
+            android:text="类型1错误" />
 
     </LinearLayout>
 
