@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.crazysunj.multityperecyclerviewadapter.constant.Constants;
 import com.crazysunj.multityperecyclerviewadapter.expand.FirstOCEntity;
 import com.crazysunj.multityperecyclerviewadapter.expand.FooterOCEntity;
 import com.crazysunj.multityperecyclerviewadapter.expand.OpenCloseAdapter;
@@ -51,24 +52,7 @@ public class OpenCloseActivity extends AppCompatActivity {
         });
 
         recyclerView.setAdapter(mAdapter);
-
-        List<OpenCloseItem> data = new ArrayList<OpenCloseItem>();
-
-        int firstType = FirstOCEntity.OC_FIRST_TYPE;
-        data.add(new TitleOCEntity(firstType, "类型1"));
-        data.addAll(getFirst());
-        data.add(new FooterOCEntity(firstType, "查看更多"));
-
-        int secondType = SecondOCEntity.OC_SECOND_TYPE;
-        data.add(new TitleOCEntity(secondType, "类型2"));
-        data.addAll(getSecond());
-        data.add(new FooterOCEntity(secondType, "点击收回"));
-
-        int thirdType = ThirdOCEntity.OC_THIRD_TYPE;
-        data.add(new TitleOCEntity(thirdType, "类型3"));
-        data.addAll(getThird());
-        data.add(new FooterOCEntity(thirdType, "点击收回"));
-        mAdapter.notifyAll(data);
+        initData();
     }
 
     private void initData() {
@@ -78,17 +62,18 @@ public class OpenCloseActivity extends AppCompatActivity {
         int firstType = FirstOCEntity.OC_FIRST_TYPE;
         data.add(new TitleOCEntity(firstType, "类型1"));
         data.addAll(getFirst());
-        data.add(new FooterOCEntity(firstType, mAdapter.getFooterTitle(firstType)));
+        data.add(new FooterOCEntity(firstType, Constants.EXPAND));
+//        data.add(new FooterOCEntity(firstType, Constants.EXPAND, mAdapter.getHelper().getRandomId()));
 
         int secondType = SecondOCEntity.OC_SECOND_TYPE;
         data.add(new TitleOCEntity(secondType, "类型2"));
         data.addAll(getSecond());
-        data.add(new FooterOCEntity(secondType, mAdapter.getFooterTitle(secondType)));
+        data.add(new FooterOCEntity(secondType, Constants.FOLD));
 
         int thirdType = ThirdOCEntity.OC_THIRD_TYPE;
         data.add(new TitleOCEntity(thirdType, "类型3"));
         data.addAll(getThird());
-        data.add(new FooterOCEntity(thirdType, mAdapter.getFooterTitle(thirdType)));
+        data.add(new FooterOCEntity(thirdType, Constants.FOLD));
         mAdapter.notifyAll(data);
     }
 

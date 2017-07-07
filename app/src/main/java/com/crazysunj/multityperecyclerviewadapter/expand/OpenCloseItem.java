@@ -8,6 +8,8 @@ import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
  * Created by sunjian on 2017/7/5.
  */
 
-public interface OpenCloseItem extends MultiHeaderEntity{
+public interface OpenCloseItem extends MultiHeaderEntity {
     int getFlag();
+
+    String getTitle();
 }

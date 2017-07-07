@@ -1,7 +1,11 @@
 package com.crazysunj.multityperecyclerviewadapter.expand;
 
+import android.support.v7.util.DiffUtil;
+
 import com.crazysunj.multitypeadapter.helper.AsynAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.R;
+
+import java.util.List;
 
 /**
  * description
@@ -53,8 +57,8 @@ public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem, Ope
         return mAdapter.getHeaderLayoutCount();
     }
 
-//    @Override
-//    protected DiffUtil.Callback getDiffCallBack(List<OpenCloseItem> oldData, List<OpenCloseItem> newData) {
-//        return new OpenCloseDiffCallBack(oldData, newData);
-//    }
+    @Override
+    protected DiffUtil.Callback getDiffCallBack(List<OpenCloseItem> oldData, List<OpenCloseItem> newData) {
+        return new OpenCloseDiffCallBack(oldData, newData);
+    }
 }

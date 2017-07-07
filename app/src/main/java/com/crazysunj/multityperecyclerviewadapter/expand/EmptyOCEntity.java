@@ -28,6 +28,7 @@ public class EmptyOCEntity implements OpenCloseItem {
         this.title = title;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }

@@ -1,9 +1,11 @@
 package com.crazysunj.multityperecyclerviewadapter.expand;
 
+import android.util.Log;
+
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 
-import java.util.UUID;
+import java.util.Locale;
 
 /**
  * description
@@ -14,20 +16,28 @@ import java.util.UUID;
 public class FooterOCEntity implements OpenCloseItem {
 
     private long id;
-
     private String title;
     private int type;
     private final int FLAG = -2;
 
+    public FooterOCEntity(int type, String title, long id) {
+        this.type = type;
+        this.title = title;
+        this.id = id;
+//        id = String.format(Locale.getDefault(), "%d_%d_%s", FLAG, type, title).hashCode();
+    }
+
     public FooterOCEntity(int type, String title) {
         this.type = type;
         this.title = title;
+        id = String.format(Locale.getDefault(), "%d_%d_%s", FLAG, type, title).hashCode();
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }
@@ -44,9 +54,7 @@ public class FooterOCEntity implements OpenCloseItem {
 
     @Override
     public long getId() {
-        if (id == 0) {
-            return id = UUID.nameUUIDFromBytes((FLAG + title).getBytes()).hashCode();
-        }
+        Log.d("FooterOCEntity", "title:" + title + " type:" + type+" id:"+id);
         return id;
     }
 

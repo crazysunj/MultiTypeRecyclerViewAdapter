@@ -28,6 +28,7 @@ public class ErrorOCEntity implements OpenCloseItem {
         this.title = title;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }

@@ -104,6 +104,7 @@ public class RxLinearActivity extends AppCompatActivity {
     }
 
     private int refreshThirdCount = 0;
+    private int refreshFouthCount = 0;
     private int refreshFirstCount = 0;
 
 
@@ -123,14 +124,12 @@ public class RxLinearActivity extends AppCompatActivity {
         textView4.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Random random = new Random();
-                int rand = random.nextInt(6);
                 List<MultiHeaderEntity> list = new ArrayList<>();
-                for (int i = 0, size = rand + 1; i < size; i++) {
+                for (int i = 0, size = 6; i < size; i++) {
                     list.add(new FourthItem(String.format("我是第四种类型%d", i), 18 + i));
                 }
                 textView4.setText(String.format("类型4的数量：%d", list.size()));
-                String title = String.format(Locale.getDefault(), "我是第四种类型的头,数量：%d", list.size());
+                String title = String.format(Locale.getDefault(), "我是第四种类型的头,点击次数：%d", refreshFouthCount++);
                 helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFourthItem(title, title.hashCode()), SimpleHelper.TYPE_TWO);
             }
         }, 0);

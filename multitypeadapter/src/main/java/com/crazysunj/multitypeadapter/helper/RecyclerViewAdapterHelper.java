@@ -54,10 +54,10 @@ import java.util.regex.Pattern;
  * 如果您发现哪里性能比较差或者说设计不合理，希望您能反馈给我
  * email:twsunj@gmail.com
  * type 取值范围
- * 数据类型 [0,1000)
+ * data类型 [0,1000)
  * header类型 [-1000,0)
- * loading数据类型 [-2000,-1000)
- * loading头类型 [-3000,-2000)
+ * loading-data类型 [-2000,-1000)
+ * loading-header类型 [-3000,-2000)
  * error类型 [-4000,-3000)
  * empty类型 [-5000,-4000)
  * footer类型 [-6000,-5000)
@@ -94,13 +94,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
 
     //header类型差值
     public static final int HEADER_TYPE_DIFFER = 1000;
-    //loading数据类型差值
+    //loading-data类型差值
     public static final int LOADING_DATA_TYPE_DIFFER = 2000;
-    //loading头类型差值
+    //loading-header类型差值
     public static final int LOADING_HEADER_TYPE_DIFFER = 3000;
-    //错误类型差值
+    //error类型差值
     public static final int ERROR_TYPE_DIFFER = 4000;
-    //空类型差值
+    //empty类型差值
     public static final int EMPTY_TYPE_DIFFER = 5000;
     //footer类型差值
     public static final int FOOTER_TYPE_DIFFER = 6000;
@@ -974,7 +974,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
 
         int size = data.size();
         ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(getLevel(type));
-        return !(attrsEntity == null || !attrsEntity.isFolded || size <= attrsEntity.minSize);
+        return !(!attrsEntity.isFolded || size <= attrsEntity.minSize);
     }
 
     /**
@@ -999,11 +999,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         int level = getLevel(type);
         ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(level);
 
-        if ((attrsEntity == null || !attrsEntity.isFolded || size <= attrsEntity.minSize) && !isFold) {
+        if ((!attrsEntity.isFolded || size <= attrsEntity.minSize) && !isFold) {
             return;
         }
 
-        if ((attrsEntity == null || attrsEntity.isFolded || size <= attrsEntity.minSize) && isFold) {
+        if ((attrsEntity.isFolded || size <= attrsEntity.minSize) && isFold) {
             return;
         }
 
@@ -1306,15 +1306,19 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         }
 
         int positionStart = getPositionStart(level);
+        int dataSize = data == null ? 0 : data.size();
 
         if (!(newData == null || newData.isEmpty()) && isRefreshData) {
             data = newData;
             ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(level);
-            if (attrsEntity == null || !attrsEntity.isFolded || data.size() <= attrsEntity.minSize) {
+            if (!attrsEntity.initState || data.size() <= attrsEntity.minSize) {
                 mNewData.addAll(header == null ? positionStart : positionStart + 1, data);
+                dataSize = data.size();
             } else {
                 mNewData.addAll(header == null ? positionStart : positionStart + 1, data.subList(0, attrsEntity.minSize));
+                dataSize = attrsEntity.minSize;
             }
+            attrsEntity.isFolded = attrsEntity.initState;
         }
 
         if (newHeader != null && isRefreshHeader) {
@@ -1327,9 +1331,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
             if (header != null) {
                 positionStart++;
             }
-            if (data != null) {
-                positionStart += data.size();
-            }
+            positionStart += dataSize;
             mNewData.add(positionStart, footer);
         }
 
@@ -1364,7 +1366,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
 
             ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(i);
             int size = list.size();
-            if (attrsEntity == null || !attrsEntity.isFolded || size <= attrsEntity.minSize) {
+            if (!attrsEntity.isFolded || size <= attrsEntity.minSize) {
                 sum += size;
             } else {
                 sum += attrsEntity.minSize;
@@ -1628,11 +1630,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
                 addData.add(header);
             }
             ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(level);
-            if (attrsEntity == null || !attrsEntity.isFolded || data.size() <= attrsEntity.minSize) {
+            if (!attrsEntity.initState || data.size() <= attrsEntity.minSize) {
                 addData.addAll(data);
             } else {
                 addData.addAll(data.subList(0, attrsEntity.minSize));
             }
+            attrsEntity.isFolded = attrsEntity.initState;
             if (footer != null) {
                 addData.add(footer);
             }

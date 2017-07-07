@@ -130,8 +130,8 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
         return mAdapter.getHeaderLayoutCount();
     }
 
-    @Override
-    protected DiffUtil.Callback getDiffCallBack(List<MultiHeaderEntity> oldData, List<MultiHeaderEntity> newData) {
-        return new SimpleDiffCallBack(oldData, newData);
-    }
+//    @Override
+//    protected DiffUtil.Callback getDiffCallBack(List<MultiHeaderEntity> oldData, List<MultiHeaderEntity> newData) {
+//        return new SimpleDiffCallBack(oldData, newData);
+//    }
 }

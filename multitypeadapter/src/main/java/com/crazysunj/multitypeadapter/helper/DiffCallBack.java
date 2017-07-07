@@ -51,7 +51,7 @@ class DiffCallBack<T extends MultiHeaderEntity> extends DiffUtil.Callback {
 
         T oldItem = mOldDatas.get(oldItemPosition);
         T newItem = mNewDatas.get(newItemPosition);
-        return !(oldItem == null || newItem == null) && oldItem.getId() == newItem.getId();
+        return !(oldItem == null || newItem == null) && oldItem.getItemType() == newItem.getItemType();
     }
 
     @Override
@@ -59,6 +59,6 @@ class DiffCallBack<T extends MultiHeaderEntity> extends DiffUtil.Callback {
 
         T oldItem = mOldDatas.get(oldItemPosition);
         T newItem = mNewDatas.get(newItemPosition);
-        return oldItem.getItemType() == newItem.getItemType();
+        return oldItem.getId() == newItem.getId();
     }
 }

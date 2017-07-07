@@ -32,4 +32,8 @@ public abstract class BaseHelperAdapter<T extends MultiHeaderEntity, K extends R
     protected int getDefItemViewType(int position) {
         return mHelper.getItemViewType(position);
     }
+
+    public K getHelper() {
+        return mHelper;
+    }
 }

@@ -54,9 +54,8 @@ public class OpenCloseDiffCallBack extends DiffUtil.Callback {
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-
         OpenCloseItem oldItem = mOldDatas.get(oldItemPosition);
         OpenCloseItem newItem = mNewDatas.get(newItemPosition);
-        return oldItem.getId() == newItem.getId();
+        return oldItem.getId() == newItem.getId() && oldItem.getTitle().equals(newItem.getTitle());
     }
 }

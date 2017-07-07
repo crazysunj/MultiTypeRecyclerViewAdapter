@@ -4,36 +4,26 @@
 ## 特点
 
 * 简单快捷，可配合大多数Adapter
-* 一行代码刷新相应viewType
-* 支持粘性头
-* 支持异步刷新，可扩展(如配合RxJava)
-* 支持高频率刷新(流畅,异步执行)
-* 支持加载facebook的shimmer效果loading页面
-* 支持加载相应type错误页面
-* 支持加载相应type空页面
-* 支持标准(一个type对应一个集合)和混合(一般的多类型集合)自如切换(自动排序集合)
-* 支持集合set，add，remove，clear等操作刷新
+* 一行代码刷新单个type，支持一般的set，add，remove，clear等刷新
+* 支持异步，高频率刷新，可扩展(如配合RxJava)
+* 单个type支持Loading(可支持shimmer效果)，empty，error页面切换
+* 单个type支持粘性头，header，footer
+* 单个type支持展开和合拢(可设置合拢最小值)
 * 支持注解生成类，减少工作量
 * 支持刷新生命周期回调
 
 ## 效果
-### 线性排布
+### 一般效果
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper1.gif)
-
-### 方格排布
-![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper3.gif)
 
 ### 关键字高亮
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper4.gif)
 
-### 错误页面
+### error页面
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper5.gif)
 
-### 空页面
+### empty页面
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper7.gif)
-
-### 高频率刷新
-![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper6.gif)
 
 ### loading页面
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper8.gif)
@@ -42,26 +32,29 @@
 ### Type 取值范围
 
 * level [0,+∞)
-* 数据类型 [0,1000)
-* 头类型 [-1000,0)
-* shimmer数据类型 [-2000,-1000)
-* shimmer头类型 [-3000,-2000)
+* data类型 [0,1000)
+* header类型 [-1000,0)
+* loading-data类型 [-2000,-1000)
+* loading-header类型 [-3000,-2000)
 * error类型 [-4000,-3000)
 * empty类型 [-5000,-4000)
+* footer类型 [-6000,-5000)
 
 ### 差值常量
 
 ```
-//头类型差值
+//header类型差值
 public static final int HEADER_TYPE_DIFFER = 1000;
-//shimmer数据类型差值
-public static final int SHIMMER_DATA_TYPE_DIFFER = 2000;
-//shimmer头类型差值
-public static final int SHIMMER_HEADER_TYPE_DIFFER = 3000;
-//错误类型差值
+//loading-data类型差值
+public static final int LOADING_DATA_TYPE_DIFFER = 2000;
+//loading-header类型差值
+public static final int LOADING_HEADER_TYPE_DIFFER = 3000;
+//error类型差值
 public static final int ERROR_TYPE_DIFFER = 4000;
-//空类型差值
+//empty类型差值
 public static final int EMPTY_TYPE_DIFFER = 5000;
+//footer类型差值
+public static final int FOOTER_TYPE_DIFFER = 6000;
 ```
 
 ### 其他
@@ -73,19 +66,19 @@ protected int getPreDataCount();
 
 调用刷新方法的时候请注意刷新模式，有些方法只支持相应刷新模式，需要注意的都加有check语句。
 
-关于entity的id为long类型是考虑刷新效率，你大可采用多种属性的UUID的hashCode或者就是普通hashCode作为主键（参考demo，注意缓存）。倘若还支持不了你的数据，就自定义DiffCallback。
+关于entity的id为long类型是考虑刷新效率，你大可采用多种属性的UUID的hashCode或者就是普通hashCode作为主键（参考demo，注意缓存）。倘若还支持不了你的数据(出现哈希冲突，并不是没刷新，可打日志调试)，就自定义DiffCallback(可参数demo)。
 
-具体可参考Demo，建议把helper封装在Adapter中，helper的实体泛型为MultiHeaderEntity。
+具体可**参考Demo**，建议把helper封装在Adapter中。
 
 ## gradle依赖
 
 ```
-compile 'com.crazysunj:multitypeadapter:1.5.0'
+compile 'com.crazysunj:multitypeadapter:1.6.0'
 ```
 如果想用注解生成可依赖
 
 ```
-apt 'com.crazysunj:multitypeadapter-compiler:1.5.0'
+apt 'com.crazysunj:multitypeadapter-compiler:1.6.0'
 ```
 记得在项目gradle中添加
 
@@ -98,6 +91,13 @@ classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 apply plugin: 'com.neenbedankt.android-apt'
 ```
 
+该库还依赖了recyclerview，想依赖自己的recyclerview版本，请如下依赖。
+
+```
+compile('com.crazysunj:multitypeadapter:1.6.0') {
+    exclude group: 'com.android.support', module: 'recyclerview-v7'
+}
+```
 ## 感谢
 
 [shimmer-android](https://github.com/facebook/shimmer-android)

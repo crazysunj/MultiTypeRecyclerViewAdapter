@@ -315,9 +315,11 @@ final class ResourcesManager {
     static class AttrsEntity {
         int minSize;
         boolean isFolded;
+        boolean initState;
 
         public AttrsEntity(int minSize, boolean isFolded) {
             this.minSize = minSize;
+            this.initState = isFolded;
             this.isFolded = isFolded;
         }
     }
