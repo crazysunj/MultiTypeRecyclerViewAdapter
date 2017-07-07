@@ -109,14 +109,14 @@ final class ResourcesManager {
         if (mLoadingManager != null) {
             int loadingLayoutResId = mLoadingManager.loadingLayoutResId;
             if (loadingLayoutResId != 0) {
-                int loadingLayoutType = type - RecyclerViewAdapterHelper.SHIMMER_DATA_TYPE_DIFFER;
+                int loadingLayoutType = type - RecyclerViewAdapterHelper.LOADING_DATA_TYPE_DIFFER;
                 mLevels.put(loadingLayoutType, level);
                 mLayouts.put(loadingLayoutType, loadingLayoutResId);
             }
 
             int loadingHeaderResId = mLoadingManager.loadingHeaderResId;
             if (loadingHeaderResId != 0) {
-                int loadingHeaderType = type - RecyclerViewAdapterHelper.SHIMMER_HEADER_TYPE_DIFFER;
+                int loadingHeaderType = type - RecyclerViewAdapterHelper.LOADING_HEADER_TYPE_DIFFER;
                 mLevels.put(loadingHeaderType, DEFAULT_HEADER_LEVEL);
                 mLayouts.put(loadingHeaderType, loadingHeaderResId);
             }

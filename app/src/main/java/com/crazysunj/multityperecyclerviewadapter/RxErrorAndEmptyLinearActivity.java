@@ -55,7 +55,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
             public void onClick(View v, int type) {
                 int id = v.getId();
                 if (id == R.id.retry && type == SimpleHelper.TYPE_THREE) {
-                    helper.notifyShimmerDataChanged(SimpleHelper.TYPE_THREE, 2);
+                    helper.notifyLoadingDataChanged(SimpleHelper.TYPE_THREE, 2);
                     textView2.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -70,7 +70,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
                         }
                     }, 2000);
                 } else if (id == R.id.retry && type == SimpleHelper.TYPE_TWO) {
-                    helper.notifyShimmerDataAndHeaderChanged(SimpleHelper.TYPE_TWO, 3);
+                    helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_TWO, 3);
                     textView4.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -88,7 +88,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
             }
         });
 
-        helper.notifyShimmerDataAndHeaderChanged(SimpleHelper.TYPE_ONE, 3);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_ONE, 3);
         textView1.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -104,7 +104,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
             }
         }, 2000);
 
-        helper.notifyShimmerDataAndHeaderChanged(SimpleHelper.TYPE_FOUR, 3);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_FOUR, 3);
         textView3.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -123,7 +123,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
     public void click1(View view) {
 
 
-        helper.notifyShimmerDataAndHeaderChanged(SimpleHelper.TYPE_ONE, 1);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_ONE, 1);
         textView1.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -136,7 +136,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
 
     public void click2(View view) {
 
-        helper.notifyShimmerDataChanged(SimpleHelper.TYPE_THREE, 2);
+        helper.notifyLoadingDataChanged(SimpleHelper.TYPE_THREE, 2);
         textView2.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -150,7 +150,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
 
     public void click3(View view) {
 
-        helper.notifyShimmerDataAndHeaderChanged(SimpleHelper.TYPE_FOUR, 1);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_FOUR, 1);
         textView3.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -161,7 +161,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
 
     public void click4(View view) {
 
-        helper.notifyShimmerDataAndHeaderChanged(SimpleHelper.TYPE_TWO, 3);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_TWO, 3);
         textView4.postDelayed(new Runnable() {
             @Override
             public void run() {

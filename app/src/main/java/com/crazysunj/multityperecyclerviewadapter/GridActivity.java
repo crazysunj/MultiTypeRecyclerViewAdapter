@@ -72,7 +72,7 @@ public class GridActivity extends AppCompatActivity {
     }
 
     public void click1(View view) {
-        helper.notifyShimmerDataAndHeaderChanged(SimpleHelper.TYPE_ONE, 3);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_ONE, 3);
         textView1.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -92,7 +92,7 @@ public class GridActivity extends AppCompatActivity {
 
     public void click2(View view) {
 
-        helper.notifyShimmerDataChanged(SimpleHelper.TYPE_THREE, 2);
+        helper.notifyLoadingDataChanged(SimpleHelper.TYPE_THREE, 2);
         textView2.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -115,7 +115,7 @@ public class GridActivity extends AppCompatActivity {
 
     public void click3(View view) {
 
-        helper.notifyShimmerHeaderChanged(SimpleHelper.TYPE_FOUR);
+        helper.notifyLoadingHeaderChanged(SimpleHelper.TYPE_FOUR);
         textView3.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -126,7 +126,7 @@ public class GridActivity extends AppCompatActivity {
 
     public void click4(View view) {
 
-        helper.notifyShimmerDataAndHeaderChanged(SimpleHelper.TYPE_TWO, 3);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_TWO, 3);
         textView4.postDelayed(new Runnable() {
             @Override
             public void run() {

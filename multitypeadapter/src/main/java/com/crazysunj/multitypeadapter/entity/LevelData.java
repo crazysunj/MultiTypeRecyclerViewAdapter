@@ -18,7 +18,7 @@ package com.crazysunj.multitypeadapter.entity;
 import java.util.List;
 
 /**
- * 一开始的时候就这样设计了，懒得改了 - -！,分别获取个人感觉更人性化
+ * 存储单个type数据实体
  * Created by sunjian on 2017/3/27.
  */
 

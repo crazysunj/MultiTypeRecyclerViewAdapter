@@ -53,18 +53,18 @@ public class SimpleCommonHelperAdapter extends CommonHelperAdapter<MultiHeaderEn
         helper.setLoadingAdapter(new LoadingEntityAdapter<MultiHeaderEntity>() {
             @Override
             public MultiHeaderEntity createLoadingEntity(int type) {
-                return new LoadingEntity(type - RxAptHelperAdapterHelper.SHIMMER_DATA_TYPE_DIFFER);
+                return new LoadingEntity(type - RxAptHelperAdapterHelper.LOADING_DATA_TYPE_DIFFER);
             }
 
             @Override
             public MultiHeaderEntity createLoadingHeaderEntity(int type) {
-                return new LoadingEntity(type - RxAptHelperAdapterHelper.SHIMMER_HEADER_TYPE_DIFFER);
+                return new LoadingEntity(type - RxAptHelperAdapterHelper.LOADING_HEADER_TYPE_DIFFER);
             }
 
             @Override
             public void bindLoadingEntity(MultiHeaderEntity loadingEntity, int position) {
 //                int itemType = loadingEntity.getItemType();
-//                int type = position < 0 ? itemType + RxAptHelperAdapterHelper.SHIMMER_HEADER_TYPE_DIFFER : itemType + RxAptHelperAdapterHelper.SHIMMER_DATA_TYPE_DIFFER;
+//                int type = position < 0 ? itemType + RxAptHelperAdapterHelper.LOADING_HEADER_TYPE_DIFFER : itemType + RxAptHelperAdapterHelper.LOADING_DATA_TYPE_DIFFER;
 //                switch (type) {
 //                    case TYPE_ONE:
 //                        break;

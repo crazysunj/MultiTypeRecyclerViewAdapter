@@ -85,6 +85,14 @@ public abstract class AsynAdapterHelper<T extends MultiHeaderEntity, A extends R
         }
     }
 
+    /**
+     * 重置刷新队列
+     */
+    public void reset() {
+        clearQueue();
+        cancelFuture();
+    }
+
     private final class HandleTask implements Runnable {
 
         private HandleBase<T> mHandleBase;

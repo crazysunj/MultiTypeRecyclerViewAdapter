@@ -52,4 +52,9 @@ public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem, Ope
     protected int getPreDataCount() {
         return mAdapter.getHeaderLayoutCount();
     }
+
+//    @Override
+//    protected DiffUtil.Callback getDiffCallBack(List<OpenCloseItem> oldData, List<OpenCloseItem> newData) {
+//        return new OpenCloseDiffCallBack(oldData, newData);
+//    }
 }

@@ -22,6 +22,7 @@ import com.crazysunj.multityperecyclerviewadapter.helper.SimpleRxHelperAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class RxLinearActivity extends AppCompatActivity {
@@ -48,7 +49,7 @@ public class RxLinearActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
         recyclerView.setAdapter(adapter);
 
-        helper.notifyShimmerDataAndHeaderChanged(SimpleHelper.TYPE_FOUR, 3);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_FOUR, 3);
         textView3.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -65,7 +66,7 @@ public class RxLinearActivity extends AppCompatActivity {
     }
 
     public void click1(View view) {
-        helper.notifyShimmerDataAndHeaderChanged(SimpleHelper.TYPE_ONE, 3);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_ONE, 3);
         textView1.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -85,7 +86,7 @@ public class RxLinearActivity extends AppCompatActivity {
 
     public void click2(View view) {
 
-        helper.notifyShimmerDataChanged(SimpleHelper.TYPE_THREE, 2);
+        helper.notifyLoadingDataChanged(SimpleHelper.TYPE_THREE, 2);
         textView2.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -108,7 +109,7 @@ public class RxLinearActivity extends AppCompatActivity {
 
     public void click3(View view) {
 
-        helper.notifyShimmerHeaderChanged(SimpleHelper.TYPE_FOUR);
+        helper.notifyLoadingHeaderChanged(SimpleHelper.TYPE_FOUR);
         textView3.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -119,7 +120,6 @@ public class RxLinearActivity extends AppCompatActivity {
 
     public void click4(View view) {
 
-        helper.notifyShimmerDataAndHeaderChanged(SimpleHelper.TYPE_TWO, 3);
         textView4.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -130,8 +130,9 @@ public class RxLinearActivity extends AppCompatActivity {
                     list.add(new FourthItem(String.format("我是第四种类型%d", i), 18 + i));
                 }
                 textView4.setText(String.format("类型4的数量：%d", list.size()));
-                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFourthItem(String.format("我是第四种类型的头,数量：%d", list.size()), helper.getRandomId()), SimpleHelper.TYPE_TWO);
+                String title = String.format(Locale.getDefault(), "我是第四种类型的头,数量：%d", list.size());
+                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFourthItem(title, title.hashCode()), SimpleHelper.TYPE_TWO);
             }
-        }, 2000);
+        }, 0);
     }
 }

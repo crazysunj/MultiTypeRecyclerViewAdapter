@@ -63,18 +63,18 @@ public class ErrorAndrEmptyHelperAdapter extends BaseQuickAdapter<StickyItem, Sh
         helper.setLoadingAdapter(new LoadingEntityAdapter<StickyItem>() {
             @Override
             public StickyItem createLoadingEntity(int type) {
-                return new ErrorAndEmptyLoadingEntity(type - RxAptHelperAdapterHelper.SHIMMER_DATA_TYPE_DIFFER);
+                return new ErrorAndEmptyLoadingEntity(type - RxAptHelperAdapterHelper.LOADING_DATA_TYPE_DIFFER);
             }
 
             @Override
             public StickyItem createLoadingHeaderEntity(int type) {
-                return new ErrorAndEmptyLoadingEntity(type - RxAptHelperAdapterHelper.SHIMMER_HEADER_TYPE_DIFFER);
+                return new ErrorAndEmptyLoadingEntity(type - RxAptHelperAdapterHelper.LOADING_HEADER_TYPE_DIFFER);
             }
 
             @Override
             public void bindLoadingEntity(StickyItem loadingEntity, int position) {
                 int itemType = loadingEntity.getItemType();
-                int type = position < 0 ? itemType + RxAptHelperAdapterHelper.SHIMMER_HEADER_TYPE_DIFFER : itemType + RxAptHelperAdapterHelper.SHIMMER_DATA_TYPE_DIFFER;
+                int type = position < 0 ? itemType + RxAptHelperAdapterHelper.LOADING_HEADER_TYPE_DIFFER : itemType + RxAptHelperAdapterHelper.LOADING_DATA_TYPE_DIFFER;
                 switch (type) {
                     case SimpleHelper.TYPE_ONE:
                         loadingEntity.setHeaderId(1);

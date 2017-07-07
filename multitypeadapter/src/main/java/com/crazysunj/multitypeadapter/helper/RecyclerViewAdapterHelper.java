@@ -95,9 +95,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     //header类型差值
     public static final int HEADER_TYPE_DIFFER = 1000;
     //loading数据类型差值
-    public static final int SHIMMER_DATA_TYPE_DIFFER = 2000;
+    public static final int LOADING_DATA_TYPE_DIFFER = 2000;
     //loading头类型差值
-    public static final int SHIMMER_HEADER_TYPE_DIFFER = 3000;
+    public static final int LOADING_HEADER_TYPE_DIFFER = 3000;
     //错误类型差值
     public static final int ERROR_TYPE_DIFFER = 4000;
     //空类型差值
@@ -345,7 +345,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     /**
      * 全局初始化的loading集合进行刷新
      */
-    public void notifyShimmerChanged() {
+    public void notifyLoadingChanged() {
 
         if (mGlobalLoadingEntitys == null) return;
 
@@ -360,23 +360,23 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
      *
      * @param type 数据类型
      */
-    public void notifyShimmerChanged(int type) {
+    public void notifyLoadingChanged(int type) {
 
         if (mGlobalLoadingEntitys == null) return;
 
-        int shimmerType = type - SHIMMER_DATA_TYPE_DIFFER;
-        int shimmerHeaderType = type - SHIMMER_HEADER_TYPE_DIFFER;
+        int loadingType = type - LOADING_DATA_TYPE_DIFFER;
+        int loadingHeaderType = type - LOADING_HEADER_TYPE_DIFFER;
         List<T> loadingEntitys = new ArrayList<T>();
         boolean isHaveHeader = false;
         for (T entity : mGlobalLoadingEntitys) {
             int itemType = entity.getItemType();
 
-            if (itemType == shimmerType) {
+            if (itemType == loadingType) {
                 loadingEntitys.add(entity);
                 continue;
             }
 
-            if (itemType == shimmerHeaderType) {
+            if (itemType == loadingHeaderType) {
                 isHaveHeader = true;
                 loadingEntitys.add(entity);
             }
@@ -392,7 +392,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
      * @param type      数据类型
      * @param dataCount 刷新条目数
      */
-    public void notifyShimmerDataChanged(int type, @IntRange(from = 1) int dataCount) {
+    public void notifyLoadingDataChanged(int type, @IntRange(from = 1) int dataCount) {
 
         List<T> datas = createLoadingData(type, dataCount);
 
@@ -420,7 +420,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
      *
      * @param type 数据类型
      */
-    public void notifyShimmerHeaderChanged(int type) {
+    public void notifyLoadingHeaderChanged(int type) {
 
         T header = createLoadingHeader(type);
 
@@ -465,7 +465,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
      * @param type      数据类型
      * @param dataCount 刷新条目数
      */
-    public void notifyShimmerDataAndHeaderChanged(int type, @IntRange(from = 1) int dataCount) {
+    public void notifyLoadingDataAndHeaderChanged(int type, @IntRange(from = 1) int dataCount) {
 
         T header = createLoadingHeader(type);
         List<T> datas = createLoadingData(type, dataCount);
@@ -955,10 +955,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     }
 
     /**
-     * 判断数据是否处于折叠状态
+     * 判断数据是否处于合拢状态
      *
      * @param type 数据类型
-     * @return boolean ture为已折叠状态，false为展开状态
+     * @return boolean ture为已合拢状态，false为展开状态
      */
     public boolean isDataFolded(int type) {
 
@@ -978,9 +978,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     }
 
     /**
-     * 展开type数据
+     * 展开合拢type数据
      *
-     * @param type 数据类型
+     * @param type   数据类型
+     * @param isFold 是否合拢
      */
     public void foldType(int type, boolean isFold) {
 
@@ -1339,12 +1340,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
     }
 
     private int getPositionStart(int level) {
-        int sum = 0;
 
+        int sum = 0;
         for (int i = 0; i < level; i++) {
 
             LevelData<T> data = mLevelOldData.get(i);
-
             if (data == null) {
                 continue;
             }
@@ -1672,6 +1672,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
         SpannableString ss = new SpannableString(originStr);
         Pattern p = Pattern.compile(keyWord);
         Matcher m = p.matcher(ss);
+
         while (m.find()) {
             ss.setSpan(new ForegroundColorSpan(hightLightColor), m.start(), m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }

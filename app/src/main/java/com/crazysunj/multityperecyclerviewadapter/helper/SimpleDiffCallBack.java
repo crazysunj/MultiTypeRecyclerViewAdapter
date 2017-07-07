@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.multitypeadapter.helper;
+package com.crazysunj.multityperecyclerviewadapter.helper;
 
 import android.support.v7.util.DiffUtil;
 
@@ -26,12 +26,12 @@ import java.util.List;
  * 如果你有自己的比较逻辑，大可自己实现一个，关于DiffUtil的用法我就不介绍了，关于接口已经提供
  * Created by sunjian on 2017/3/28.
  */
-class DiffCallBack<T extends MultiHeaderEntity> extends DiffUtil.Callback {
+public class SimpleDiffCallBack extends DiffUtil.Callback {
 
-    private List<T> mOldDatas;
-    private List<T> mNewDatas;
+    private List<MultiHeaderEntity> mOldDatas;
+    private List<MultiHeaderEntity> mNewDatas;
 
-    DiffCallBack(List<T> mOldDatas, List<T> mNewDatas) {
+    public SimpleDiffCallBack(List<MultiHeaderEntity> mOldDatas, List<MultiHeaderEntity> mNewDatas) {
         this.mOldDatas = mOldDatas;
         this.mNewDatas = mNewDatas;
     }
@@ -49,16 +49,16 @@ class DiffCallBack<T extends MultiHeaderEntity> extends DiffUtil.Callback {
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
 
-        T oldItem = mOldDatas.get(oldItemPosition);
-        T newItem = mNewDatas.get(newItemPosition);
-        return !(oldItem == null || newItem == null) && oldItem.getId() == newItem.getId();
+        MultiHeaderEntity oldItem = mOldDatas.get(oldItemPosition);
+        MultiHeaderEntity newItem = mNewDatas.get(newItemPosition);
+        return !(oldItem == null || newItem == null) && oldItem.getItemType() == newItem.getItemType();
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
 
-        T oldItem = mOldDatas.get(oldItemPosition);
-        T newItem = mNewDatas.get(newItemPosition);
-        return oldItem.getItemType() == newItem.getItemType();
+        MultiHeaderEntity oldItem = mOldDatas.get(oldItemPosition);
+        MultiHeaderEntity newItem = mNewDatas.get(newItemPosition);
+        return oldItem.getId() == newItem.getId();
     }
 }

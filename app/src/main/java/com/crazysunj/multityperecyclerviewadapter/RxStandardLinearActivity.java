@@ -148,7 +148,7 @@ public class RxStandardLinearActivity extends AppCompatActivity {
 
     public void click1(View view) {
 
-        helper.notifyShimmerChanged();
+        helper.notifyLoadingChanged();
         view.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -159,7 +159,7 @@ public class RxStandardLinearActivity extends AppCompatActivity {
     }
 
     public void click2(View view) {
-        helper.notifyShimmerChanged();
+        helper.notifyLoadingChanged();
         view.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -271,6 +271,6 @@ public class RxStandardLinearActivity extends AppCompatActivity {
     public void click10(View view) {
         Random random = new Random();
         int type = random.nextInt(4);
-        helper.notifyShimmerChanged(type);
+        helper.notifyLoadingChanged(type);
     }
 }

@@ -89,7 +89,7 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
                 .loadingLayoutResId(R.layout.layout_default_shimmer_view)
                 .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
                 .register();
-        
+
         registerMoudle(TYPE_FOUR)
                 .level(LEVEL_THIRD)
                 .layoutResId(R.layout.item_third)
@@ -128,5 +128,10 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
     @Override
     protected int getPreDataCount() {
         return mAdapter.getHeaderLayoutCount();
+    }
+
+    @Override
+    protected DiffUtil.Callback getDiffCallBack(List<MultiHeaderEntity> oldData, List<MultiHeaderEntity> newData) {
+        return new SimpleDiffCallBack(oldData, newData);
     }
 }
