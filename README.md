@@ -13,20 +13,7 @@
 * 支持刷新生命周期回调
 
 ## 效果
-### 一般效果
-![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper1.gif)
-
-### 关键字高亮
-![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper4.gif)
-
-### error页面
-![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper5.gif)
-
-### empty页面
-![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper7.gif)
-
-### loading页面
-![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper8.gif)
+![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper9.gif)
 
 ## 注意点
 ### Type 取值范围

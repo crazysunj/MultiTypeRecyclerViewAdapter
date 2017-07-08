@@ -120,4 +120,14 @@ public class OpenCloseActivity extends AppCompatActivity {
             initData();
         }
     }
+
+    public void click4(View view) {
+        mAdapter.notifyFirstLoading();
+        view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.notifyFirst(getFirst());
+            }
+        }, 2000);
+    }
 }

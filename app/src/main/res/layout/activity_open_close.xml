@@ -30,20 +30,33 @@
             android:onClick="click3"
             android:text="刷新" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="click4"
+            android:text="类型1Loading" />
+
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="click1"
-            android:text="类型1空" />
+            android:text="类型1empty" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="click2"
-            android:text="类型1错误" />
-
+            android:text="类型1error" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

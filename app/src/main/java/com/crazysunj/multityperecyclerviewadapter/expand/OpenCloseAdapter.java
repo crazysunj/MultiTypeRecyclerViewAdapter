@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multitypeadapter.adapter.EmptyEntityAdapter;
 import com.crazysunj.multitypeadapter.adapter.ErrorEntityAdapter;
+import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.constant.Constants;
@@ -29,6 +30,22 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
 
     public OpenCloseAdapter() {
         super(new OpenCloseAdapterHelper());
+        mHelper.setLoadingAdapter(new LoadingEntityAdapter<OpenCloseItem>() {
+            @Override
+            public OpenCloseItem createLoadingEntity(int type) {
+                return new LoadingOCEntity(type - RecyclerViewAdapterHelper.LOADING_DATA_TYPE_DIFFER, mHelper.getRandomId());
+            }
+
+            @Override
+            public OpenCloseItem createLoadingHeaderEntity(int type) {
+                return new LoadingOCEntity(type - RecyclerViewAdapterHelper.LOADING_HEADER_TYPE_DIFFER, mHelper.getRandomId());
+            }
+
+            @Override
+            public void bindLoadingEntity(OpenCloseItem loadingEntity, int position) {
+
+            }
+        });
         mHelper.setEmptyAdapter(new EmptyEntityAdapter<OpenCloseItem>() {
             @Override
             public OpenCloseItem createEmptyEntity(int type) {
@@ -89,6 +106,10 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
 
     public void notifyFirstError() {
         mHelper.notifyMoudleErrorChanged(FirstOCEntity.OC_FIRST_TYPE);
+    }
+
+    public void notifyFirstLoading() {
+        mHelper.notifyLoadingDataAndHeaderChanged(FirstOCEntity.OC_FIRST_TYPE, 2);
     }
 
     public void notifyFirst(List<FirstOCEntity> entities) {
