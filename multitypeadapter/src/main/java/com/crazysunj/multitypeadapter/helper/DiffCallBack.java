@@ -17,7 +17,7 @@ package com.crazysunj.multitypeadapter.helper;
 
 import android.support.v7.util.DiffUtil;
 
-import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
+import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ import java.util.List;
  * 如果你有自己的比较逻辑，大可自己实现一个，关于DiffUtil的用法我就不介绍了，关于接口已经提供
  * Created by sunjian on 2017/3/28.
  */
-class DiffCallBack<T extends MultiHeaderEntity> extends DiffUtil.Callback {
+class DiffCallBack<T extends MultiTypeEntity> extends DiffUtil.Callback {
 
     private List<T> mOldDatas;
     private List<T> mNewDatas;

@@ -18,14 +18,13 @@ package com.crazysunj.multitypeadapter.entity;
 /**
  * 多类型实体类接口
  * id标志不同数据项(包括头,唯一标识)
- * headerId标志粘性头部的类型(拥有相同headerId的数据项公用同一个粘性头部)
  * itemType标志数据的类型
- * 该类已经过时，希望大家自己实现，讲道理，这跟我们的主题并不符合
  * Created by sunjian on 2017/3/28.
  */
 
-@Deprecated
-public interface MultiHeaderEntity extends MultiTypeEntity {
+public interface MultiTypeEntity {
 
-    long getHeaderId();
+    int getItemType();
+
+    long getId();
 }

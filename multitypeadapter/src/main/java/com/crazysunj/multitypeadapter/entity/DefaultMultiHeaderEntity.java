@@ -15,18 +15,17 @@
  */
 package com.crazysunj.multitypeadapter.entity;
 
-import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
-
 /**
  * @author sunjian
  * @description 默认实现返回StickyHeaderDecoration.NO_HEADER_ID
  * android现在还不能很好兼容java8特性，无奈之举，不然使用default method
  * @date 2017/5/13
  */
+@Deprecated
 public abstract class DefaultMultiHeaderEntity implements MultiHeaderEntity {
 
     @Override
     public long getHeaderId() {
-        return StickyHeaderDecoration.NO_HEADER_ID;
+        return -1;
     }
 }

@@ -11,7 +11,7 @@ import com.crazysunj.multityperecyclerviewadapter.R;
  * Created by sunjian on 2017/5/4.
  */
 
-public class SimpleCommonHelper extends AsynAdapterHelper<MultiHeaderEntity, CommonHelperAdapter<MultiHeaderEntity, CommonShimmerVH>> {
+public class SimpleCommonHelper extends AsynAdapterHelper<MultiHeaderEntity, CommonHelperAdapter> {
 
     public static final int TYPE_ONE = 0;
     public static final int TYPE_TWO = 1;

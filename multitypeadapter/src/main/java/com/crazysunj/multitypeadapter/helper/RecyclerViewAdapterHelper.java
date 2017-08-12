@@ -36,7 +36,7 @@ import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.entity.HandleBase;
 import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
-import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
+import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -64,7 +64,7 @@ import java.util.regex.Pattern;
  * Created by sunjian on 2017/5/4.
  */
 
-public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A extends RecyclerView.Adapter> {
+public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A extends RecyclerView.Adapter> {
 
     protected static final String TAG = RecyclerViewAdapterHelper.class.getSimpleName();
 
@@ -279,13 +279,17 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiHeaderEntity, A e
      * @param position 索引
      * @return headerId
      */
+    @Deprecated
     public long getHeaderId(int position) {
-
         int preDataCount = getPreDataCount();
         if (position < preDataCount) {
-            return StickyHeaderDecoration.NO_HEADER_ID;
+            return -1;
         }
-        return mData.get(position - preDataCount).getHeaderId();
+        T data = mData.get(position - preDataCount);
+        if (data instanceof MultiHeaderEntity) {
+            return ((MultiHeaderEntity) data).getHeaderId();
+        }
+        return -1;
     }
 
     /**

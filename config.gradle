@@ -4,7 +4,7 @@ ext {
     android = [
             compileSdkVersion: 26,
             buildToolsVersion: "26.0.1",
-            minSdkVersion    : 14,
+            minSdkVersion    : 16,
             targetSdkVersion : 26,
     ]
 
@@ -17,9 +17,11 @@ ext {
             MTRVA_Anno         : 'com.crazysunj:multitypeadapter-annotation:1.6.0',
             appcompatV7        : "com.android.support:appcompat-v7:$supportVersion",
             recyclerview       : "com.android.support:recyclerview-v7:$supportVersion",
-            BRVAH              : 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.1',
+            BRVAH              : 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.27',
+            shimmer              : 'com.facebook.shimmer:shimmer:0.1.0@aar',
             rxandroid          : 'io.reactivex.rxjava2:rxandroid:2.0.1',
             rxjava             : 'io.reactivex.rxjava2:rxjava:2.0.9',
+            itemDecoration             : 'com.crazysunj:itemdecoration:0.2.0',
             constraintLayout   : 'com.android.support.constraint:constraint-layout:1.0.2',
             junit              : 'junit:junit:4.12',
     ]

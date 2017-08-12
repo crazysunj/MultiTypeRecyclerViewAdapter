@@ -21,7 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
+import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 import com.crazysunj.multitypeadapter.holder.CommonViewHolder;
 
 import java.lang.reflect.Constructor;
@@ -38,15 +38,14 @@ import java.util.List;
  * Created by sunjian on 2017/5/4.
  */
 
-public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends CommonViewHolder> extends RecyclerView.Adapter<K> {
+public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends CommonViewHolder, H extends RecyclerViewAdapterHelper<T, CommonHelperAdapter>> extends RecyclerView.Adapter<K> {
 
     protected Context mContext;
     protected LayoutInflater mLayoutInflater;
     protected List<T> mData;
-    protected RecyclerViewAdapterHelper<T, CommonHelperAdapter<T, K>> mHelper;
+    protected H mHelper;
 
-    public <R extends RecyclerViewAdapterHelper<T, CommonHelperAdapter<T, K>>> CommonHelperAdapter(R helper) {
-
+    public CommonHelperAdapter(H helper) {
         mData = helper.getData();
         helper.bindAdapter(this);
         mHelper = helper;
@@ -54,19 +53,16 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
 
     @Override
     public int getItemViewType(int position) {
-
         return mHelper.getItemViewType(position);
     }
 
     @Override
     public K onCreateViewHolder(ViewGroup parent, int viewType) {
-
         return createCommonViewHolder(parent, mHelper.getLayoutId(viewType));
     }
 
     @Override
     public int getItemCount() {
-
         return mData.size();
     }
 
@@ -112,7 +108,6 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
@@ -130,7 +125,6 @@ public abstract class CommonHelperAdapter<T extends MultiHeaderEntity, K extends
                 }
             }
         }
-
         return null;
     }
 

@@ -36,6 +36,8 @@ dependencies {
 
     compile libs.appcompatV7
     compile libs.BRVAH
+    compile libs.itemDecoration
+    compile libs.shimmer
     compile libs.recyclerview
     compile libs.rxandroid
     compile libs.rxjava
