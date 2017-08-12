@@ -1,10 +1,10 @@
-
+apply from: "config.gradle"
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.novoda:bintray-release:0.4.0'
     }
@@ -20,16 +20,6 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-ext {
-    userOrg = 'twsunj'
-    groupId = 'com.crazysunj'
-    uploadName = 'MultiTypeRecyclerViewAdapter'
-    publishVersion = '1.7.0'
-    desc = 'MultiTypeRecyclerViewAdapter For Android'
-    website = 'https://github.com/crazysunj/MultiTypeRecyclerViewAdapter'
-    licences = ['Apache-2.0']
 }
 
 allprojects {

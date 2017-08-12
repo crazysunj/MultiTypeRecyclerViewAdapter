@@ -1,15 +1,18 @@
 apply plugin: 'com.android.library'
 apply plugin: 'bintray-release'
 
+def configs = rootProject.ext.android //android配置
+def libs = rootProject.ext.dependencies //依赖库配置
+def bintrays = rootProject.ext.bintray //bintray配置
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion configs.compileSdkVersion
+    buildToolsVersion configs.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 12
-        targetSdkVersion 25
+        minSdkVersion configs.minSdkVersion
+        targetSdkVersion configs.targetSdkVersion
         versionCode 1
-        versionName rootProject.ext.publishVersion
+        versionName bintrays.publishVersion
     }
     buildTypes {
         release {
@@ -27,19 +30,19 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile project(':multitypeadapter-annotation')
+    provided 'com.android.support:recyclerview-v7:26.0.0-alpha1'
+    provided project(libs.MTRVA_File_Anno)
 }
 
 publish {
 
     artifactId = 'multitypeadapter'
-    userOrg = rootProject.ext.userOrg
-    groupId = rootProject.ext.groupId
-    uploadName = rootProject.ext.uploadName
-    publishVersion = rootProject.ext.publishVersion
-    desc = rootProject.ext.desc
-    website = rootProject.ext.website
-    licences = rootProject.ext.licences
+    userOrg = bintrays.userOrg
+    groupId = bintrays.groupId
+    uploadName = bintrays.uploadName
+    publishVersion = bintrays.publishVersion
+    desc = bintrays.desc
+    website = bintrays.website
+    licences = bintrays.licences
 }
 

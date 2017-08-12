@@ -1,21 +1,23 @@
 apply plugin: 'java'
 apply plugin: 'bintray-release'
+def libs = rootProject.ext.dependencies //依赖库配置
+def bintrays = rootProject.ext.bintray //bintray配置
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.auto.service:auto-service:1.0-rc3'
     compile 'com.squareup:javapoet:1.9.0'
-    compile project(':multitypeadapter-annotation')
+    compile project(libs.MTRVA_File_Anno)
 }
 
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 publish {
     artifactId = 'multitypeadapter-compiler'
-    userOrg = rootProject.ext.userOrg
-    groupId = rootProject.ext.groupId
-    uploadName = rootProject.ext.uploadName
-    publishVersion = rootProject.ext.publishVersion
-    desc = rootProject.ext.desc
-    website = rootProject.ext.website
-    licences = rootProject.ext.licences
+    userOrg = bintrays.userOrg
+    groupId = bintrays.groupId
+    uploadName = bintrays.uploadName
+    publishVersion = bintrays.publishVersion
+    desc = bintrays.desc
+    website = bintrays.website
+    licences = bintrays.licences
 }
