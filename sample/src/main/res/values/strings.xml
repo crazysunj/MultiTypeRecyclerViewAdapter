@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Sample</string>
+    <string name="header_all">查看全部</string>
+    <string name="search_hint">搜索各种疾病</string>
+    <string name="home_titile">我的天</string>
+    <string name="copyright">界面设计版权声明：版权归孙老师所有\n禁止商业使用</string>
+</resources>

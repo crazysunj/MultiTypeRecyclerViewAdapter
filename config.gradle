@@ -1,10 +1,12 @@
 ext {
 
-    supportVersion = "26.0.0-alpha1"
+//    supportVersion = "26.0.0-alpha1"
+    supportVersion = "23.2.0"
     android = [
             compileSdkVersion: 26,
             buildToolsVersion: "26.0.1",
-            minSdkVersion    : 16,
+            minSdkVersion    : 17,
+            libMinSdkVersion : 14,
             targetSdkVersion : 26,
     ]
 
@@ -16,12 +18,17 @@ ext {
             MTRVA_Compiler     : 'com.crazysunj:multitypeadapter-compiler:1.6.0',
             MTRVA_Anno         : 'com.crazysunj:multitypeadapter-annotation:1.6.0',
             appcompatV7        : "com.android.support:appcompat-v7:$supportVersion",
+            design             : "com.android.support:design:$supportVersion",
             recyclerview       : "com.android.support:recyclerview-v7:$supportVersion",
+            diffutil           : 'com.crazysunj:diffutil:0.0.2',
             BRVAH              : 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.27',
-            shimmer              : 'com.facebook.shimmer:shimmer:0.1.0@aar',
+            shimmer            : 'com.facebook.shimmer:shimmer:0.1.0@aar',
             rxandroid          : 'io.reactivex.rxjava2:rxandroid:2.0.1',
             rxjava             : 'io.reactivex.rxjava2:rxjava:2.0.9',
-            itemDecoration             : 'com.crazysunj:itemdecoration:0.2.0',
+            itemDecoration     : 'com.crazysunj:itemdecoration:0.2.1',
+            materialsearchview : 'com.miguelcatalan:materialsearchview:1.4.0',
+            SuperTextView      : 'com.github.chenBingX:SuperTextView:v1.3',
+            roundedimageview   : 'com.makeramen:roundedimageview:2.3.0',
             constraintLayout   : 'com.android.support.constraint:constraint-layout:1.0.2',
             junit              : 'junit:junit:4.12',
     ]

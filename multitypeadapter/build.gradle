@@ -9,7 +9,7 @@ android {
     buildToolsVersion configs.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion configs.minSdkVersion
+        minSdkVersion configs.libMinSdkVersion
         targetSdkVersion configs.targetSdkVersion
         versionCode 1
         versionName bintrays.publishVersion
@@ -31,11 +31,11 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     provided 'com.android.support:recyclerview-v7:26.0.0-alpha1'
+    provided libs.diffutil
     provided project(libs.MTRVA_File_Anno)
 }
 
 publish {
-
     artifactId = 'multitypeadapter'
     userOrg = bintrays.userOrg
     groupId = bintrays.groupId

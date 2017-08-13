@@ -1,17 +1,20 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 def configs = rootProject.ext.android //android配置
 def libs = rootProject.ext.dependencies //依赖库配置
 android {
     compileSdkVersion configs.compileSdkVersion
     buildToolsVersion configs.buildToolsVersion
+
     defaultConfig {
-        applicationId "com.crazysunj.multityperecyclerviewadapter"
+        applicationId "com.crazysunj.sample"
         minSdkVersion configs.minSdkVersion
         targetSdkVersion configs.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -19,30 +22,31 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     compile project(libs.MTRVA_File)
-    apt project(libs.MTRVA_File_Compiler)
-    compile libs.MTRVA_Anno
-
-//    compile libs.MTRVA
-//    apt libs.MTRVA_Compiler
-
-    compile libs.appcompatV7
-    compile libs.BRVAH
-    compile libs.itemDecoration
-    compile libs.shimmer
-    compile libs.recyclerview
+    compile libs.design
+    compile libs.constraintLayout
     compile libs.rxandroid
     compile libs.rxjava
-    compile libs.constraintLayout
+    compile libs.BRVAH
+    compile libs.materialsearchview
+    compile libs.SuperTextView
+    compile libs.roundedimageview
     testCompile libs.junit
 
+    compile libs.appcompatV7
+    compile libs.recyclerview
     compile libs.diffutil
+    compile libs.itemDecoration
 }

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_white">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/item_4_icon"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:layout_margin="10dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_doctor_1"
+        app:riv_corner_radius="6dp" />
+
+    <TextView
+        android:id="@+id/item_4_title"
+        style="@style/text_14_333333"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/item_4_icon"
+        android:layout_toEndOf="@id/item_4_icon"
+        tools:text="怎样系统预防及治疗冠心病" />
+
+    <TextView
+        android:id="@+id/item_4_name"
+        style="@style/text_12_666666"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/item_4_title"
+        android:layout_below="@id/item_4_title"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="3dp"
+        tools:text="刘飞" />
+
+    <TextView
+        android:id="@+id/item_4_des"
+        style="@style/text_12_9f9f9f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_4_title"
+        android:layout_marginTop="3dp"
+        android:layout_toEndOf="@id/item_4_name"
+        tools:text="首都医科大学宣武医院主治医师" />
+
+
+    <TextView
+        android:id="@+id/item_4_people"
+        style="@style/text_10_9f9f9f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/item_4_icon"
+        android:layout_alignStart="@id/item_4_title"
+        tools:text="25人见过" />
+
+    <com.coorchice.library.SuperTextView
+        android:id="@+id/item_4_tag"
+        style="@style/text_10_5c93f7"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_above="@id/item_4_people"
+        android:layout_alignStart="@+id/item_4_title"
+        android:layout_marginBottom="3dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:paddingBottom="2dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="2dp"
+        app:corner="10dp"
+        app:stroke_color="@color/color_5C93F7"
+        app:stroke_width="1dp"
+        tools:text="健康行家" />
+
+    <TextView
+        android:id="@+id/item_4_price"
+        style="@style/text_12_5c93f7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/item_4_icon"
+        android:layout_marginEnd="10dp"
+        tools:text="￥ 150/次" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@id/item_4_icon"
+        android:background="@color/color_line" />
+</RelativeLayout>

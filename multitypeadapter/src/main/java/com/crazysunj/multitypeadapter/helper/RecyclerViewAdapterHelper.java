@@ -275,6 +275,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
 
     /**
      * 提供粘性头headerId
+     * 该方法已过时，希望大家去实现属于自己的方法
      *
      * @param position 索引
      * @return headerId
@@ -342,7 +343,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         if (mMaxRandomId <= mMinRandomId) {
             throw new DataException("boy,you win !");
         }
-
         return mMaxRandomId--;
     }
 
@@ -354,6 +354,39 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         if (mGlobalLoadingEntitys == null) return;
 
         mNewData.clear();
+        mLevelOldData.clear();
+        for (T entity : mGlobalLoadingEntitys) {
+            int itemType = entity.getItemType();
+            int level;
+            if (itemType >= -2000 && itemType < -1000) {
+                level = getLevel(itemType + LOADING_DATA_TYPE_DIFFER);
+                LevelData<T> levelData = mLevelOldData.get(level);
+                List<T> data;
+                if (levelData == null) {
+                    data = new ArrayList<T>();
+                    levelData = new LevelData<T>(data, null, null);
+                    mLevelOldData.put(level, levelData);
+                } else {
+                    data = levelData.getData();
+                    if (data == null) {
+                        data = new ArrayList<T>();
+                        levelData.setData(data);
+                    }
+                }
+                data.add(entity);
+            } else if (itemType >= -3000 && itemType < -2000) {
+                level = getLevel(itemType + LOADING_HEADER_TYPE_DIFFER);
+                LevelData<T> levelData = mLevelOldData.get(level);
+                if (levelData == null) {
+                    levelData = new LevelData<T>(null, entity, null);
+                    mLevelOldData.put(level, levelData);
+                } else {
+                    levelData.setHeader(entity);
+                }
+            } else {
+                throw new DataException("are you sure the ture type ?");
+            }
+        }
         mNewData.addAll(mGlobalLoadingEntitys);
 
         notifyMoudleChanged(mNewData, null, null, REFRESH_TYPE_LOAD_ALL, REFRESH_ALL);
@@ -533,7 +566,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
      * @param type   数据类型
      */
     @SuppressWarnings("unchecked")
-    public void notifyMoudleHeaderAndDataAndFooterChanged(T header, List<? extends T> data, T footer, int type) {
+    public void notifyMoudleDataAndHeaderAndFooterChanged(T header, List<? extends T> data, T footer, int type) {
         notifyMoudleChanged((List<T>) data, header, footer, type, REFRESH_HEADER_FOOTER_DATA);
     }
 
@@ -545,7 +578,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
      * @param footer 底
      * @param type   数据类型
      */
-    public void notifyMoudleHeaderAndDataAndFooterChanged(T header, T data, T footer, int type) {
+    public void notifyMoudleDataAndHeaderAndFooterChanged(T header, T data, T footer, int type) {
         notifyMoudleChanged(Collections.singletonList(data), header, footer, type, REFRESH_HEADER_FOOTER_DATA);
     }
 

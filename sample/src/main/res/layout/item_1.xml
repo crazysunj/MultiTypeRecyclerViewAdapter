@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_bottom_line"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/item_1_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:src="@drawable/shape_circle_5c93f7" />
+
+    <TextView
+        android:id="@+id/item_1_title"
+        style="@style/text_14_333333"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@id/item_1_img"
+        tools:text="冠心病康复指导" />
+
+    <TextView
+        android:id="@+id/item_1_content"
+        style="@style/text_12_9f9f9f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/item_1_title"
+        android:layout_below="@id/item_1_title"
+        android:layout_marginTop="6dp"
+        tools:text="冠心病康复指导" />
+
+    <TextView
+        android:id="@+id/item_1_time_flag"
+        style="@style/text_10_9f9f9f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/item_1_title"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="0.5dp"
+        tools:text="AM" />
+
+    <TextView
+        android:id="@+id/item_1_time"
+        style="@style/text_14_333333"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/item_1_title"
+        android:layout_marginEnd="8dp"
+        android:layout_toStartOf="@id/item_1_time_flag"
+        tools:text="10:30" />
+
+</RelativeLayout>

@@ -114,7 +114,7 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
 
     public void notifyFirst(List<FirstOCEntity> entities) {
         int firstType = FirstOCEntity.OC_FIRST_TYPE;
-        mHelper.notifyMoudleHeaderAndDataAndFooterChanged(
+        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(
                 new TitleOCEntity(firstType, "类型1"),
                 entities,
                 new FooterOCEntity(firstType, Constants.EXPAND),
@@ -123,7 +123,7 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
 
     public void notifySecond(List<SecondOCEntity> entities) {
         int secondType = SecondOCEntity.OC_SECOND_TYPE;
-        mHelper.notifyMoudleHeaderAndDataAndFooterChanged(
+        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(
                 new TitleOCEntity(secondType, "类型2"),
                 entities,
                 new FooterOCEntity(secondType, Constants.FOLD),
@@ -132,7 +132,7 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
 
     public void notifyThird(List<ThirdOCEntity> entities) {
         int thirdType = ThirdOCEntity.OC_THIRD_TYPE;
-        mHelper.notifyMoudleHeaderAndDataAndFooterChanged(
+        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(
                 new TitleOCEntity(thirdType, "类型3"),
                 entities,
                 new FooterOCEntity(thirdType, Constants.FOLD),

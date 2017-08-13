@@ -34,6 +34,10 @@ public final class LevelData<T> {
         this.footer = footer;
     }
 
+    public void setData(List<T> data) {
+        this.data = data;
+    }
+
     public List<T> getData() {
         return data;
     }

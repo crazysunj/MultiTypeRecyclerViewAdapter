@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.coorchice.library.SuperTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/text_10_5c93f7"
+    android:layout_width="wrap_content"
+    android:layout_height="18dp"
+    android:layout_marginRight="6dp"
+    android:gravity="center"
+    android:paddingBottom="2dp"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="2dp"
+    app:corner="10dp"
+    app:stroke_color="@color/color_5C93F7"
+    app:stroke_width="1dp"
+    tools:text="低脂肪" />

@@ -1,0 +1,73 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
+    </style>
+
+    <style name="TranslucentTheme" parent="AppTheme.NoActionBar" />
+
+    <style name="text_12_333333">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/color_333333</item>
+    </style>
+
+    <style name="text_12_5c93f7">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/color_5C93F7</item>
+    </style>
+
+    <style name="text_10_5c93f7">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/color_5C93F7</item>
+    </style>
+
+    <style name="text_16_333333">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/color_333333</item>
+    </style>
+
+    <style name="text_14_9f9f9f">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/color_9F9F9F</item>
+    </style>
+
+    <style name="text_14_333333">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/color_333333</item>
+    </style>
+
+    <style name="text_14_F7657D">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/color_F7657D</item>
+    </style>
+
+    <style name="text_12_666666">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/color_666666</item>
+    </style>
+
+    <style name="text_12_9f9f9f">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/color_9F9F9F</item>
+    </style>
+
+    <style name="text_10_9f9f9f">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/color_9F9F9F</item>
+    </style>
+
+</resources>

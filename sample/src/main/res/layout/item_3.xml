@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/color_bg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_top_bottom_line"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/item_3_left_title"
+                style="@style/text_14_333333"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                tools:text="冠心手术康复指导" />
+
+            <TextView
+                android:id="@+id/item_3_left_content"
+                style="@style/text_12_9f9f9f"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:lines="1"
+                tools:text="日常生活应该如何预防冠心病？" />
+
+            <ImageView
+                android:id="@+id/item_3_left_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/ic_boy" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="200dp"
+            android:background="@color/color_line" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp">
+
+                <ImageView
+                    android:id="@+id/item_3_top_icon"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="12dp"
+                    android:src="@mipmap/ic_drug" />
+
+                <TextView
+                    android:id="@+id/item_3_top_title"
+                    style="@style/text_14_333333"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/item_3_top_icon"
+                    android:layout_marginTop="3dp"
+                    android:layout_toEndOf="@id/item_3_top_icon"
+                    tools:text="健康用药" />
+
+                <TextView
+                    android:id="@+id/item_3_top_content"
+                    style="@style/text_12_9f9f9f"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/item_3_top_icon"
+                    android:layout_alignStart="@id/item_3_top_title"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    tools:text="冠心病药物治疗策略" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/color_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp">
+
+                <ImageView
+                    android:id="@+id/item_3_bottom_icon"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="12dp"
+                    android:src="@mipmap/ic_device" />
+
+                <TextView
+                    android:id="@+id/item_3_bottom_title"
+                    style="@style/text_14_333333"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/item_3_bottom_icon"
+                    android:layout_marginTop="3dp"
+                    android:layout_toEndOf="@id/item_3_bottom_icon"
+                    tools:text="科学诊断" />
+
+                <TextView
+                    android:id="@+id/item_3_bottom_content"
+                    style="@style/text_12_9f9f9f"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/item_3_bottom_icon"
+                    android:layout_alignStart="@id/item_3_bottom_title"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    tools:text="这些方法诊断冠心病" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
