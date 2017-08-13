@@ -44,5 +44,5 @@ dependencies {
     compile libs.constraintLayout
     testCompile libs.junit
 
-    compile libs.diffutil
+//    compile libs.diffutil
 }

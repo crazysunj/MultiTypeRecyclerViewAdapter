@@ -47,6 +47,6 @@ dependencies {
 
     compile libs.appcompatV7
     compile libs.recyclerview
-    compile libs.diffutil
+//    compile libs.diffutil
     compile libs.itemDecoration
 }

@@ -1,7 +1,5 @@
 ext {
-
-//    supportVersion = "26.0.0-alpha1"
-    supportVersion = "23.2.0"
+    supportVersion = "26.0.0-alpha1"
     android = [
             compileSdkVersion: 26,
             buildToolsVersion: "26.0.1",
@@ -37,7 +35,7 @@ ext {
             userOrg       : 'twsunj',
             groupId       : 'com.crazysunj',
             uploadName    : 'MultiTypeRecyclerViewAdapter',
-            publishVersion: '1.7.0',
+            publishVersion: '1.6.6',
             desc          : 'MultiTypeRecyclerViewAdapter For Android',
             website       : 'https://github.com/crazysunj/MultiTypeRecyclerViewAdapter',
             licences      : ['Apache-2.0']

@@ -1255,7 +1255,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
      *
      * @return ListUpdateCallback
      */
-    protected ListUpdateCallback getListUpdateCallback(final RecyclerView.Adapter adapter) {
+    protected ListUpdateCallback getListUpdateCallback(final A adapter) {
 
         final int preDataCount = getPreDataCount();
 
