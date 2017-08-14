@@ -14,6 +14,7 @@
 * 兼容低版本RecyclerView
 
 ## 效果
+
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper10.gif)
 
 ## 传送门
