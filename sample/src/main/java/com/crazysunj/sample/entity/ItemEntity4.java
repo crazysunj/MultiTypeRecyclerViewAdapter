@@ -13,6 +13,7 @@ import com.crazysunj.sample.util.MD5Util;
 
 public class ItemEntity4 implements MutiTypeTitleEntity {
     public static final int TYPE_4 = 3;
+    public static final String HEADER_TITLE = "名医推荐";
 
     private long id;
 

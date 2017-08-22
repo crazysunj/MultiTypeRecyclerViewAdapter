@@ -34,7 +34,7 @@ public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, 
 
     private CommonHeadEntity entity1Header = new CommonHeadEntity(ItemEntity1.HEADER_TITLE, ItemEntity1.TYPE_1);
     private CommonHeadEntity entity2Header = new CommonHeadEntity(ItemEntity2.HEADER_TITLE, ItemEntity2.TYPE_2);
-    private CommonHeadEntity entity4Header = new CommonHeadEntity(ItemEntity2.HEADER_TITLE, ItemEntity4.TYPE_4);
+    private CommonHeadEntity entity4Header = new CommonHeadEntity(ItemEntity4.HEADER_TITLE, ItemEntity4.TYPE_4);
     private CommonFooterEntity entity1Footer = new CommonFooterEntity(Constants.EXPAND, ItemEntity1.TYPE_1);
 
     public MyAdapter() {
