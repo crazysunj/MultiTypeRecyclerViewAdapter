@@ -14,7 +14,6 @@ import com.crazysunj.multitypeadapter.annotation.BindHeaderRes;
 import com.crazysunj.multitypeadapter.annotation.BindLoadingHeaderRes;
 import com.crazysunj.multitypeadapter.annotation.BindLoadingLayoutRes;
 import com.crazysunj.multitypeadapter.annotation.PreDataCount;
-import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
 import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
@@ -30,6 +29,7 @@ import com.crazysunj.multityperecyclerviewadapter.header.HeaderFirstItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFourthItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderSecondItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderThirdItem;
+import com.crazysunj.multityperecyclerviewadapter.helper.MultiHeaderEntity;
 import com.crazysunj.multityperecyclerviewadapter.helper.ShimmerViewHolder;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 import com.crazysunj.multityperecyclerviewadapter.sticky.FirstStickyItem;
@@ -44,6 +44,7 @@ import com.crazysunj.multityperecyclerviewadapter.sticky.ThirdStickyItem;
  */
 
 @AdapterHelper(superObj = "com.crazysunj.multityperecyclerviewadapter.helper.SimpleRxAdapterHelper",
+        entity = "com.crazysunj.multityperecyclerviewadapter.helper.MultiHeaderEntity",
         adapter = "com.crazysunj.multityperecyclerviewadapter.apt.RxAptHelperAdapter")
 public class RxAptHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, ShimmerViewHolder>
         implements StickyHeaderAdapter<ShimmerViewHolder> {

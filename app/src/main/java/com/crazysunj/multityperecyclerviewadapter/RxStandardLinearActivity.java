@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
@@ -22,6 +21,7 @@ import com.crazysunj.multityperecyclerviewadapter.header.HeaderFirstItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFourthItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderSecondItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderThirdItem;
+import com.crazysunj.multityperecyclerviewadapter.helper.MultiHeaderEntity;
 import com.crazysunj.multityperecyclerviewadapter.helper.RxAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleRxHelperAdapter;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.multitypeadapter.entity;
+package com.crazysunj.multityperecyclerviewadapter.helper;
 
 /**
  * @author sunjian
@@ -21,7 +21,6 @@ package com.crazysunj.multitypeadapter.entity;
  * android现在还不能很好兼容java8特性，无奈之举，不然使用default method
  * @date 2017/5/13
  */
-@Deprecated
 public abstract class DefaultMultiHeaderEntity implements MultiHeaderEntity {
 
     @Override

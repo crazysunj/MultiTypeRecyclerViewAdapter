@@ -95,6 +95,12 @@
             android:layout_height="wrap_content"
             android:onClick="click14"
             android:text="展开合拢" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="click15"
+            android:text="Rx180" />
     </LinearLayout>
 
 </ScrollView>

@@ -70,4 +70,8 @@ public class MainActivity extends AppCompatActivity {
     public void click14(View view) {
         startActivity(new Intent(this, OpenCloseActivity.class));
     }
+
+    public void click15(View view) {
+        startActivity(new Intent(this, Rx180Activity.class));
+    }
 }

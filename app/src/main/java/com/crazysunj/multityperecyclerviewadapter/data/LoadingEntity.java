@@ -1,6 +1,6 @@
 package com.crazysunj.multityperecyclerviewadapter.data;
 
-import com.crazysunj.multitypeadapter.entity.DefaultMultiHeaderEntity;
+import com.crazysunj.multityperecyclerviewadapter.helper.DefaultMultiHeaderEntity;
 
 import java.util.UUID;
 

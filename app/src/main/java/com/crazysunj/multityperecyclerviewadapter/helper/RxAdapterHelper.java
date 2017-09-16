@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.crazysunj.multitypeadapter.entity.HandleBase;
-import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.R;
 
@@ -65,6 +64,15 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
                         handleResult(diffResult);
                     }
                 });
+    }
+
+    public long getHeaderId(int position) {
+        int preDataCount = getPreDataCount();
+        if (position < preDataCount) {
+            return -1;
+        }
+        MultiHeaderEntity data = mData.get(position - preDataCount);
+        return data.getHeaderId();
     }
 
     @Override

@@ -67,6 +67,15 @@ public class ErrorAndEmptyAdapterHelper extends RecyclerViewAdapterHelper<Sticky
                 });
     }
 
+    public long getHeaderId(int position) {
+        int preDataCount = getPreDataCount();
+        if (position < preDataCount) {
+            return -1;
+        }
+        MultiHeaderEntity data = mData.get(position - preDataCount);
+        return data.getHeaderId();
+    }
+
     @Override
     protected void onStart() {
         super.onStart();

@@ -29,6 +29,9 @@ ext {
             roundedimageview   : 'com.makeramen:roundedimageview:2.3.0',
             constraintLayout   : 'com.android.support.constraint:constraint-layout:1.0.2',
             junit              : 'junit:junit:4.12',
+            debugLeakcanary    : 'com.squareup.leakcanary:leakcanary-android:1.5.1',
+            releaseLeakcanary  : 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1',
+            multidex           : "com.android.support:multidex:1.0.1",
     ]
 
     bintray = [

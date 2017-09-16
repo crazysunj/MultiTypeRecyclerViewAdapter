@@ -7,7 +7,6 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multitypeadapter.adapter.EmptyEntityAdapter;
 import com.crazysunj.multitypeadapter.adapter.ErrorEntityAdapter;
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
-import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
 import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.apt.RxAptHelperAdapterHelper;

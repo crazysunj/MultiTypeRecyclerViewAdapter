@@ -17,8 +17,6 @@ package com.crazysunj.multityperecyclerviewadapter.helper;
 
 import android.support.v7.util.DiffUtil;
 
-import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
-
 import java.util.List;
 
 /**

@@ -4,7 +4,6 @@ import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 
 import com.crazysunj.multitypeadapter.entity.HandleBase;
-import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 
 import java.util.List;
@@ -50,5 +49,14 @@ public abstract class SimpleRxAdapterHelper<T extends MultiHeaderEntity, A exten
                         handleResult(diffResult);
                     }
                 });
+    }
+
+    public long getHeaderId(int position) {
+        int preDataCount = getPreDataCount();
+        if (position < preDataCount) {
+            return -1;
+        }
+        T data = mData.get(position - preDataCount);
+        return data.getHeaderId();
     }
 }

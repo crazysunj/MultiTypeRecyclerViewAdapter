@@ -49,4 +49,7 @@ dependencies {
     compile libs.recyclerview
 //    compile libs.diffutil
     compile libs.itemDecoration
+    compile libs.multidex
+    debugCompile libs.debugLeakcanary
+    releaseCompile libs.releaseLeakcanary
 }

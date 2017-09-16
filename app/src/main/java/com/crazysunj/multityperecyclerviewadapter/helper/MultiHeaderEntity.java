@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.multitypeadapter.entity;
+package com.crazysunj.multityperecyclerviewadapter.helper;
+
+import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 
 /**
  * 多类型实体类接口
@@ -24,7 +26,6 @@ package com.crazysunj.multitypeadapter.entity;
  * Created by sunjian on 2017/3/28.
  */
 
-@Deprecated
 public interface MultiHeaderEntity extends MultiTypeEntity {
 
     long getHeaderId();

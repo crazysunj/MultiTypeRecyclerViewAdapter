@@ -226,6 +226,13 @@ public class MainActivity extends AppCompatActivity {
         SnackBarUtil.show(this, "哥，别点了");
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAdapter.release();
+        Log.d("MainActivity", "我的天");
+    }
+
     public void scrollTop(View view) {
         mRecyclerView.smoothScrollToPosition(0);
     }

@@ -1,6 +1,6 @@
 package com.crazysunj.multityperecyclerviewadapter.expand;
 
-import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
+import com.crazysunj.multityperecyclerviewadapter.helper.MultiHeaderEntity;
 
 /**
  * description

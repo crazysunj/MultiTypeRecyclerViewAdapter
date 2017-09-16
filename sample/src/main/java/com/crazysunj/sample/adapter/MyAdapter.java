@@ -182,4 +182,8 @@ public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, 
     public void notifyType4(List<ItemEntity4> itemEntity4s) {
         mHelper.notifyMoudleDataAndHeaderChanged(itemEntity4s, entity4Header, ItemEntity4.TYPE_4);
     }
+
+    public void release() {
+        mHelper.release();
+    }
 }

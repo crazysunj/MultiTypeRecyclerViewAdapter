@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.crazysunj.multitypeadapter.entity.MultiHeaderEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
@@ -15,6 +14,7 @@ import com.crazysunj.multityperecyclerviewadapter.data.ThirdItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFirstItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFourthItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderThirdItem;
+import com.crazysunj.multityperecyclerviewadapter.helper.MultiHeaderEntity;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleCommonHelper;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleCommonHelperAdapter;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
