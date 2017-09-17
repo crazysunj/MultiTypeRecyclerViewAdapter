@@ -44,5 +44,4 @@ dependencies {
     testCompile libs.junit
 
 //    compile libs.diffutil
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
