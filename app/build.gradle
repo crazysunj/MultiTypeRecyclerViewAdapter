@@ -41,7 +41,6 @@ dependencies {
     compile libs.recyclerview
     compile libs.rxandroid
     compile libs.rxjava
-    compile libs.constraintLayout
     testCompile libs.junit
 
 //    compile libs.diffutil

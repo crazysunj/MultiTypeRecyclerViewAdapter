@@ -36,7 +36,6 @@ dependencies {
     })
     compile project(libs.MTRVA_File)
     compile libs.design
-    compile libs.constraintLayout
     compile libs.rxandroid
     compile libs.rxjava
     compile libs.BRVAH
