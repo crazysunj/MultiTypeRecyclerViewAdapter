@@ -31,16 +31,17 @@
 
 ## 传送门
 
-博客:[http://crazysunj.com/](http://crazysunj.com/)
+博客：[http://crazysunj.com/](http://crazysunj.com/)
 
-谷歌邮箱:twsunj@gmail.com
+谷歌邮箱：twsunj@gmail.com
 
-QQ邮箱:387953660@qq.com
+QQ邮箱：387953660@qq.com
 
 [版本记录](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/releases)
 
 [使用说明书](http://crazysunj.com/2017/08/14/MTRVA%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6/)
 
+下载地址：[使用Demo](https://www.pgyer.com/LAZn) [首页Demo](https://www.pgyer.com/sOVg) [项目Demo](https://www.pgyer.com/EbHS)
 **欢迎大家的star(fork)和反馈(可发issues或者我的邮箱）。**
 
 ## License
