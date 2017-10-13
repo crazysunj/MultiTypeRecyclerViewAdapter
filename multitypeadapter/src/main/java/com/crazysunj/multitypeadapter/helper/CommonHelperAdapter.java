@@ -94,7 +94,6 @@ public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends C
     private K createGenericKInstance(Class z, View view) {
 
         try {
-
             Constructor constructor;
             String buffer = Modifier.toString(z.getModifiers());
             String className = z.getName();

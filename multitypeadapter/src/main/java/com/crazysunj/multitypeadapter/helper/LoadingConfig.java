@@ -76,7 +76,6 @@ public class LoadingConfig {
         }
 
         public LoadingConfig build() {
-
             return new LoadingConfig(mBuilderConfigs);
         }
     }

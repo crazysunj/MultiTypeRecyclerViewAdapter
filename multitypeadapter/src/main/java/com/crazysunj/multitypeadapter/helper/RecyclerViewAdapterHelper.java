@@ -334,7 +334,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         for (T entity : mGlobalLoadingEntitys) {
             final int itemType = entity.getItemType();
             int level;
-            if (itemType >= -2000 && itemType < -1000) {
+            if (itemType >= -LOADING_DATA_TYPE_DIFFER && itemType < -HEADER_TYPE_DIFFER) {
                 level = getLevel(itemType + LOADING_DATA_TYPE_DIFFER);
                 LevelData<T> levelData = mLevelOldData.get(level);
                 List<T> data;
@@ -350,7 +350,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
                     }
                 }
                 data.add(entity);
-            } else if (itemType >= -3000 && itemType < -2000) {
+            } else if (itemType >= -LOADING_HEADER_TYPE_DIFFER && itemType < -LOADING_DATA_TYPE_DIFFER) {
                 level = getLevel(itemType + LOADING_HEADER_TYPE_DIFFER);
                 LevelData<T> levelData = mLevelOldData.get(level);
                 if (levelData == null) {
@@ -416,6 +416,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         notifyMoudleDataInserted(Collections.singletonList(data), type);
     }
 
+    /**
+     * 在原来基础上添加一个数据集合
+     *
+     * @param data 添加数据集
+     * @param type 添加数据类型
+     */
     public void notifyMoudleDataInserted(List<? extends T> data, int type) {
         final int level = getLevel(type);
         LevelData<T> levelData = mLevelOldData.get(level);
@@ -858,7 +864,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
             T t = mData.get(position);
             int itemType = t.getItemType();
             int pos;
-            if (itemType >= -1000 && itemType < 0) {
+            if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
                 pos = position + 1;
                 itemType = itemType + HEADER_TYPE_DIFFER;
                 if (itemType != data.getItemType()) {
@@ -878,7 +884,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
                     levelData.setData(list);
                 }
                 list.add(0, data);
-            } else if (itemType >= -6000 && itemType < -5000) {
+            } else if (itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER) {
                 pos = position;
                 itemType = itemType + FOOTER_TYPE_DIFFER;
                 if (itemType != data.getItemType()) {
@@ -955,10 +961,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
             T t = mData.get(position);
             int itemType = t.getItemType();
             int pos;
-            if (itemType >= -1000 && itemType < 0) {
+            if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
                 pos = position + 1;
                 itemType = itemType + HEADER_TYPE_DIFFER;
-            } else if (itemType >= -6000 && itemType < -5000) {
+            } else if (itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER) {
                 pos = position;
                 itemType = itemType + FOOTER_TYPE_DIFFER;
             } else if (itemType >= 0) {
@@ -1020,8 +1026,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         if (mCurrentMode == MODE_STANDARD) {
 
             int itemType = removeData.getItemType();
-            boolean isHeader = itemType >= -1000 && itemType < 0;
-            boolean isFooter = itemType >= -6000 && itemType < -5000;
+            boolean isHeader = itemType >= -HEADER_TYPE_DIFFER && itemType < 0;
+            boolean isFooter = itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER;
             if (isHeader) {
                 itemType += HEADER_TYPE_DIFFER;
             }
@@ -1084,8 +1090,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
 
             T oldData = mData.set(position, data);
             mAdapter.notifyItemChanged(position + getPreDataCount());
-            boolean isHeader = itemType >= -1000 && itemType < 0;
-            boolean isFooter = itemType >= -6000 && itemType < -5000;
+            boolean isHeader = itemType >= -HEADER_TYPE_DIFFER && itemType < 0;
+            boolean isFooter = itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER;
             if (isHeader) {
                 itemType += HEADER_TYPE_DIFFER;
             }
@@ -1145,7 +1151,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
             T t = mData.get(position);
             int itemType = t.getItemType();
             int pos;
-            if (itemType >= -1000 && itemType < 0) {
+            if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
                 pos = position + 1;
                 itemType = itemType + HEADER_TYPE_DIFFER;
                 checkList(itemType, data);
@@ -1162,7 +1168,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
                     levelData.setData(list);
                 }
                 list.addAll(0, data);
-            } else if (itemType >= -6000 && itemType < -5000) {
+            } else if (itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER) {
                 pos = position;
                 itemType = itemType + FOOTER_TYPE_DIFFER;
                 checkList(itemType, data);
@@ -1233,10 +1239,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
             T t = mData.get(position);
             int itemType = t.getItemType();
             int pos;
-            if (itemType >= -1000 && itemType < 0) {
+            if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
                 pos = position + 1;
                 itemType = itemType + HEADER_TYPE_DIFFER;
-            } else if (itemType >= -6000 && itemType < -5000) {
+            } else if (itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER) {
                 pos = position;
                 itemType = itemType + FOOTER_TYPE_DIFFER;
             } else if (itemType >= 0) {
@@ -1928,7 +1934,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         for (T data : newData) {
 
             int itemType = data.getItemType();
-            if (itemType >= 0 && itemType < 1000) {
+            if (itemType >= 0 && itemType < HEADER_TYPE_DIFFER) {
                 int level = getLevel(itemType);
                 List<T> dataList = temDatas.get(level);
                 if (dataList == null) {
@@ -1937,9 +1943,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
                 }
                 dataList.add(data);
 
-            } else if (itemType >= -1000 && itemType < 0) {
+            } else if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
                 temHeaders.put(getLevel(itemType + HEADER_TYPE_DIFFER), data);
-            } else if (itemType >= -6000 && itemType < -5000) {
+            } else if (itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER) {
                 temFooters.put(getLevel(itemType + FOOTER_TYPE_DIFFER), data);
             }
         }
@@ -1996,6 +2002,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         mNewData = null;
         mData.clear();
         mData = null;
+        mGlobalLoadingEntitys.clear();
+        mGlobalLoadingEntitys = null;
+        mSingleCache.evictAll();
+        mSingleCache = null;
+        mDataCache.evictAll();
+        mDataCache = null;
         mLevelOldData.clear();
         mLevelOldData = null;
         mResourcesManager.release();
@@ -2004,7 +2016,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
 
     /**
      * 处理关键字高亮
-     * 如果需要检索算法库，请联系我
      *
      * @param originStr       被处理字符串
      * @param keyWord         关键字

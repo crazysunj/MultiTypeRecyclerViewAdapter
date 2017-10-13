@@ -51,12 +51,8 @@ public abstract class AsynAdapterHelper<T extends MultiTypeEntity, A extends Rec
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == HANDLE_DATA_UPDATE) {
-                try {
-                    DiffUtil.DiffResult diffResult = (DiffUtil.DiffResult) msg.obj;
-                    handleResult(diffResult);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                DiffUtil.DiffResult diffResult = (DiffUtil.DiffResult) msg.obj;
+                handleResult(diffResult);
             }
         }
     };
@@ -76,9 +72,17 @@ public abstract class AsynAdapterHelper<T extends MultiTypeEntity, A extends Rec
                 0, TimeUnit.MILLISECONDS);
     }
 
+    @Override
+    public void release() {
+        cancelFuture();
+        if (!mExecutor.isShutdown()) {
+            mExecutor.shutdown();
+            mExecutor = null;
+        }
+        super.release();
+    }
 
     protected void cancelFuture() {
-
         if (mFuture != null && !mFuture.isCancelled()) {
             mFuture.cancel(true);
             mFuture = null;

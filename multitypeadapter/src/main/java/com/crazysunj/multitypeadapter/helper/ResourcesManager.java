@@ -54,21 +54,14 @@ final class ResourcesManager {
         if (mAttrs == null) {
             mAttrs = new SparseArray<AttrsEntity>();
         }
-        if (mTypeManagers == null) {
-            mTypeManagers = new SparseArray<TypesManager>();
-        }
-        if (mLoadingManagers == null) {
-            mLoadingManagers = new SparseArray<LoadingsManager>();
-        }
-        if (mErrorManagers == null) {
-            mErrorManagers = new SparseArray<ErrorsManager>();
-        }
-        if (mEmptysManagers == null) {
-            mEmptysManagers = new SparseArray<EmptysManager>();
-        }
     }
 
     TypesManager type(@IntRange(from = 0, to = 999) int type) {
+
+        if (mTypeManagers == null) {
+            mTypeManagers = new SparseArray<TypesManager>();
+        }
+
         TypesManager typesManager = mTypeManagers.get(type);
         if (typesManager == null) {
             typesManager = new TypesManager(this, type);
@@ -78,6 +71,11 @@ final class ResourcesManager {
     }
 
     private LoadingsManager loading(@IntRange(from = 0, to = 999) int type) {
+
+        if (mLoadingManagers == null) {
+            mLoadingManagers = new SparseArray<LoadingsManager>();
+        }
+
         LoadingsManager loadingsManager = mLoadingManagers.get(type);
         if (loadingsManager == null) {
             loadingsManager = new LoadingsManager(this, type);
@@ -87,6 +85,11 @@ final class ResourcesManager {
     }
 
     private ErrorsManager error(@IntRange(from = 0, to = 999) int type) {
+
+        if (mErrorManagers == null) {
+            mErrorManagers = new SparseArray<ErrorsManager>();
+        }
+
         ErrorsManager errorsManager = mErrorManagers.get(type);
         if (errorsManager == null) {
             errorsManager = new ErrorsManager(this, type);
@@ -96,6 +99,11 @@ final class ResourcesManager {
     }
 
     private EmptysManager empty(@IntRange(from = 0, to = 999) int type) {
+
+        if (mEmptysManagers == null) {
+            mEmptysManagers = new SparseArray<EmptysManager>();
+        }
+
         EmptysManager emptysManager = mEmptysManagers.get(type);
         if (emptysManager == null) {
             emptysManager = new EmptysManager(this, type);
