@@ -16,7 +16,7 @@
 ## 特点
 
 * 使用简单快捷，可配合大多数Adapter
-* 一行代码刷新单个type，支持一般的set，add，remove，clear等刷新，刷新带有动画
+* 一行代码刷新单个type，刷新带有动画
 * 支持增删改查操作
 * 支持异步，高频率刷新，可扩展(如配合RxJava)
 * 单个type支持Loading(加载)，Empty(空)，Error(错误)页面切换
@@ -26,6 +26,7 @@
 * 支持注解生成类，减少工作量
 * 支持刷新生命周期回调
 * 兼容低版本RecyclerView
+* 进阶用法，比如打造自己的headerView和footerView，让页面在多种页面之间自由切换。
 
 ## 效果
 

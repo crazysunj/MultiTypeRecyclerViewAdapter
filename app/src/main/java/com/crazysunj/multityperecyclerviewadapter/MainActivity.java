@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.crazysunj.multityperecyclerviewadapter.switchtype.SwitchTypeActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -73,5 +75,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void click15(View view) {
         startActivity(new Intent(this, Rx180Activity.class));
+    }
+
+    public void click16(View view) {
+        startActivity(new Intent(this, SwitchTypeActivity.class));
     }
 }

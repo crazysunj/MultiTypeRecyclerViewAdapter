@@ -687,6 +687,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         notifyDataSetChanged(newData, mCurrentMode);
     }
 
+    public void notifyDataSetChanged(T data) {
+        notifyDataSetChanged(Collections.singletonList(data));
+    }
+
     /**
      * 全局刷新
      */
@@ -731,6 +735,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
 
     public void notifyDataByDiff(List<? extends T> newData) {
         notifyDataByDiff(newData, mCurrentMode);
+    }
+
+    public void notifyDataByDiff(T data) {
+        notifyDataByDiff(Collections.singletonList(data));
     }
 
 
