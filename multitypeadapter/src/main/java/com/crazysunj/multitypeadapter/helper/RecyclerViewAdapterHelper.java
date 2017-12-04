@@ -327,7 +327,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
      */
     public void notifyLoadingChanged() {
 
-        if (mGlobalLoadingEntitys == null) return;
+        if (mGlobalLoadingEntitys == null) {
+            return;
+        }
 
         mNewData.clear();
         mLevelOldData.clear();
@@ -375,7 +377,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
      */
     public void notifyLoadingChanged(int type) {
 
-        if (mGlobalLoadingEntitys == null) return;
+        if (mGlobalLoadingEntitys == null) {
+            return;
+        }
 
         final int loadingType = type - LOADING_DATA_TYPE_DIFFER;
         final int loadingHeaderType = type - LOADING_HEADER_TYPE_DIFFER;
