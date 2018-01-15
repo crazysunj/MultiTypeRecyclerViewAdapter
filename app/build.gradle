@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 def configs = rootProject.ext.android //android配置
 def libs = rootProject.ext.dependencies //依赖库配置
 android {
@@ -28,7 +27,7 @@ dependencies {
     })
 
     compile project(libs.MTRVA_File)
-    apt project(libs.MTRVA_File_Compiler)
+    annotationProcessor project(libs.MTRVA_File_Compiler)
     compile libs.MTRVA_Anno
 
 //    compile libs.MTRVA

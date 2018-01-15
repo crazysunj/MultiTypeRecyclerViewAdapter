@@ -20,7 +20,7 @@ package com.crazysunj.multitypeadapter.adapter;
  * <p>空实体类的适配器
  * Created by sunjian on 2017/6/29.
  */
-
+@FunctionalInterface
 public interface EmptyEntityAdapter<T> {
 
     T createEmptyEntity(int type);
