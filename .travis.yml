@@ -5,10 +5,12 @@ android:
   components:
     - build-tools-27.0.3
     - android-27
+    - android-26
     - extra-android-support
     - extra-android-m2repository
     - platform-tools
     - tools
   licenses:
     - 'android-sdk-license.*'
+    - 'android-sdk-license-.+'
 script: ./gradlew assembleRelease
