@@ -46,7 +46,9 @@ QQ邮箱：387953660@qq.com
 
 下载地址：[使用Demo](https://www.pgyer.com/LAZn) [首页Demo](https://www.pgyer.com/sOVg) [项目Demo](https://www.pgyer.com/EbHS)
 
-**欢迎大家的star(fork)和反馈(可发issues或者我的邮箱）。**
+**欢迎大家的star(fork)**
+
+**如果大家有什么问题或者觉得哪里需要优化改进或者有新奇想法可以发我邮箱或者直接加我QQ387953660，大家一起来探讨**
 
 ## License
 
