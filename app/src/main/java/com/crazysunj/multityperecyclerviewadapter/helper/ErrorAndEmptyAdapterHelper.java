@@ -55,7 +55,7 @@ public class ErrorAndEmptyAdapterHelper extends RecyclerViewAdapterHelper<Sticky
                 .map(new Function<HandleBase<StickyItem>, DiffUtil.DiffResult>() {
                     @Override
                     public DiffUtil.DiffResult apply(@NonNull HandleBase<StickyItem> handleBase) throws Exception {
-                        return handleRefresh(handleBase.getNewData(), handleBase.getNewHeader(), handleBase.getNewFooter(), handleBase.getType(), handleBase.getRefreshType());
+                        return handleRefresh(handleBase.getNewData(), handleBase.getNewHeader(), handleBase.getNewFooter(), handleBase.getLevel(), handleBase.getRefreshType());
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -79,7 +79,7 @@ public class ErrorAndEmptyAdapterHelper extends RecyclerViewAdapterHelper<Sticky
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "刷新开始---当前Type:" + getCurrentRefreshType());
+        Log.d(TAG, "刷新开始---当前Level:" + getCurrentRefreshLevel());
     }
 
     @Override
@@ -90,8 +90,8 @@ public class ErrorAndEmptyAdapterHelper extends RecyclerViewAdapterHelper<Sticky
 
     @Override
     protected void registerMoudle() {
-        registerMoudle(TYPE_ONE)
-                .level(LEVEL_FIRST)
+        registerMoudle(LEVEL_FIRST)
+                .type(TYPE_ONE)
                 .layoutResId(R.layout.item_first)
                 .headerResId(R.layout.item_header)
                 .loading()
@@ -99,8 +99,8 @@ public class ErrorAndEmptyAdapterHelper extends RecyclerViewAdapterHelper<Sticky
                 .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
                 .register();
 
-        registerMoudle(TYPE_FOUR)
-                .level(LEVEL_THIRD)
+        registerMoudle(LEVEL_THIRD)
+                .type(TYPE_FOUR)
                 .layoutResId(R.layout.item_third)
                 .headerResId(R.layout.item_header_img)
                 .loading()
@@ -110,8 +110,8 @@ public class ErrorAndEmptyAdapterHelper extends RecyclerViewAdapterHelper<Sticky
                 .emptyLayoutResId(R.layout.layout_empty)
                 .register();
 
-        registerMoudle(TYPE_TWO)
-                .level(LEVEL_FOURTH)
+        registerMoudle(LEVEL_FOURTH)
+                .type(TYPE_TWO)
                 .layoutResId(R.layout.item_fourth)
                 .headerResId(R.layout.item_header_img)
                 .loading()
@@ -121,8 +121,8 @@ public class ErrorAndEmptyAdapterHelper extends RecyclerViewAdapterHelper<Sticky
                 .errorLayoutResId(R.layout.layout_error_two)
                 .register();
 
-        registerMoudle(TYPE_THREE)
-                .level(LEVEL_SENCOND)
+        registerMoudle(LEVEL_SENCOND)
+                .type(TYPE_THREE)
                 .layoutResId(R.layout.item_second)
                 .headerResId(R.layout.item_header_img)
                 .loading()

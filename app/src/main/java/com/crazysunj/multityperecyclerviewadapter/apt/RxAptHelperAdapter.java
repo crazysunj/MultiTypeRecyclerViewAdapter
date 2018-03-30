@@ -9,7 +9,7 @@ import com.crazysunj.multitypeadapter.adapter.EmptyEntityAdapter;
 import com.crazysunj.multitypeadapter.adapter.ErrorEntityAdapter;
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.annotation.AdapterHelper;
-import com.crazysunj.multitypeadapter.annotation.BindAllType;
+import com.crazysunj.multitypeadapter.annotation.BindAllLevel;
 import com.crazysunj.multitypeadapter.annotation.BindHeaderRes;
 import com.crazysunj.multitypeadapter.annotation.BindLoadingHeaderRes;
 import com.crazysunj.multitypeadapter.annotation.BindLoadingLayoutRes;
@@ -49,25 +49,25 @@ import com.crazysunj.multityperecyclerviewadapter.sticky.ThirdStickyItem;
 public class RxAptHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, ShimmerViewHolder>
         implements StickyHeaderAdapter<ShimmerViewHolder> {
 
-    @BindAllType(level = 0, layoutResId = R.layout.item_first, headerResId = R.layout.item_header)
-    public static final int TYPE_ONE = 0;
+    @BindAllLevel(type = {0}, layoutResId = {R.layout.item_first}, headerResId = R.layout.item_header)
+    public static final int LEVEL_1 = 0;
 
-    @BindAllType(level = 3, layoutResId = R.layout.item_fourth, errorLayoutResId = R.layout.layout_error_two)
-    public static final int TYPE_TWO = 1;
+    @BindAllLevel(type = 1, layoutResId = R.layout.item_fourth, errorLayoutResId = R.layout.layout_error_two)
+    public static final int LEVEL_4 = 3;
 
-    @BindAllType(level = 1, layoutResId = R.layout.item_second, errorLayoutResId = R.layout.layout_error)
-    public static final int TYPE_THREE = 2;
+    @BindAllLevel(type = 2, layoutResId = R.layout.item_second, errorLayoutResId = R.layout.layout_error)
+    public static final int LEVEL_2 = 1;
 
-    @BindAllType(level = 2, layoutResId = R.layout.item_third, emptyLayoutResId = R.layout.layout_empty)
-    public static final int TYPE_FOUR = 3;
+    @BindAllLevel(type = 3, layoutResId = R.layout.item_third, emptyLayoutResId = R.layout.layout_empty)
+    public static final int LEVEL_3 = 2;
 
-    @BindHeaderRes(type = {TYPE_TWO, TYPE_THREE, TYPE_FOUR})
+    @BindHeaderRes(level = {LEVEL_4, LEVEL_2, LEVEL_3})
     final int HEADER_LAYOUT_RES_ID = R.layout.item_header_img;
 
-    @BindLoadingHeaderRes(type = {TYPE_ONE, TYPE_TWO, TYPE_THREE, TYPE_FOUR})
+    @BindLoadingHeaderRes(level = {LEVEL_1, LEVEL_4, LEVEL_2, LEVEL_3})
     final int LOADING_HEADER_RES_ID = R.layout.layout_default_shimmer_header_view;
 
-    @BindLoadingLayoutRes(type = {TYPE_ONE, TYPE_TWO, TYPE_THREE, TYPE_FOUR})
+    @BindLoadingLayoutRes(level = {LEVEL_1, LEVEL_4, LEVEL_2, LEVEL_3})
     final int LOADING_LAYOUT_RES_ID = R.layout.layout_default_shimmer_view;
 
 
@@ -80,25 +80,25 @@ public class RxAptHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, Shim
         helper.bindAdapter(this);
         helper.setEmptyAdapter(new EmptyEntityAdapter<MultiHeaderEntity>() {
             @Override
-            public MultiHeaderEntity createEmptyEntity(int type) {
+            public MultiHeaderEntity createEmptyEntity(int type, int level) {
                 return new SimpleEmptyEntity(type);
             }
         });
         helper.setErrorAdapter(new ErrorEntityAdapter<MultiHeaderEntity>() {
             @Override
-            public MultiHeaderEntity createErrorEntity(int type) {
+            public MultiHeaderEntity createErrorEntity(int type, int level) {
                 return new SimpleErrorEntity(type);
             }
         });
         helper.setLoadingAdapter(new LoadingEntityAdapter<MultiHeaderEntity>() {
             @Override
-            public MultiHeaderEntity createLoadingEntity(int type) {
-                return new LoadingEntity(type - RxAptHelperAdapterHelper.LOADING_DATA_TYPE_DIFFER);
+            public MultiHeaderEntity createLoadingEntity(int type, int level) {
+                return new LoadingEntity(type);
             }
 
             @Override
-            public MultiHeaderEntity createLoadingHeaderEntity(int type) {
-                return new LoadingEntity(type - RxAptHelperAdapterHelper.LOADING_HEADER_TYPE_DIFFER);
+            public MultiHeaderEntity createLoadingHeaderEntity(int type, int level) {
+                return new LoadingEntity(type);
             }
 
             @Override
@@ -158,18 +158,18 @@ public class RxAptHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, Shim
         } else if (item instanceof HeaderFourthItem) {
             renderHeaderFourth(helper, (HeaderFourthItem) item);
         } else if (item instanceof SimpleErrorEntity) {
-            if (item.getItemType() == SimpleHelper.TYPE_THREE - SimpleHelper.ERROR_TYPE_DIFFER) {
-                renderErrorSecond(helper, SimpleHelper.TYPE_THREE);
+            if (item.getItemType() == SimpleHelper.LEVEL_SENCOND - SimpleHelper.ERROR_TYPE_DIFFER) {
+                renderErrorSecond(helper, SimpleHelper.LEVEL_SENCOND);
             }
 
             if (item instanceof MyErrorEntity) {
                 MyErrorEntity errorEntity = (MyErrorEntity) item;
-                if (errorEntity.getItemType() == SimpleHelper.TYPE_TWO - SimpleHelper.ERROR_TYPE_DIFFER) {
-                    renderErrorFourth(helper, errorEntity, SimpleHelper.TYPE_TWO);
+                if (errorEntity.getItemType() == SimpleHelper.LEVEL_FOURTH - SimpleHelper.ERROR_TYPE_DIFFER) {
+                    renderErrorFourth(helper, errorEntity, SimpleHelper.LEVEL_FOURTH);
                 }
             }
         } else if (item instanceof MyEmptyEntity) {
-            renderEmptyThird(helper, (MyEmptyEntity) item, SimpleHelper.TYPE_FOUR);
+            renderEmptyThird(helper, (MyEmptyEntity) item, SimpleHelper.LEVEL_THIRD);
         }
     }
 

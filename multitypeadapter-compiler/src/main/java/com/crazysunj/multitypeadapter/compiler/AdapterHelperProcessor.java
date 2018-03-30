@@ -2,15 +2,15 @@ package com.crazysunj.multitypeadapter.compiler;
 
 
 import com.crazysunj.multitypeadapter.annotation.AdapterHelper;
-import com.crazysunj.multitypeadapter.annotation.BindAllType;
-import com.crazysunj.multitypeadapter.annotation.BindDefaultType;
+import com.crazysunj.multitypeadapter.annotation.BindAllLevel;
+import com.crazysunj.multitypeadapter.annotation.BindDefaultLevel;
 import com.crazysunj.multitypeadapter.annotation.BindEmptyLayoutRes;
 import com.crazysunj.multitypeadapter.annotation.BindErrorLayoutRes;
 import com.crazysunj.multitypeadapter.annotation.BindHeaderRes;
 import com.crazysunj.multitypeadapter.annotation.BindLayoutRes;
+import com.crazysunj.multitypeadapter.annotation.BindLevel;
 import com.crazysunj.multitypeadapter.annotation.BindLoadingHeaderRes;
 import com.crazysunj.multitypeadapter.annotation.BindLoadingLayoutRes;
-import com.crazysunj.multitypeadapter.annotation.BindType;
 import com.crazysunj.multitypeadapter.annotation.PreDataCount;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
@@ -21,7 +21,6 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -69,172 +68,184 @@ public class AdapterHelperProcessor extends AbstractProcessor {
                     .returns(void.class);
             List<? extends Element> allMembers = mElementUtils.getAllMembers(typeElement);
 
-            Map<String, String> typeNames = new HashMap<String, String>();
-            Map<String, String> levels = new HashMap<String, String>();
-            Map<String, String> layoutRess = new HashMap<String, String>();
-            Map<String, String> headerRess = new HashMap<String, String>();
-            Map<String, String> loadingLayoutRess = new HashMap<String, String>();
-            Map<String, String> loadingHeaderRess = new HashMap<String, String>();
-            Map<String, String> errorLayoutRess = new HashMap<String, String>();
-            Map<String, String> emptyLayoutRess = new HashMap<String, String>();
+            Map<String, Map<String, String>> levels = new HashMap<>();
+            Map<String, String> headerRess = new HashMap<>();
+            Map<String, String> loadingLayoutRess = new HashMap<>();
+            Map<String, String> loadingHeaderRess = new HashMap<>();
+            Map<String, String> errorLayoutRess = new HashMap<>();
+            Map<String, String> emptyLayoutRess = new HashMap<>();
             ExecutableElement preDataCountElement = null;
 
             for (Element member : allMembers) {
-
                 PreDataCount preDataCountAnno = member.getAnnotation(PreDataCount.class);
                 if (member instanceof ExecutableElement && preDataCountAnno != null && preDataCountElement == null) {
                     preDataCountElement = (ExecutableElement) member;
                 }
-
                 if (!(member instanceof VariableElement)) {
                     continue;
                 }
-
                 VariableElement variableMember = (VariableElement) member;
-
-                BindDefaultType defaultTypeAnno = variableMember.getAnnotation(BindDefaultType.class);
+                BindDefaultLevel defaultTypeAnno = variableMember.getAnnotation(BindDefaultLevel.class);
                 if (defaultTypeAnno != null) {
-
+                    Map<String, String> types = new HashMap<>();
                     String type = "0";
-                    levels.put(type, "0");
-                    typeNames.put(type, "DEFAULT_VIEW_TYPE");
-                    layoutRess.put(type, variableMember.getConstantValue().toString());
-
+                    String level = "0";
+                    types.put(type, variableMember.getConstantValue().toString());
+                    levels.put(level, types);
                     int headerResId = defaultTypeAnno.headerResId();
                     if (headerResId != 0) {
-                        headerRess.put(type, String.valueOf(headerResId));
+                        headerRess.put(level, String.valueOf(headerResId));
                     }
                     int loadingLayoutResId = defaultTypeAnno.loadingLayoutResId();
                     if (loadingLayoutResId != 0) {
-                        loadingLayoutRess.put(type, String.valueOf(loadingLayoutResId));
+                        loadingLayoutRess.put(level, String.valueOf(loadingLayoutResId));
                     }
                     int loadingHeaderResId = defaultTypeAnno.loadingHeaderResId();
                     if (loadingHeaderResId != 0) {
-                        loadingHeaderRess.put(type, String.valueOf(loadingHeaderResId));
+                        loadingHeaderRess.put(level, String.valueOf(loadingHeaderResId));
                     }
                     int errorLayoutResId = defaultTypeAnno.errorLayoutResId();
                     if (errorLayoutResId != 0) {
-                        errorLayoutRess.put(type, String.valueOf(errorLayoutResId));
+                        errorLayoutRess.put(level, String.valueOf(errorLayoutResId));
                     }
                     int emptyLayoutResId = defaultTypeAnno.emptyLayoutResId();
                     if (emptyLayoutResId != 0) {
-                        emptyLayoutRess.put(type, String.valueOf(emptyLayoutResId));
+                        emptyLayoutRess.put(level, String.valueOf(emptyLayoutResId));
                     }
                     continue;
                 }
 
-
-                BindAllType allTypeAnno = variableMember.getAnnotation(BindAllType.class);
+                BindAllLevel allTypeAnno = variableMember.getAnnotation(BindAllLevel.class);
                 if (allTypeAnno != null) {
-                    String type = variableMember.getConstantValue().toString();
-                    levels.put(type, String.valueOf(allTypeAnno.level()));
-                    typeNames.put(type, variableMember.getSimpleName().toString());
-                    layoutRess.put(type, String.valueOf(allTypeAnno.layoutResId()));
+                    String level = variableMember.getConstantValue().toString();
+                    Map<String, String> types = new HashMap<>();
+                    int[] type = allTypeAnno.type();
+                    int[] layoutResId = allTypeAnno.layoutResId();
+                    final int size = type.length;
+                    if (size != layoutResId.length) {
+                        throw new RuntimeException("please the type and the layoutResId are in agreement !");
+                    }
+                    for (int i = 0; i < size; i++) {
+                        types.put(String.valueOf(type[i]), String.valueOf(layoutResId[i]));
+                    }
+
+                    levels.put(level, types);
                     int headerResId = allTypeAnno.headerResId();
                     if (headerResId != 0) {
-                        headerRess.put(type, String.valueOf(headerResId));
+                        headerRess.put(level, String.valueOf(headerResId));
                     }
                     int loadingLayoutResId = allTypeAnno.loadingLayoutResId();
                     if (loadingLayoutResId != 0) {
-                        loadingLayoutRess.put(type, String.valueOf(loadingLayoutResId));
+                        loadingLayoutRess.put(level, String.valueOf(loadingLayoutResId));
                     }
                     int loadingHeaderResId = allTypeAnno.loadingHeaderResId();
                     if (loadingHeaderResId != 0) {
-                        loadingHeaderRess.put(type, String.valueOf(loadingHeaderResId));
+                        loadingHeaderRess.put(level, String.valueOf(loadingHeaderResId));
                     }
                     int errorLayoutResId = allTypeAnno.errorLayoutResId();
                     if (errorLayoutResId != 0) {
-                        errorLayoutRess.put(type, String.valueOf(errorLayoutResId));
+                        errorLayoutRess.put(level, String.valueOf(errorLayoutResId));
                     }
                     int emptyLayoutResId = allTypeAnno.emptyLayoutResId();
                     if (emptyLayoutResId != 0) {
-                        emptyLayoutRess.put(type, String.valueOf(emptyLayoutResId));
+                        emptyLayoutRess.put(level, String.valueOf(emptyLayoutResId));
                     }
                 }
 
 
-                BindType typeAnno = variableMember.getAnnotation(BindType.class);
+                BindLevel typeAnno = variableMember.getAnnotation(BindLevel.class);
                 if (typeAnno != null) {
-                    String type = variableMember.getConstantValue().toString();
-                    levels.put(type, String.valueOf(typeAnno.level()));
-                    typeNames.put(type, variableMember.getSimpleName().toString());
+                    String level = variableMember.getConstantValue().toString();
+                    Map<String, String> types = new HashMap<>();
+                    int[] type = typeAnno.type();
+                    int[] layoutResId = typeAnno.layoutResId();
+                    final int size = type.length;
+                    if (size != layoutResId.length) {
+                        throw new RuntimeException("please the type and the layoutResId are in agreement !");
+                    }
+                    for (int i = 0; i < size; i++) {
+                        types.put(String.valueOf(type[i]), String.valueOf(layoutResId[i]));
+                    }
+                    levels.put(level, types);
                 }
 
 
                 BindLayoutRes layoutResAnno = variableMember.getAnnotation(BindLayoutRes.class);
                 if (layoutResAnno != null) {
-                    int[] types = layoutResAnno.type();
-                    for (int type : types) {
-                        layoutRess.put(String.valueOf(type), variableMember.getConstantValue().toString());
-                    }
+                    int type = layoutResAnno.type();
+                    int level = layoutResAnno.level();
+                    Map<String, String> types = new HashMap<>();
+                    types.put(String.valueOf(type), variableMember.getConstantValue().toString());
+                    levels.put(String.valueOf(level), types);
                 }
 
                 BindHeaderRes headerResAnno = variableMember.getAnnotation(BindHeaderRes.class);
                 if (headerResAnno != null) {
-                    int[] types = headerResAnno.type();
-                    for (int type : types) {
-                        headerRess.put(String.valueOf(type), variableMember.getConstantValue().toString());
+                    int[] headerLevels = headerResAnno.level();
+                    for (int level : headerLevels) {
+                        headerRess.put(String.valueOf(level), variableMember.getConstantValue().toString());
                     }
                 }
 
                 BindLoadingLayoutRes loadingLayoutResAnno = variableMember.getAnnotation(BindLoadingLayoutRes.class);
                 if (loadingLayoutResAnno != null) {
-                    int[] types = loadingLayoutResAnno.type();
-                    for (int type : types) {
-                        loadingLayoutRess.put(String.valueOf(type), variableMember.getConstantValue().toString());
+                    int[] loadingLayoutLevels = loadingLayoutResAnno.level();
+                    for (int level : loadingLayoutLevels) {
+                        loadingLayoutRess.put(String.valueOf(level), variableMember.getConstantValue().toString());
                     }
                 }
 
                 BindLoadingHeaderRes loadingHeaderResAnno = variableMember.getAnnotation(BindLoadingHeaderRes.class);
                 if (loadingHeaderResAnno != null) {
-                    int[] types = loadingHeaderResAnno.type();
-                    for (int type : types) {
-                        loadingHeaderRess.put(String.valueOf(type), variableMember.getConstantValue().toString());
+                    int[] loadingHeaderLevels = loadingHeaderResAnno.level();
+                    for (int level : loadingHeaderLevels) {
+                        loadingHeaderRess.put(String.valueOf(level), variableMember.getConstantValue().toString());
                     }
                 }
 
                 BindErrorLayoutRes errorLayoutResAnno = variableMember.getAnnotation(BindErrorLayoutRes.class);
                 if (errorLayoutResAnno != null) {
-                    int[] types = errorLayoutResAnno.type();
-                    for (int type : types) {
-                        errorLayoutRess.put(String.valueOf(type), variableMember.getConstantValue().toString());
+                    int[] errorLevels = errorLayoutResAnno.level();
+                    for (int level : errorLevels) {
+                        errorLayoutRess.put(String.valueOf(level), variableMember.getConstantValue().toString());
                     }
                 }
 
                 BindEmptyLayoutRes emptyLayoutResAnno = variableMember.getAnnotation(BindEmptyLayoutRes.class);
                 if (emptyLayoutResAnno != null) {
-                    int[] types = emptyLayoutResAnno.type();
-                    for (int type : types) {
-                        emptyLayoutRess.put(String.valueOf(type), variableMember.getConstantValue().toString());
+                    int[] emptyLevels = emptyLayoutResAnno.level();
+                    for (int level : emptyLevels) {
+                        emptyLayoutRess.put(String.valueOf(level), variableMember.getConstantValue().toString());
                     }
                 }
 
             }
 
-            for (String type : levels.keySet()) {
+            for (String level : levels.keySet()) {
                 StringBuilder sb = new StringBuilder();
                 sb.append("\n");
                 sb.append("registerMoudle(")
-                        .append(typeNames.get(type))
-                        .append(")\n")
-                        .append(".level(")
-                        .append(levels.get(type))
+                        .append(level)
                         .append(")\n");
 
-                String layoutResId = layoutRess.get(type);
-                sb.append(".layoutResId(")
-                        .append(layoutResId)
-                        .append(")\n");
+                Map<String, String> types = levels.get(level);
+                for (String type : types.keySet()) {
+                    sb.append(".type(")
+                            .append(type)
+                            .append(")\n.layoutResId(")
+                            .append(types.get(type))
+                            .append(")\n");
+                }
 
-                String headerResId = headerRess.get(type);
+                String headerResId = headerRess.get(level);
                 if (headerResId != null) {
                     sb.append(".headerResId(")
                             .append(headerResId)
                             .append(")\n");
                 }
 
-                String loadingLayoutResId = loadingLayoutRess.get(type);
-                String loadingHeaderResId = loadingHeaderRess.get(type);
+                String loadingLayoutResId = loadingLayoutRess.get(level);
+                String loadingHeaderResId = loadingHeaderRess.get(level);
                 if (loadingLayoutResId != null || loadingHeaderResId != null) {
                     sb.append(".loading()\n");
                 }
@@ -251,7 +262,7 @@ public class AdapterHelperProcessor extends AbstractProcessor {
                             .append(")\n");
                 }
 
-                String errorLayoutResId = errorLayoutRess.get(type);
+                String errorLayoutResId = errorLayoutRess.get(level);
                 if (errorLayoutResId != null) {
                     sb.append(".error()\n")
                             .append(".errorLayoutResId(")
@@ -259,7 +270,7 @@ public class AdapterHelperProcessor extends AbstractProcessor {
                             .append(")\n");
                 }
 
-                String emptyLayoutResId = emptyLayoutRess.get(type);
+                String emptyLayoutResId = emptyLayoutRess.get(level);
                 if (emptyLayoutResId != null) {
                     sb.append(".empty()\n")
                             .append(".emptyLayoutResId(")
@@ -322,13 +333,13 @@ public class AdapterHelperProcessor extends AbstractProcessor {
 
             JavaFile.Builder javaFileBuilder = JavaFile.builder(getPackageName(typeElement), adapterHelper);
 
-            Collection<String> values = typeNames.values();
-            for (String typeName : values) {
-                if ("DEFAULT_VIEW_TYPE".equals(typeName)) {
-                    break;
-                }
-                javaFileBuilder.addStaticImport(ClassName.get(typeElement), typeName);
-            }
+//            Collection<String> values = typeNames.values();
+//            for (String typeName : values) {
+//                if ("DEFAULT_VIEW_TYPE".equals(typeName)) {
+//                    break;
+//                }
+//                javaFileBuilder.addStaticImport(ClassName.get(typeElement), typeName);
+//            }
             javaFileBuilder.addFileComment("/**\n" +
                     " * Copyright 2017 Sun Jian\n" +
                     " * <p>\n" +

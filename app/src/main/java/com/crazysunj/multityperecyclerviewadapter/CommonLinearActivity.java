@@ -21,6 +21,7 @@ import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class CommonLinearActivity extends AppCompatActivity {
@@ -46,7 +47,7 @@ public class CommonLinearActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_FOUR, 3);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_THIRD, 3);
         textView3.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -54,16 +55,16 @@ public class CommonLinearActivity extends AppCompatActivity {
                 int rand = random.nextInt(6);
                 List<MultiHeaderEntity> list = new ArrayList<>();
                 for (int i = 0, size = rand + 1; i < size; i++) {
-                    list.add(new ThirdItem(String.format("我是第三种类型%d", i), 12 + i));
+                    list.add(new ThirdItem(String.format(Locale.getDefault(), "我是第三种类型%d", i), 12 + i));
                 }
-                textView3.setText(String.format("类型3的数量：%d", list.size()));
-                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderThirdItem("我是第三种类型的头", helper.getRandomId()), SimpleHelper.TYPE_FOUR);
+                textView3.setText(String.format(Locale.getDefault(), "类型3的数量：%d", list.size()));
+                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderThirdItem("我是第三种类型的头", helper.getRandomId()), SimpleHelper.LEVEL_THIRD);
             }
         }, 3000);
     }
 
     public void click1(View view) {
-        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_ONE, 3);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_FIRST, 3);
         textView1.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -71,10 +72,10 @@ public class CommonLinearActivity extends AppCompatActivity {
                 int rand = random.nextInt(6000);
                 final List<MultiHeaderEntity> list = new ArrayList<>();
                 for (int i = 0, size = rand + 1; i < size; i++) {
-                    list.add(new FirstItem(String.format("我是第一种类型%d", i), i));
+                    list.add(new FirstItem(String.format(Locale.getDefault(), "我是第一种类型%d", i), i));
                 }
-                textView1.setText(String.format("类型1的数量：%d", list.size()));
-                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFirstItem(String.format("我是第一种类型的头,点击次数：%d", refreshFirstCount++), helper.getRandomId()), SimpleHelper.TYPE_ONE);
+                textView1.setText(String.format(Locale.getDefault(), "类型1的数量：%d", list.size()));
+                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFirstItem(String.format(Locale.getDefault(), "我是第一种类型的头,点击次数：%d", refreshFirstCount++), helper.getRandomId()), SimpleHelper.LEVEL_FIRST);
 
             }
         }, 2000);
@@ -83,7 +84,7 @@ public class CommonLinearActivity extends AppCompatActivity {
 
     public void click2(View view) {
 
-        helper.notifyLoadingDataChanged(SimpleHelper.TYPE_THREE, 2);
+        helper.notifyLoadingDataChanged(SimpleHelper.LEVEL_SENCOND, 2);
         textView2.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -91,10 +92,10 @@ public class CommonLinearActivity extends AppCompatActivity {
                 int rand = random.nextInt(6);
                 List<MultiHeaderEntity> list = new ArrayList<>();
                 for (int i = 0, size = rand + 1; i < size; i++) {
-                    list.add(new SecondItem(String.format("我是第二种类型%d", i), 6 + i));
+                    list.add(new SecondItem(String.format(Locale.getDefault(), "我是第二种类型%d", i), 6 + i));
                 }
-                textView2.setText(String.format("类型2的数量：%d", list.size()));
-                helper.notifyMoudleDataChanged(list, SimpleHelper.TYPE_THREE);
+                textView2.setText(String.format(Locale.getDefault(), "类型2的数量：%d", list.size()));
+                helper.notifyMoudleDataChanged(list, SimpleHelper.LEVEL_SENCOND);
             }
         }, 2000);
 
@@ -106,18 +107,18 @@ public class CommonLinearActivity extends AppCompatActivity {
 
     public void click3(View view) {
 
-        helper.notifyLoadingHeaderChanged(SimpleHelper.TYPE_FOUR);
+        helper.notifyLoadingHeaderChanged(SimpleHelper.LEVEL_THIRD);
         textView3.postDelayed(new Runnable() {
             @Override
             public void run() {
-                helper.notifyMoudleHeaderChanged(new HeaderThirdItem(String.format("我是第三种类型的头,点击次数：%d", refreshThirdCount++), helper.getRandomId()), SimpleHelper.TYPE_FOUR);
+                helper.notifyMoudleHeaderChanged(new HeaderThirdItem(String.format(Locale.getDefault(), "我是第三种类型的头,点击次数：%d", refreshThirdCount++), helper.getRandomId()), SimpleHelper.LEVEL_THIRD);
             }
         }, 2000);
     }
 
     public void click4(View view) {
 
-        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_TWO, 3);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_FOURTH, 3);
         textView4.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -125,10 +126,10 @@ public class CommonLinearActivity extends AppCompatActivity {
                 int rand = random.nextInt(6);
                 List<MultiHeaderEntity> list = new ArrayList<>();
                 for (int i = 0, size = rand + 1; i < size; i++) {
-                    list.add(new FourthItem(String.format("我是第四种类型%d", i), 18 + i));
+                    list.add(new FourthItem(String.format(Locale.getDefault(), "我是第四种类型%d", i), 18 + i));
                 }
-                textView4.setText(String.format("类型4的数量：%d", list.size()));
-                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFourthItem(String.format("我是第四种类型的头,数量：%d", list.size()), helper.getRandomId()), SimpleHelper.TYPE_TWO);
+                textView4.setText(String.format(Locale.getDefault(), "类型4的数量：%d", list.size()));
+                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFourthItem(String.format(Locale.getDefault(), "我是第四种类型的头,数量：%d", list.size()), helper.getRandomId()), SimpleHelper.LEVEL_FOURTH);
             }
         }, 2000);
     }

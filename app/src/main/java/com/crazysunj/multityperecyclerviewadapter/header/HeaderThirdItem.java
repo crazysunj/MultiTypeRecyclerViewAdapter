@@ -43,7 +43,7 @@ public class HeaderThirdItem implements ThirdStickyItem {
 
     @Override
     public int getItemType() {
-        return SimpleHelper.TYPE_FOUR - 1000;
+        return SimpleHelper.LEVEL_THIRD - 1000;
     }
 
     @Override

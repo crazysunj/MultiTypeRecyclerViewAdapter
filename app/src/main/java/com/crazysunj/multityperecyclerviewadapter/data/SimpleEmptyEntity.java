@@ -1,6 +1,5 @@
 package com.crazysunj.multityperecyclerviewadapter.data;
 
-import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.helper.DefaultMultiHeaderEntity;
 
 import java.util.UUID;
@@ -32,7 +31,7 @@ public class SimpleEmptyEntity extends DefaultMultiHeaderEntity {
 
     @Override
     public int getItemType() {
-        return type - RecyclerViewAdapterHelper.EMPTY_TYPE_DIFFER;
+        return type;
     }
 
     @Override

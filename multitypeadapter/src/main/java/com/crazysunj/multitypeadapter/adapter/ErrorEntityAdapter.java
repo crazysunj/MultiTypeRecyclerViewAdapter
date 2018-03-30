@@ -23,5 +23,5 @@ package com.crazysunj.multitypeadapter.adapter;
 @FunctionalInterface
 public interface ErrorEntityAdapter<T> {
 
-    T createErrorEntity(int type);
+    T createErrorEntity(int type, int level);
 }

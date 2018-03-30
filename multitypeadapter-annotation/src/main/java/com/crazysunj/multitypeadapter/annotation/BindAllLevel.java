@@ -7,11 +7,11 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.CLASS)
-public @interface BindAllType {
+public @interface BindAllLevel {
 
-    int level();
+    int[] type();
 
-    int layoutResId();
+    int[] layoutResId();
 
     int headerResId() default 0;
 

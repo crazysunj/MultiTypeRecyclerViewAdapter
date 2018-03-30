@@ -8,5 +8,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.CLASS)
 public @interface BindLayoutRes {
-    int[] type();
+    int type();
+
+    int level();
 }

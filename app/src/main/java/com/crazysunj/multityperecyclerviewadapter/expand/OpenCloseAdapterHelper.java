@@ -15,6 +15,10 @@ import java.util.List;
 
 public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem, OpenCloseAdapter> {
 
+    public static final int LEVEL_FIRST = 0;
+    public static final int LEVEL_SECOND = 1;
+    public static final int LEVEL_THIRD = 2;
+
     public OpenCloseAdapterHelper() {
         super(null);
     }
@@ -22,8 +26,8 @@ public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem, Ope
     @Override
     protected void registerMoudle() {
 
-        registerMoudle(FirstOCEntity.OC_FIRST_TYPE)
-                .level(0)
+        registerMoudle(LEVEL_FIRST)
+                .type(FirstOCEntity.OC_FIRST_TYPE)
                 .layoutResId(R.layout.item_first)
                 .headerResId(R.layout.item_header)
                 .footerResId(R.layout.item_footer)
@@ -38,16 +42,16 @@ public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem, Ope
                 .emptyLayoutResId(R.layout.layout_empty)
                 .register();
 
-        registerMoudle(SecondOCEntity.OC_SECOND_TYPE)
-                .level(1)
+        registerMoudle(LEVEL_SECOND)
+                .type(SecondOCEntity.OC_SECOND_TYPE)
                 .layoutResId(R.layout.item_second)
                 .headerResId(R.layout.item_header)
                 .footerResId(R.layout.item_footer)
                 .minSize(2)
                 .register();
 
-        registerMoudle(ThirdOCEntity.OC_THIRD_TYPE)
-                .level(2)
+        registerMoudle(LEVEL_THIRD)
+                .type(ThirdOCEntity.OC_THIRD_TYPE)
                 .layoutResId(R.layout.item_third)
                 .headerResId(R.layout.item_header)
                 .footerResId(R.layout.item_footer)

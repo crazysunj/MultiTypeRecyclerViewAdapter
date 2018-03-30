@@ -48,7 +48,6 @@ class DiffCallBack<T extends MultiTypeEntity> extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-
         T oldItem = mOldDatas.get(oldItemPosition);
         T newItem = mNewDatas.get(newItemPosition);
         return !(oldItem == null || newItem == null) && oldItem.getItemType() == newItem.getItemType();
@@ -56,7 +55,6 @@ class DiffCallBack<T extends MultiTypeEntity> extends DiffUtil.Callback {
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-
         T oldItem = mOldDatas.get(oldItemPosition);
         T newItem = mNewDatas.get(newItemPosition);
         return oldItem.getId() == newItem.getId();

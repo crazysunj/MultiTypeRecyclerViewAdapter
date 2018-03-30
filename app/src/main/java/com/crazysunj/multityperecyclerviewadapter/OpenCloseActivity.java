@@ -13,6 +13,7 @@ import com.crazysunj.multityperecyclerviewadapter.constant.Constants;
 import com.crazysunj.multityperecyclerviewadapter.expand.FirstOCEntity;
 import com.crazysunj.multityperecyclerviewadapter.expand.FooterOCEntity;
 import com.crazysunj.multityperecyclerviewadapter.expand.OpenCloseAdapter;
+import com.crazysunj.multityperecyclerviewadapter.expand.OpenCloseAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.expand.OpenCloseItem;
 import com.crazysunj.multityperecyclerviewadapter.expand.SecondOCEntity;
 import com.crazysunj.multityperecyclerviewadapter.expand.ThirdOCEntity;
@@ -37,8 +38,8 @@ public class OpenCloseActivity extends AppCompatActivity {
         mAdapter = new OpenCloseAdapter();
         mAdapter.setOnErrorCallback(new OpenCloseAdapter.OnErrorCallback() {
             @Override
-            public void onError(int type) {
-                if (type == FirstOCEntity.OC_FIRST_TYPE) {
+            public void onError(int level) {
+                if (level == OpenCloseAdapterHelper.LEVEL_FIRST) {
                     mAdapter.notifyFirst(getFirst());
                 }
             }
@@ -59,18 +60,18 @@ public class OpenCloseActivity extends AppCompatActivity {
 
         List<OpenCloseItem> data = new ArrayList<OpenCloseItem>();
 
-        int firstType = FirstOCEntity.OC_FIRST_TYPE;
-        data.add(new TitleOCEntity(firstType, "类型1"));
+        int firstTypeLevel = OpenCloseAdapterHelper.LEVEL_FIRST;
+        data.add(new TitleOCEntity(firstTypeLevel, "类型1"));
         data.addAll(getFirst());
-        data.add(new FooterOCEntity(firstType, Constants.EXPAND));
+        data.add(new FooterOCEntity(firstTypeLevel, Constants.EXPAND));
 //        data.add(new FooterOCEntity(firstType, Constants.EXPAND, mAdapter.getHelper().getRandomId()));
 
-        int secondType = SecondOCEntity.OC_SECOND_TYPE;
+        int secondType = OpenCloseAdapterHelper.LEVEL_SECOND;
         data.add(new TitleOCEntity(secondType, "类型2"));
         data.addAll(getSecond());
         data.add(new FooterOCEntity(secondType, Constants.FOLD));
 
-        int thirdType = ThirdOCEntity.OC_THIRD_TYPE;
+        int thirdType = OpenCloseAdapterHelper.LEVEL_THIRD;
         data.add(new TitleOCEntity(thirdType, "类型3"));
         data.addAll(getThird());
         data.add(new FooterOCEntity(thirdType, Constants.FOLD));

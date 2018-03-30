@@ -11,8 +11,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
-import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
@@ -56,7 +54,7 @@ public class RxStandardLinearActivity extends AppCompatActivity {
         helper = new RxAdapterHelper(list);
         SimpleRxHelperAdapter adapter = new SimpleRxHelperAdapter(helper);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
+//        recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
         recyclerView.setAdapter(adapter);
 
     }
@@ -174,22 +172,36 @@ public class RxStandardLinearActivity extends AppCompatActivity {
 
         try {
             Random random = new Random();
-            int position = random.nextInt(helper.getData().size());
+            List<MultiHeaderEntity> data = helper.getData();
+            if (data == null || data.isEmpty()) {
+                Toast.makeText(this, "data为空", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            int position = random.nextInt(data.size());
             MultiHeaderEntity removeData = helper.removeData(position);
             int itemType = removeData.getItemType();
-            if (itemType >= -1000 && itemType < 0) {
-                itemType += RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER;
+            TextView textView;
+            int level = helper.getLevel(itemType);
+            if (itemType < 0) {
+                Log.d("RxStandardLinearActivit", "itemType:" + itemType);
+                textView = getOtherTextView(level);
+            } else {
+                textView = getDataTextView(itemType);
             }
-            Toast.makeText(this, "移除了第" + (position + 1) + "个数据,Type为" + itemType, Toast.LENGTH_SHORT).show();
-            getTextView(itemType)
-                    .setText(String.format(Locale.getDefault(), "类型%d的数量：%d", itemType + 1, helper.getDataWithType(itemType).getData().size()));
+            String text = "移除了第" + (position + 1) + "个数据,Type为" + itemType + " level为" + level;
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+            Log.d("RxStandardLinearActivit", text);
+            List<MultiHeaderEntity> list = helper.getDataWithType(itemType).getData();
+            int size = list == null ? 0 : list.size();
+            textView.setText(String.format(Locale.getDefault(), "类型%d的数量：%d", level + 1, size));
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d("RxStandardLinearActivit", e.getMessage());
         }
 
     }
 
-    private TextView getTextView(int itemType) {
+    private TextView getDataTextView(int itemType) {
         if (itemType == SimpleHelper.TYPE_ONE) {
             return textView1;
         } else if (itemType == SimpleHelper.TYPE_THREE) {
@@ -197,6 +209,19 @@ public class RxStandardLinearActivity extends AppCompatActivity {
         } else if (itemType == SimpleHelper.TYPE_FOUR) {
             return textView3;
         } else if (itemType == SimpleHelper.TYPE_TWO) {
+            return textView4;
+        }
+        return null;
+    }
+
+    private TextView getOtherTextView(int level) {
+        if (level == SimpleHelper.LEVEL_FIRST) {
+            return textView1;
+        } else if (level == SimpleHelper.LEVEL_SENCOND) {
+            return textView2;
+        } else if (level == SimpleHelper.LEVEL_THIRD) {
+            return textView3;
+        } else if (level == SimpleHelper.LEVEL_FOURTH) {
             return textView4;
         }
         return null;
@@ -210,17 +235,25 @@ public class RxStandardLinearActivity extends AppCompatActivity {
     public void click4(View view) {
         try {
             Random random = new Random();
-            int position = random.nextInt(helper.getData().size());
-            int itemType = helper.getData().get(position).getItemType();
-            helper.setData(position, getChangeItem(itemType));
-            Toast.makeText(this, "修改了第" + (position + 1) + "个数据,Type为" + itemType, Toast.LENGTH_SHORT).show();
+            List<MultiHeaderEntity> data = helper.getData();
+            if (data == null || data.isEmpty()) {
+                Toast.makeText(this, "data为空", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            int position = random.nextInt(data.size());
+            int itemType = data.get(position).getItemType();
+            int level = helper.getLevel(itemType);
+            helper.setData(position, itemType < 0 ? getOtherChangeItem(level) : getDataChangeItem(itemType));
+            String text = "修改了第" + (position + 1) + "个数据,Type为" + itemType + " level为" + level;
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+            Log.d("RxStandardLinearActivit", text);
         } catch (Exception e) {
-            Log.d("RecyclerViewAdapter", e.getMessage());
+            Log.d("RxStandardLinearActivit", e.getMessage());
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private MultiHeaderEntity getChangeItem(int itemType) {
+    private MultiHeaderEntity getDataChangeItem(int itemType) {
 
         String date = (String) DateFormat.format("HH:mm:ss", System.currentTimeMillis());
         if (itemType == SimpleHelper.TYPE_ONE) {
@@ -231,13 +264,20 @@ public class RxStandardLinearActivity extends AppCompatActivity {
             return new ThirdItem("我的天，类型3被修改了 " + date);
         } else if (itemType == SimpleHelper.TYPE_TWO) {
             return new FourthItem("我的天，类型4被修改了 " + date);
-        } else if (itemType == SimpleHelper.TYPE_ONE - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER) {
+        }
+        throw new RuntimeException("返回为空");
+    }
+
+    private MultiHeaderEntity getOtherChangeItem(int level) {
+
+        String date = (String) DateFormat.format("HH:mm:ss", System.currentTimeMillis());
+        if (level == SimpleHelper.LEVEL_FIRST) {
             return new HeaderFirstItem("我的天，类型1的头被修改了 " + date);
-        } else if (itemType == SimpleHelper.TYPE_THREE - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER) {
+        } else if (level == SimpleHelper.LEVEL_SENCOND) {
             return new HeaderSecondItem("我的天，类型2的头被修改了 " + date);
-        } else if (itemType == SimpleHelper.TYPE_FOUR - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER) {
+        } else if (level == SimpleHelper.LEVEL_THIRD) {
             return new HeaderThirdItem("我的天，类型3的头被修改了 " + date);
-        } else if (itemType == SimpleHelper.TYPE_TWO - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER) {
+        } else if (level == SimpleHelper.LEVEL_FOURTH) {
             return new HeaderFourthItem("我的天，类型4的头被修改了 " + date);
         }
         throw new RuntimeException("返回为空");
@@ -245,32 +285,41 @@ public class RxStandardLinearActivity extends AppCompatActivity {
 
     public void click5(View view) {
 
-        helper.clearMoudle(SimpleHelper.TYPE_ONE);
+        helper.clearMoudle(SimpleHelper.LEVEL_FIRST);
     }
 
     public void click6(View view) {
 
-        helper.clearMoudle(SimpleHelper.TYPE_THREE);
+        helper.clearMoudle(SimpleHelper.LEVEL_SENCOND);
     }
 
     public void click7(View view) {
-        helper.clearMoudle(SimpleHelper.TYPE_FOUR);
+        helper.clearMoudle(SimpleHelper.LEVEL_THIRD);
 
     }
 
     public void click8(View view) {
-
-        helper.clearMoudle(SimpleHelper.TYPE_TWO);
+        helper.clearMoudle(SimpleHelper.LEVEL_FOURTH);
     }
 
     public void click9(View view) {
-
         helper.clear();
     }
 
     public void click10(View view) {
-        Random random = new Random();
-        int type = random.nextInt(4);
-        helper.notifyLoadingChanged(type);
+        try {
+            Random random = new Random();
+            final int level = random.nextInt(4);
+            helper.notifyLoadingChanged(level);
+            textView1.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    List<MultiHeaderEntity> data = helper.getDataWithLevel(level).getData();
+                    getOtherTextView(level).setText(String.format(Locale.getDefault(), "类型%d的数量：%d", level + 1, data == null ? 0 : data.size()));
+                }
+            }, 200);
+        } catch (Exception e) {
+            Log.d("RxStandardLinearActivit", e.getMessage());
+        }
     }
 }

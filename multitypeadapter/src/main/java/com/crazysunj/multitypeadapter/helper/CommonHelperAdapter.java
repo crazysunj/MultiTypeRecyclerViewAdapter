@@ -67,7 +67,6 @@ public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends C
     }
 
     protected K createCommonViewHolder(ViewGroup parent, int layoutResId) {
-
         if (mContext == null) {
             mContext = parent.getContext();
         }
@@ -79,7 +78,6 @@ public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends C
 
     @SuppressWarnings("unchecked")
     protected K createCommonViewHolder(View view) {
-
         Class temp = getClass();
         Class z = null;
         while (z == null && null != temp) {
@@ -92,7 +90,6 @@ public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends C
 
     @SuppressWarnings("unchecked")
     private K createGenericKInstance(Class z, View view) {
-
         try {
             Constructor constructor;
             String buffer = Modifier.toString(z.getModifiers());
@@ -111,7 +108,6 @@ public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends C
     }
 
     private Class getInstancedGenericKClass(Class z) {
-
         Type type = z.getGenericSuperclass();
         if (type instanceof ParameterizedType) {
             Type[] types = ((ParameterizedType) type).getActualTypeArguments();
@@ -126,5 +122,4 @@ public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends C
         }
         return null;
     }
-
 }

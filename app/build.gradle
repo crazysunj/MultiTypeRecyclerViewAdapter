@@ -27,8 +27,9 @@ dependencies {
     })
 
     compile project(libs.MTRVA_File)
+    compile project(libs.MTRVA_File_Anno)
     annotationProcessor project(libs.MTRVA_File_Compiler)
-    compile libs.MTRVA_Anno
+//    compile libs.MTRVA_Anno
 //    compile libs.MTRVA
 //    apt libs.MTRVA_Compiler
 

@@ -1,6 +1,5 @@
 package com.crazysunj.multityperecyclerviewadapter.data;
 
-import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.helper.DefaultMultiHeaderEntity;
 
 import java.util.UUID;
@@ -31,7 +30,7 @@ public class SimpleErrorEntity extends DefaultMultiHeaderEntity {
 
     @Override
     public int getItemType() {
-        return type - RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER;
+        return type;
     }
 
     @Override

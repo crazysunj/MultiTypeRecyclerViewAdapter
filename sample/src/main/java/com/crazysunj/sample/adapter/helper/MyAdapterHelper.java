@@ -21,6 +21,10 @@ import java.util.List;
 
 public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity, BaseAdapter> {
 
+    public static final int LEVEL_1 = 0;
+    public static final int LEVEL_2 = 1;
+    public static final int LEVEL_3 = 2;
+    public static final int LEVEL_4 = 3;
 
     public MyAdapterHelper() {
         super(null);
@@ -29,10 +33,10 @@ public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity, Base
     @Override
     protected void registerMoudle() {
 
-        registerMoudle(ItemEntity1.TYPE_1)
-                .level(0)
-                .headerResId(R.layout.header_common)
+        registerMoudle(LEVEL_1)
+                .type(ItemEntity1.TYPE_1)
                 .layoutResId(R.layout.item_1)
+                .headerResId(R.layout.header_common)
                 .footerResId(R.layout.item_footer)
                 .isFolded(true)
                 .minSize(2)
@@ -41,26 +45,26 @@ public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity, Base
                 .loadingLayoutResId(R.layout.layout_loading)
                 .register();
 
-        registerMoudle(ItemEntity2.TYPE_2)
-                .level(1)
-                .headerResId(R.layout.header_common)
+        registerMoudle(LEVEL_2)
+                .type(ItemEntity2.TYPE_2)
                 .layoutResId(R.layout.item_2)
+                .headerResId(R.layout.header_common)
                 .loading()
                 .loadingHeaderResId(R.layout.layout_loading_header)
                 .loadingLayoutResId(R.layout.layout_loading)
                 .register();
 
-        registerMoudle(ItemEntity3.TYPE_3)
-                .level(2)
+        registerMoudle(LEVEL_3)
+                .type(ItemEntity3.TYPE_3)
                 .layoutResId(R.layout.item_3)
                 .loading()
                 .loadingLayoutResId(R.layout.layout_loading)
                 .register();
 
-        registerMoudle(ItemEntity4.TYPE_4)
-                .level(3)
-                .headerResId(R.layout.header_common)
+        registerMoudle(LEVEL_4)
+                .type(ItemEntity4.TYPE_4)
                 .layoutResId(R.layout.item_4)
+                .headerResId(R.layout.header_common)
                 .loading()
                 .loadingHeaderResId(R.layout.layout_loading_header)
                 .loadingLayoutResId(R.layout.layout_loading)

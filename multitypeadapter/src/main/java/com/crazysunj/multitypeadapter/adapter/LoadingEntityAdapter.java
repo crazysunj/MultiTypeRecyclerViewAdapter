@@ -23,9 +23,9 @@ package com.crazysunj.multitypeadapter.adapter;
 
 public interface LoadingEntityAdapter<T> {
 
-    T createLoadingEntity(int type);
+    T createLoadingEntity(int type, int level);
 
-    T createLoadingHeaderEntity(int type);
+    T createLoadingHeaderEntity(int type, int level);
 
     /**
      * loadingEntity是复用的

@@ -43,7 +43,7 @@ public class HeaderFirstItem implements FirstStickyItem {
 
     @Override
     public int getItemType() {
-        return SimpleHelper.TYPE_ONE - 1000;
+        return SimpleHelper.LEVEL_FIRST - 1000;
     }
 
     @Override

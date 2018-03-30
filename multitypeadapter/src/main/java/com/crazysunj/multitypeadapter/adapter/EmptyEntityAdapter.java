@@ -23,5 +23,5 @@ package com.crazysunj.multitypeadapter.adapter;
 @FunctionalInterface
 public interface EmptyEntityAdapter<T> {
 
-    T createEmptyEntity(int type);
+    T createEmptyEntity(int type, int level);
 }

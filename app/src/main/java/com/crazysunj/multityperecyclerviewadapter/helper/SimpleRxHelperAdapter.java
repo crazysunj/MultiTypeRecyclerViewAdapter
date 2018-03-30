@@ -12,7 +12,6 @@ import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.helper.LoadingConfig;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
 import com.crazysunj.multityperecyclerviewadapter.R;
-import com.crazysunj.multityperecyclerviewadapter.apt.RxAptHelperAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
 import com.crazysunj.multityperecyclerviewadapter.data.LoadingEntity;
@@ -49,25 +48,25 @@ public class SimpleRxHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, S
         helper.bindAdapter(this);
         helper.setEmptyAdapter(new EmptyEntityAdapter<MultiHeaderEntity>() {
             @Override
-            public MultiHeaderEntity createEmptyEntity(int type) {
+            public MultiHeaderEntity createEmptyEntity(int type, int level) {
                 return new SimpleEmptyEntity(type);
             }
         });
         helper.setErrorAdapter(new ErrorEntityAdapter<MultiHeaderEntity>() {
             @Override
-            public MultiHeaderEntity createErrorEntity(int type) {
+            public MultiHeaderEntity createErrorEntity(int type, int level) {
                 return new SimpleErrorEntity(type);
             }
         });
         helper.setLoadingAdapter(new LoadingEntityAdapter<MultiHeaderEntity>() {
             @Override
-            public MultiHeaderEntity createLoadingEntity(int type) {
-                return new LoadingEntity(type - RxAptHelperAdapterHelper.LOADING_DATA_TYPE_DIFFER);
+            public MultiHeaderEntity createLoadingEntity(int type, int level) {
+                return new LoadingEntity(type);
             }
 
             @Override
-            public MultiHeaderEntity createLoadingHeaderEntity(int type) {
-                return new LoadingEntity(type - RxAptHelperAdapterHelper.LOADING_HEADER_TYPE_DIFFER);
+            public MultiHeaderEntity createLoadingHeaderEntity(int type, int level) {
+                return new LoadingEntity(type);
             }
 
             @Override
@@ -89,10 +88,10 @@ public class SimpleRxHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, S
             }
         });
         helper.initGlobalLoadingConfig(new LoadingConfig.Builder()
-                .setLoading(SimpleHelper.TYPE_ONE, 3, true)
-                .setLoading(SimpleHelper.TYPE_TWO, 2)
-                .setLoading(SimpleHelper.TYPE_THREE, true)
-                .setLoading(SimpleHelper.TYPE_FOUR, 4, true)
+                .setLoading(SimpleHelper.LEVEL_FIRST, 3, true)
+                .setLoading(SimpleHelper.LEVEL_SENCOND, 2)
+                .setLoading(SimpleHelper.LEVEL_THIRD, true)
+                .setLoading(SimpleHelper.LEVEL_FOURTH, 4, true)
                 .build());
         mHelper = helper;
     }

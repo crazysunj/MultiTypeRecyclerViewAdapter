@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 import com.crazysunj.multityperecyclerviewadapter.apt.RxAptHelperAdapter;
 import com.crazysunj.multityperecyclerviewadapter.apt.RxAptHelperAdapterHelper;
@@ -33,8 +34,8 @@ public class RxAptErrorAndEmptyLinearActivity extends AppCompatActivity {
     private TextView textView3;
     private TextView textView4;
     private RxAptHelperAdapterHelper helper;
-    private MyErrorEntity errorfourthEntity = new MyErrorEntity(SimpleHelper.TYPE_TWO, "我是第四种错误title", "我是第四种错误message");
-    private MyEmptyEntity emptyEntity = new MyEmptyEntity(SimpleHelper.TYPE_FOUR, "我肚子好饿啊");
+    private MyErrorEntity errorfourthEntity = new MyErrorEntity(SimpleHelper.LEVEL_FOURTH - RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER, "我是第四种错误title", "我是第四种错误message");
+    private MyEmptyEntity emptyEntity = new MyEmptyEntity(SimpleHelper.LEVEL_THIRD - RecyclerViewAdapterHelper.EMPTY_TYPE_DIFFER, "我肚子好饿啊");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +56,8 @@ public class RxAptErrorAndEmptyLinearActivity extends AppCompatActivity {
             @Override
             public void onClick(View v, int type) {
                 int id = v.getId();
-                if (id == R.id.retry && type == SimpleHelper.TYPE_THREE) {
-                    helper.notifyLoadingDataChanged(SimpleHelper.TYPE_THREE, 2);
+                if (id == R.id.retry && type == 1) {
+                    helper.notifyLoadingDataChanged(1, 2);
                     textView2.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -67,11 +68,11 @@ public class RxAptErrorAndEmptyLinearActivity extends AppCompatActivity {
                                 list.add(new SecondItem(String.format(Locale.getDefault(), "我是第二种类型%d", i), 6 + i));
                             }
                             textView2.setText(String.format(Locale.getDefault(), "类型2的数量：%d", list.size()));
-                            helper.notifyMoudleDataChanged(list, SimpleHelper.TYPE_THREE);
+                            helper.notifyMoudleDataChanged(list, 1);
                         }
                     }, 2000);
-                } else if (id == R.id.retry && type == SimpleHelper.TYPE_TWO) {
-                    helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_TWO, 3);
+                } else if (id == R.id.retry && type == 3) {
+                    helper.notifyLoadingDataAndHeaderChanged(3, 3);
                     textView4.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -82,14 +83,14 @@ public class RxAptErrorAndEmptyLinearActivity extends AppCompatActivity {
                                 list.add(new FourthItem(String.format(Locale.getDefault(), "我是第四种类型%d", i), 18 + i));
                             }
                             textView4.setText(String.format(Locale.getDefault(), "类型4的数量：%d", list.size()));
-                            helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFourthItem(String.format(Locale.getDefault(), "我是第四种类型的头,数量：%d", list.size()), helper.getRandomId()), SimpleHelper.TYPE_TWO);
+                            helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFourthItem(String.format(Locale.getDefault(), "我是第四种类型的头,数量：%d", list.size()), helper.getRandomId()), 3);
                         }
                     }, 2000);
                 }
             }
         });
 
-        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_ONE, 3);
+        helper.notifyLoadingDataAndHeaderChanged(0, 3);
         textView1.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -100,12 +101,12 @@ public class RxAptErrorAndEmptyLinearActivity extends AppCompatActivity {
                     list.add(new FirstItem(String.format(Locale.getDefault(), "我是第一种类型%d", i), i));
                 }
                 textView1.setText(String.format(Locale.getDefault(), "类型1的数量：%d", list.size()));
-                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFirstItem(String.format(Locale.getDefault(), "我是第一种类型的头,点击次数：%d", refreshFirstCount++), helper.getRandomId()), SimpleHelper.TYPE_ONE);
+                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFirstItem(String.format(Locale.getDefault(), "我是第一种类型的头,点击次数：%d", refreshFirstCount++), helper.getRandomId()), 0);
 
             }
         }, 2000);
 
-        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_FOUR, 3);
+        helper.notifyLoadingDataAndHeaderChanged(2, 3);
         textView3.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -116,7 +117,7 @@ public class RxAptErrorAndEmptyLinearActivity extends AppCompatActivity {
                     list.add(new ThirdItem(String.format(Locale.getDefault(), "我是第三种类型%d", i), 12 + i));
                 }
                 textView3.setText(String.format(Locale.getDefault(), "类型3的数量：%d", list.size()));
-                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderThirdItem("我是第三种类型的头", helper.getRandomId()), SimpleHelper.TYPE_FOUR);
+                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderThirdItem("我是第三种类型的头", helper.getRandomId()), 2);
             }
         }, 3000);
     }
@@ -124,12 +125,12 @@ public class RxAptErrorAndEmptyLinearActivity extends AppCompatActivity {
     public void click1(View view) {
 
 
-        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_ONE, 1);
+        helper.notifyLoadingDataAndHeaderChanged(0, 1);
         textView1.postDelayed(new Runnable() {
             @Override
             public void run() {
                 textView1.setText(String.format(Locale.getDefault(), "类型1的数量：%d", 1));
-                helper.notifyMoudleDataAndHeaderChanged(new FirstItem("我是新刷新的条目" + refreshFirstCount, System.currentTimeMillis()), new HeaderFirstItem(String.format("我是第一种类型的头,点击次数：%d", refreshFirstCount++), helper.getRandomId()), SimpleHelper.TYPE_ONE);
+                helper.notifyMoudleDataAndHeaderChanged(new FirstItem("我是新刷新的条目" + refreshFirstCount, System.currentTimeMillis()), new HeaderFirstItem(String.format(Locale.getDefault(), "我是第一种类型的头,点击次数：%d", refreshFirstCount++), helper.getRandomId()), 0);
             }
         }, 2000);
 
@@ -137,11 +138,11 @@ public class RxAptErrorAndEmptyLinearActivity extends AppCompatActivity {
 
     public void click2(View view) {
 
-        helper.notifyLoadingDataChanged(SimpleHelper.TYPE_THREE, 2);
+        helper.notifyLoadingDataChanged(1, 2);
         textView2.postDelayed(new Runnable() {
             @Override
             public void run() {
-                helper.notifyMoudleErrorChanged(SimpleHelper.TYPE_THREE);
+                helper.notifyMoudleErrorChanged(1);
             }
         }, 2000);
 
@@ -153,22 +154,22 @@ public class RxAptErrorAndEmptyLinearActivity extends AppCompatActivity {
 
     public void click3(View view) {
 
-        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_FOUR, 1);
+        helper.notifyLoadingDataAndHeaderChanged(2, 1);
         textView3.postDelayed(new Runnable() {
             @Override
             public void run() {
-                helper.notifyMoudleEmptyChanged(emptyEntity, SimpleHelper.TYPE_FOUR);
+                helper.notifyMoudleEmptyChanged(emptyEntity, 2);
             }
         }, 2000);
     }
 
     public void click4(View view) {
 
-        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_TWO, 3);
+        helper.notifyLoadingDataAndHeaderChanged(3, 3);
         textView4.postDelayed(new Runnable() {
             @Override
             public void run() {
-                helper.notifyMoudleErrorChanged(errorfourthEntity, SimpleHelper.TYPE_TWO);
+                helper.notifyMoudleErrorChanged(errorfourthEntity, 3);
             }
         }, 2000);
     }

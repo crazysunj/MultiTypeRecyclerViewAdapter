@@ -30,7 +30,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    provided 'com.android.support:recyclerview-v7:27.0.2'
+    provided 'com.android.support:recyclerview-v7:27.1.0'
     provided libs.diffutil
     provided project(libs.MTRVA_File_Anno)
 }

@@ -42,7 +42,7 @@ public abstract class SynAdapterHelper<T extends MultiTypeEntity, A extends Recy
     @Override
     protected void startRefresh(HandleBase<T> refreshData) {
         handleResult(handleRefresh(refreshData.getNewData(), refreshData.getNewHeader(),
-                refreshData.getNewFooter(), refreshData.getType(), refreshData.getRefreshType()));
+                refreshData.getNewFooter(), refreshData.getLevel(), refreshData.getRefreshType()));
     }
 
 }

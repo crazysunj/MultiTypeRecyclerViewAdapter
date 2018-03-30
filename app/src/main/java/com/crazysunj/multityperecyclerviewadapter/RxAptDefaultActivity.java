@@ -45,7 +45,7 @@ public class RxAptDefaultActivity extends AppCompatActivity {
         for (int i = 0, size = rand + 1; i < size; i++) {
             list.add(new FirstItem(String.format(Locale.getDefault(), "我是第一种类型%d", i)));
         }
-        helper.notifyMoudleDataChanged(list, AptDefaultHelperAdapterHelper.DEFAULT_VIEW_TYPE);
+        helper.notifyMoudleDataChanged(list, 0);
 
 
     }

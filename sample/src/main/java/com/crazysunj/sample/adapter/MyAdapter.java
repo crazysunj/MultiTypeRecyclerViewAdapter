@@ -41,13 +41,13 @@ public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, 
         super(new MyAdapterHelper());
         mHelper.setLoadingAdapter(new LoadingEntityAdapter<MutiTypeTitleEntity>() {
             @Override
-            public MutiTypeTitleEntity createLoadingEntity(int type) {
-                return new LoadingEntity(type - RecyclerViewAdapterHelper.LOADING_DATA_TYPE_DIFFER, mHelper.getRandomId());
+            public MutiTypeTitleEntity createLoadingEntity(int type, int level) {
+                return new LoadingEntity(type, mHelper.getRandomId());
             }
 
             @Override
-            public MutiTypeTitleEntity createLoadingHeaderEntity(int type) {
-                return new LoadingEntity(type - RecyclerViewAdapterHelper.LOADING_HEADER_TYPE_DIFFER, mHelper.getRandomId());
+            public MutiTypeTitleEntity createLoadingHeaderEntity(int type, int level) {
+                return new LoadingEntity(type, mHelper.getRandomId());
             }
 
             @Override
@@ -57,10 +57,10 @@ public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, 
         });
 
         mHelper.initGlobalLoadingConfig(new LoadingConfig.Builder()
-                .setLoading(ItemEntity1.TYPE_1, 2, true)
-                .setLoading(ItemEntity2.TYPE_2, 1, true)
-                .setLoading(ItemEntity3.TYPE_3, 1)
-                .setLoading(ItemEntity4.TYPE_4, 1, true)
+                .setLoading(MyAdapterHelper.LEVEL_1, 2, true)
+                .setLoading(MyAdapterHelper.LEVEL_2, 1, true)
+                .setLoading(MyAdapterHelper.LEVEL_3, 1)
+                .setLoading(MyAdapterHelper.LEVEL_4, 1, true)
                 .build());
     }
 
@@ -80,13 +80,15 @@ public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, 
             case ItemEntity4.TYPE_4:
                 renderEntity4(helper, (ItemEntity4) item);
                 break;
-            case ItemEntity1.TYPE_1 - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
-            case ItemEntity2.TYPE_2 - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
-            case ItemEntity4.TYPE_4 - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
+            case MyAdapterHelper.LEVEL_1 - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
+            case MyAdapterHelper.LEVEL_2 - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
+            case MyAdapterHelper.LEVEL_3 - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
                 renderHeader(helper, (CommonHeadEntity) item);
                 break;
-            case ItemEntity1.TYPE_1 - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
+            case MyAdapterHelper.LEVEL_1 - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
                 renderFooter(helper, (CommonFooterEntity) item);
+                break;
+            default:
                 break;
         }
     }
@@ -168,19 +170,19 @@ public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, 
     }
 
     public void notifyType1(List<ItemEntity1> itemEntity1s) {
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(entity1Header, itemEntity1s, entity1Footer, ItemEntity1.TYPE_1);
+        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(entity1Header, itemEntity1s, entity1Footer, MyAdapterHelper.LEVEL_1);
     }
 
     public void notifyType2(List<ItemEntity2> itemEntity2s) {
-        mHelper.notifyMoudleDataAndHeaderChanged(itemEntity2s, entity2Header, ItemEntity2.TYPE_2);
+        mHelper.notifyMoudleDataAndHeaderChanged(itemEntity2s, entity2Header, MyAdapterHelper.LEVEL_2);
     }
 
     public void notifyType3(ItemEntity3 itemEntity3) {
-        mHelper.notifyMoudleDataChanged(itemEntity3, ItemEntity3.TYPE_3);
+        mHelper.notifyMoudleDataChanged(itemEntity3, MyAdapterHelper.LEVEL_3);
     }
 
     public void notifyType4(List<ItemEntity4> itemEntity4s) {
-        mHelper.notifyMoudleDataAndHeaderChanged(itemEntity4s, entity4Header, ItemEntity4.TYPE_4);
+        mHelper.notifyMoudleDataAndHeaderChanged(itemEntity4s, entity4Header, MyAdapterHelper.LEVEL_4);
     }
 
     public void release() {

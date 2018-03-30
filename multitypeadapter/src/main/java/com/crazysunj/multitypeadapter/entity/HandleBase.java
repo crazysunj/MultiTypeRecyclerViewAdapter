@@ -26,13 +26,13 @@ public final class HandleBase<T> {
     private T header;
     private T footer;
     private int refreshType;
-    private int type;
+    private int level;
 
-    public HandleBase(List<T> newData, T header, T footer, int type, int refreshType) {
+    public HandleBase(List<T> newData, T header, T footer, int level, int refreshType) {
         this.newData = newData;
         this.header = header;
         this.footer = footer;
-        this.type = type;
+        this.level = level;
         this.refreshType = refreshType;
     }
 
@@ -48,8 +48,8 @@ public final class HandleBase<T> {
         return footer;
     }
 
-    public int getType() {
-        return type;
+    public int getLevel() {
+        return level;
     }
 
     public int getRefreshType() {

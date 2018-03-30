@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
@@ -23,6 +24,7 @@ import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
@@ -32,8 +34,8 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
     private TextView textView3;
     private TextView textView4;
     private ErrorAndEmptyAdapterHelper helper;
-    private MyErrorAndEmptyErrorEntity errorfourthEntity = new MyErrorAndEmptyErrorEntity(SimpleHelper.TYPE_TWO, "我是第四种错误title", "我是第四种错误message");
-    private MyErrorAndEmptyEmptyEntity emptyEntity = new MyErrorAndEmptyEmptyEntity(SimpleHelper.TYPE_FOUR, "我肚子好饿啊");
+    private MyErrorAndEmptyErrorEntity errorfourthEntity = new MyErrorAndEmptyErrorEntity(SimpleHelper.LEVEL_FOURTH - RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER, "我是第四种错误title", "我是第四种错误message");
+    private MyErrorAndEmptyEmptyEntity emptyEntity = new MyErrorAndEmptyEmptyEntity(SimpleHelper.LEVEL_THIRD - RecyclerViewAdapterHelper.EMPTY_TYPE_DIFFER, "我肚子好饿啊");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +56,8 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
             @Override
             public void onClick(View v, int type) {
                 int id = v.getId();
-                if (id == R.id.retry && type == SimpleHelper.TYPE_THREE) {
-                    helper.notifyLoadingDataChanged(SimpleHelper.TYPE_THREE, 2);
+                if (id == R.id.retry && type == SimpleHelper.LEVEL_SENCOND) {
+                    helper.notifyLoadingDataChanged(SimpleHelper.LEVEL_SENCOND, 2);
                     textView2.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -63,14 +65,14 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
                             int rand = random.nextInt(6);
                             List<SecondItem> list = new ArrayList<>();
                             for (int i = 0, size = rand + 1; i < size; i++) {
-                                list.add(new SecondItem(String.format("我是第二种类型%d", i), 6 + i));
+                                list.add(new SecondItem(String.format(Locale.getDefault(), "我是第二种类型%d", i), 6 + i));
                             }
-                            textView2.setText(String.format("类型2的数量：%d", list.size()));
-                            helper.notifyMoudleDataChanged(list, SimpleHelper.TYPE_THREE);
+                            textView2.setText(String.format(Locale.getDefault(), "类型2的数量：%d", list.size()));
+                            helper.notifyMoudleDataChanged(list, SimpleHelper.LEVEL_SENCOND);
                         }
                     }, 2000);
-                } else if (id == R.id.retry && type == SimpleHelper.TYPE_TWO) {
-                    helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_TWO, 3);
+                } else if (id == R.id.retry && type == SimpleHelper.LEVEL_FOURTH) {
+                    helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_FOURTH, 3);
                     textView4.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -78,17 +80,17 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
                             int rand = random.nextInt(6);
                             List<FourthItem> list = new ArrayList<>();
                             for (int i = 0, size = rand + 1; i < size; i++) {
-                                list.add(new FourthItem(String.format("我是第四种类型%d", i), 18 + i));
+                                list.add(new FourthItem(String.format(Locale.getDefault(), "我是第四种类型%d", i), 18 + i));
                             }
-                            textView4.setText(String.format("类型4的数量：%d", list.size()));
-                            helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFourthItem(String.format("我是第四种类型的头,数量：%d", list.size()), helper.getRandomId()), SimpleHelper.TYPE_TWO);
+                            textView4.setText(String.format(Locale.getDefault(), "类型4的数量：%d", list.size()));
+                            helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFourthItem(String.format(Locale.getDefault(), "我是第四种类型的头,数量：%d", list.size()), helper.getRandomId()), SimpleHelper.LEVEL_FOURTH);
                         }
                     }, 2000);
                 }
             }
         });
 
-        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_ONE, 3);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_FIRST, 3);
         textView1.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -96,15 +98,15 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
                 int rand = random.nextInt(6);
                 final List<FirstItem> list = new ArrayList<>();
                 for (int i = 0, size = rand + 1; i < size; i++) {
-                    list.add(new FirstItem(String.format("我是第一种类型%d", i), i));
+                    list.add(new FirstItem(String.format(Locale.getDefault(), "我是第一种类型%d", i), i));
                 }
-                textView1.setText(String.format("类型1的数量：%d", list.size()));
-                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFirstItem(String.format("我是第一种类型的头,点击次数：%d", refreshFirstCount++), helper.getRandomId()), SimpleHelper.TYPE_ONE);
+                textView1.setText(String.format(Locale.getDefault(), "类型1的数量：%d", list.size()));
+                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFirstItem(String.format(Locale.getDefault(), "我是第一种类型的头,点击次数：%d", refreshFirstCount++), helper.getRandomId()), SimpleHelper.LEVEL_FIRST);
 
             }
         }, 2000);
 
-        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_FOUR, 3);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_THIRD, 3);
         textView3.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -112,10 +114,10 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
                 int rand = random.nextInt(6);
                 List<ThirdItem> list = new ArrayList<>();
                 for (int i = 0, size = rand + 1; i < size; i++) {
-                    list.add(new ThirdItem(String.format("我是第三种类型%d", i), 12 + i));
+                    list.add(new ThirdItem(String.format(Locale.getDefault(), "我是第三种类型%d", i), 12 + i));
                 }
-                textView3.setText(String.format("类型3的数量：%d", list.size()));
-                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderThirdItem("我是第三种类型的头", helper.getRandomId()), SimpleHelper.TYPE_FOUR);
+                textView3.setText(String.format(Locale.getDefault(), "类型3的数量：%d", list.size()));
+                helper.notifyMoudleDataAndHeaderChanged(list, new HeaderThirdItem("我是第三种类型的头", helper.getRandomId()), SimpleHelper.LEVEL_THIRD);
             }
         }, 3000);
     }
@@ -123,12 +125,12 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
     public void click1(View view) {
 
 
-        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_ONE, 1);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_FIRST, 1);
         textView1.postDelayed(new Runnable() {
             @Override
             public void run() {
-                textView1.setText(String.format("类型1的数量：%d", 1));
-                helper.notifyMoudleDataAndHeaderChanged(new FirstItem("我是新刷新的条目" + refreshFirstCount, System.currentTimeMillis()), new HeaderFirstItem(String.format("我是第一种类型的头,点击次数：%d", refreshFirstCount++), helper.getRandomId()), SimpleHelper.TYPE_ONE);
+                textView1.setText(String.format(Locale.getDefault(), "类型1的数量：%d", 1));
+                helper.notifyMoudleDataAndHeaderChanged(new FirstItem("我是新刷新的条目" + refreshFirstCount, System.currentTimeMillis()), new HeaderFirstItem(String.format(Locale.getDefault(), "我是第一种类型的头,点击次数：%d", refreshFirstCount++), helper.getRandomId()), SimpleHelper.LEVEL_FIRST);
             }
         }, 2000);
 
@@ -136,11 +138,11 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
 
     public void click2(View view) {
 
-        helper.notifyLoadingDataChanged(SimpleHelper.TYPE_THREE, 2);
+        helper.notifyLoadingDataChanged(SimpleHelper.LEVEL_SENCOND, 2);
         textView2.postDelayed(new Runnable() {
             @Override
             public void run() {
-                helper.notifyMoudleErrorChanged(SimpleHelper.TYPE_THREE);
+                helper.notifyMoudleErrorChanged(SimpleHelper.LEVEL_SENCOND);
             }
         }, 2000);
 
@@ -150,22 +152,22 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
 
     public void click3(View view) {
 
-        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_FOUR, 1);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_THIRD, 1);
         textView3.postDelayed(new Runnable() {
             @Override
             public void run() {
-                helper.notifyMoudleEmptyChanged(emptyEntity, SimpleHelper.TYPE_FOUR);
+                helper.notifyMoudleEmptyChanged(emptyEntity, SimpleHelper.LEVEL_THIRD);
             }
         }, 2000);
     }
 
     public void click4(View view) {
 
-        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.TYPE_TWO, 3);
+        helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_FOURTH, 3);
         textView4.postDelayed(new Runnable() {
             @Override
             public void run() {
-                helper.notifyMoudleErrorChanged(errorfourthEntity, SimpleHelper.TYPE_TWO);
+                helper.notifyMoudleErrorChanged(errorfourthEntity, SimpleHelper.LEVEL_FOURTH);
             }
         }, 2000);
     }

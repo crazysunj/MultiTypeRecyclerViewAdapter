@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multitypeadapter.annotation.AdapterHelper;
-import com.crazysunj.multitypeadapter.annotation.BindDefaultType;
+import com.crazysunj.multitypeadapter.annotation.BindDefaultLevel;
 import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.helper.ShimmerViewHolder;
@@ -20,7 +20,7 @@ import com.crazysunj.multityperecyclerviewadapter.helper.ShimmerViewHolder;
         adapter = "com.crazysunj.multityperecyclerviewadapter.apt.AptDefaultHelperAdapter")
 public class AptDefaultHelperAdapter extends BaseQuickAdapter<FirstItem, ShimmerViewHolder> {
 
-    @BindDefaultType()
+    @BindDefaultLevel()
     final int LAYOUT_RES_ID = R.layout.item_first;
 
     private AptDefaultHelperAdapterHelper mHelper;

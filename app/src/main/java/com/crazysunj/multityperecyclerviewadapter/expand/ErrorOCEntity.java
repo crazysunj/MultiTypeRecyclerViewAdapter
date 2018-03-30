@@ -1,6 +1,5 @@
 package com.crazysunj.multityperecyclerviewadapter.expand;
 
-import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 
 import java.util.UUID;
@@ -40,7 +39,7 @@ public class ErrorOCEntity implements OpenCloseItem {
 
     @Override
     public int getItemType() {
-        return type - RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER;
+        return type;
     }
 
     @Override

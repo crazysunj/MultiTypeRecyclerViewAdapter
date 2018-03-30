@@ -30,7 +30,7 @@ public class LoadingConfig {
 
     public LoadingConfig() {
         if (mConfigs == null) {
-            mConfigs = new SparseArray<LoadingConfigEntity>();
+            mConfigs = new SparseArray<>();
         }
     }
 
@@ -38,16 +38,16 @@ public class LoadingConfig {
         mConfigs = configs;
     }
 
-    public void setLoading(int type, @IntRange(from = 1) int count, boolean isHaveHeader) {
-        mConfigs.put(type, new LoadingConfigEntity(count, isHaveHeader));
+    public void setLoading(int level, @IntRange(from = 1) int count, boolean isHaveHeader) {
+        mConfigs.put(level, new LoadingConfigEntity(count, isHaveHeader));
     }
 
-    public void setLoading(int type, @IntRange(from = 1) int count) {
-        mConfigs.put(type, new LoadingConfigEntity(count));
+    public void setLoading(int level, @IntRange(from = 1) int count) {
+        mConfigs.put(level, new LoadingConfigEntity(count));
     }
 
-    public void setLoading(int type, boolean isHaveHeader) {
-        mConfigs.put(type, new LoadingConfigEntity(isHaveHeader));
+    public void setLoading(int level, boolean isHaveHeader) {
+        mConfigs.put(level, new LoadingConfigEntity(isHaveHeader));
     }
 
     public static class Builder {
@@ -56,22 +56,22 @@ public class LoadingConfig {
 
         public Builder() {
             if (mBuilderConfigs == null) {
-                mBuilderConfigs = new SparseArray<LoadingConfigEntity>();
+                mBuilderConfigs = new SparseArray<>();
             }
         }
 
-        public Builder setLoading(int type, @IntRange(from = 1) int count, boolean isHaveHeader) {
-            mBuilderConfigs.put(type, new LoadingConfigEntity(count, isHaveHeader));
+        public Builder setLoading(int level, @IntRange(from = 1) int count, boolean isHaveHeader) {
+            mBuilderConfigs.put(level, new LoadingConfigEntity(count, isHaveHeader));
             return this;
         }
 
-        public Builder setLoading(int type, @IntRange(from = 1) int count) {
-            mBuilderConfigs.put(type, new LoadingConfigEntity(count));
+        public Builder setLoading(int level, @IntRange(from = 1) int count) {
+            mBuilderConfigs.put(level, new LoadingConfigEntity(count));
             return this;
         }
 
-        public Builder setLoading(int type, boolean isHaveHeader) {
-            mBuilderConfigs.put(type, new LoadingConfigEntity(isHaveHeader));
+        public Builder setLoading(int level, boolean isHaveHeader) {
+            mBuilderConfigs.put(level, new LoadingConfigEntity(isHaveHeader));
             return this;
         }
 

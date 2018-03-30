@@ -32,13 +32,13 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
         super(new OpenCloseAdapterHelper());
         mHelper.setLoadingAdapter(new LoadingEntityAdapter<OpenCloseItem>() {
             @Override
-            public OpenCloseItem createLoadingEntity(int type) {
-                return new LoadingOCEntity(type - RecyclerViewAdapterHelper.LOADING_DATA_TYPE_DIFFER, mHelper.getRandomId());
+            public OpenCloseItem createLoadingEntity(int type, int level) {
+                return new LoadingOCEntity(type, mHelper.getRandomId());
             }
 
             @Override
-            public OpenCloseItem createLoadingHeaderEntity(int type) {
-                return new LoadingOCEntity(type - RecyclerViewAdapterHelper.LOADING_HEADER_TYPE_DIFFER, mHelper.getRandomId());
+            public OpenCloseItem createLoadingHeaderEntity(int type, int level) {
+                return new LoadingOCEntity(type, mHelper.getRandomId());
             }
 
             @Override
@@ -48,14 +48,14 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
         });
         mHelper.setEmptyAdapter(new EmptyEntityAdapter<OpenCloseItem>() {
             @Override
-            public OpenCloseItem createEmptyEntity(int type) {
-                return new EmptyOCEntity(type, "肚子好饿" + type);
+            public OpenCloseItem createEmptyEntity(int type, int level) {
+                return new EmptyOCEntity(type, "肚子好饿" + level);
             }
         });
         mHelper.setErrorAdapter(new ErrorEntityAdapter<OpenCloseItem>() {
             @Override
-            public OpenCloseItem createErrorEntity(int type) {
-                return new ErrorOCEntity(type, "我错了" + type);
+            public OpenCloseItem createErrorEntity(int type, int level) {
+                return new ErrorOCEntity(type, "我错了" + level);
             }
         });
     }
@@ -73,21 +73,23 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
             case ThirdOCEntity.OC_THIRD_TYPE:
                 renderThird(helper, (ThirdOCEntity) item);
                 break;
-            case FirstOCEntity.OC_FIRST_TYPE - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
-            case SecondOCEntity.OC_SECOND_TYPE - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
-            case ThirdOCEntity.OC_THIRD_TYPE - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
+            case OpenCloseAdapterHelper.LEVEL_FIRST - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
+            case OpenCloseAdapterHelper.LEVEL_SECOND - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
+            case OpenCloseAdapterHelper.LEVEL_THIRD - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
                 renderHeader(helper, (TitleOCEntity) item);
                 break;
-            case FirstOCEntity.OC_FIRST_TYPE - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
-            case SecondOCEntity.OC_SECOND_TYPE - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
-            case ThirdOCEntity.OC_THIRD_TYPE - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
+            case OpenCloseAdapterHelper.LEVEL_FIRST - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
+            case OpenCloseAdapterHelper.LEVEL_SECOND - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
+            case OpenCloseAdapterHelper.LEVEL_THIRD - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
                 renderFooter(helper, (FooterOCEntity) item);
                 break;
-            case FirstOCEntity.OC_FIRST_TYPE - RecyclerViewAdapterHelper.EMPTY_TYPE_DIFFER:
+            case OpenCloseAdapterHelper.LEVEL_FIRST - RecyclerViewAdapterHelper.EMPTY_TYPE_DIFFER:
                 renderEmpty(helper, (EmptyOCEntity) item);
                 break;
-            case FirstOCEntity.OC_FIRST_TYPE - RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER:
+            case OpenCloseAdapterHelper.LEVEL_FIRST - RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER:
                 renderError(helper, (ErrorOCEntity) item);
+                break;
+            default:
                 break;
         }
     }
@@ -101,54 +103,54 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
     }
 
     public void notifyFirstEmpty() {
-        mHelper.notifyMoudleEmptyChanged(FirstOCEntity.OC_FIRST_TYPE);
+        mHelper.notifyMoudleEmptyChanged(OpenCloseAdapterHelper.LEVEL_FIRST);
     }
 
     public void notifyFirstError() {
-        mHelper.notifyMoudleErrorChanged(FirstOCEntity.OC_FIRST_TYPE);
+        mHelper.notifyMoudleErrorChanged(OpenCloseAdapterHelper.LEVEL_FIRST);
     }
 
     public void notifyFirstLoading() {
-        mHelper.notifyLoadingDataAndHeaderChanged(FirstOCEntity.OC_FIRST_TYPE, 2);
+        mHelper.notifyLoadingDataAndHeaderChanged(OpenCloseAdapterHelper.LEVEL_FIRST, 2);
     }
 
     public void notifyFirst(List<FirstOCEntity> entities) {
-        int firstType = FirstOCEntity.OC_FIRST_TYPE;
+        int firstLevel = OpenCloseAdapterHelper.LEVEL_FIRST;
         mHelper.notifyMoudleDataAndHeaderAndFooterChanged(
-                new TitleOCEntity(firstType, "类型1"),
+                new TitleOCEntity(firstLevel, "类型1"),
                 entities,
-                new FooterOCEntity(firstType, Constants.EXPAND),
-                firstType);
+                new FooterOCEntity(firstLevel, Constants.EXPAND),
+                firstLevel);
     }
 
     public void notifySecond(List<SecondOCEntity> entities) {
-        int secondType = SecondOCEntity.OC_SECOND_TYPE;
+        int secondLevel = OpenCloseAdapterHelper.LEVEL_SECOND;
         mHelper.notifyMoudleDataAndHeaderAndFooterChanged(
-                new TitleOCEntity(secondType, "类型2"),
+                new TitleOCEntity(secondLevel, "类型2"),
                 entities,
-                new FooterOCEntity(secondType, Constants.FOLD),
-                secondType);
+                new FooterOCEntity(secondLevel, Constants.FOLD),
+                secondLevel);
     }
 
     public void notifyThird(List<ThirdOCEntity> entities) {
-        int thirdType = ThirdOCEntity.OC_THIRD_TYPE;
+        int thirdLevel = OpenCloseAdapterHelper.LEVEL_THIRD;
         mHelper.notifyMoudleDataAndHeaderAndFooterChanged(
-                new TitleOCEntity(thirdType, "类型3"),
+                new TitleOCEntity(thirdLevel, "类型3"),
                 entities,
-                new FooterOCEntity(thirdType, Constants.FOLD),
-                thirdType);
+                new FooterOCEntity(thirdLevel, Constants.FOLD),
+                thirdLevel);
     }
 
     private void renderError(BaseViewHolder helper, ErrorOCEntity item) {
 
-        final int type = item.getItemType() + RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER;
-        helper.setText(R.id.title, String.format("我是错误 flag:%s type:%s", item.getFlag(), type));
+        final int level = item.getItemType() + RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER;
+        helper.setText(R.id.title, String.format("我是错误 flag:%s level:%s", item.getFlag(), level));
         helper.setText(R.id.message, String.format("title:%s", item.getTitle()));
         helper.getView(R.id.retry).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mErrorCallback != null) {
-                    mErrorCallback.onError(type);
+                    mErrorCallback.onError(level);
                 }
             }
         });
@@ -160,7 +162,7 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
 
 
     public interface OnErrorCallback {
-        void onError(int type);
+        void onError(int level);
     }
 
     private void renderEmpty(BaseViewHolder helper, EmptyOCEntity item) {

@@ -34,7 +34,7 @@ public class CommonViewHolder extends RecyclerView.ViewHolder {
     public CommonViewHolder(View view) {
         super(view);
         if (mViews == null) {
-            mViews = new SparseArray<View>();
+            mViews = new SparseArray<>();
         }
     }
 

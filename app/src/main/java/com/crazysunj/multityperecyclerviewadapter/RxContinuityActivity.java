@@ -85,10 +85,10 @@ public class RxContinuityActivity extends AppCompatActivity {
         }
         textView4.setText(String.format(Locale.getDefault(), "类型4的数量：%d", list4.size()));
 
-        helper.notifyMoudleDataAndHeaderChanged(list1, new HeaderFirstItem("我是第一种类型头" + random.nextInt(100), timeMillis + 100), SimpleHelper.TYPE_ONE);
-        helper.notifyMoudleDataAndHeaderChanged(list2, new HeaderSecondItem("我是第二种类型头" + random.nextInt(100), timeMillis + 200), SimpleHelper.TYPE_THREE);
-        helper.notifyMoudleDataAndHeaderChanged(list3, new HeaderThirdItem("我是第三种类型头" + random.nextInt(100), timeMillis + 300), SimpleHelper.TYPE_FOUR);
-        helper.notifyMoudleDataAndHeaderChanged(list4, new HeaderFourthItem("我是第四种类型头" + random.nextInt(100), timeMillis + 400), SimpleHelper.TYPE_TWO);
+        helper.notifyMoudleDataAndHeaderChanged(list1, new HeaderFirstItem("我是第一种类型头" + random.nextInt(100), timeMillis + 100), SimpleHelper.LEVEL_FIRST);
+        helper.notifyMoudleDataAndHeaderChanged(list2, new HeaderSecondItem("我是第二种类型头" + random.nextInt(100), timeMillis + 200), SimpleHelper.LEVEL_SENCOND);
+        helper.notifyMoudleDataAndHeaderChanged(list3, new HeaderThirdItem("我是第三种类型头" + random.nextInt(100), timeMillis + 300), SimpleHelper.LEVEL_THIRD);
+        helper.notifyMoudleDataAndHeaderChanged(list4, new HeaderFourthItem("我是第四种类型头" + random.nextInt(100), timeMillis + 400), SimpleHelper.LEVEL_FOURTH);
     }
 
     public void click(View view) {

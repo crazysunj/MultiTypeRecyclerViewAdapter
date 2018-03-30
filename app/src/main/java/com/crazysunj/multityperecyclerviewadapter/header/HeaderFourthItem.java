@@ -44,7 +44,7 @@ public class HeaderFourthItem implements FourthStickyItem {
 
     @Override
     public int getItemType() {
-        return SimpleHelper.TYPE_TWO - 1000;
+        return SimpleHelper.LEVEL_FOURTH - 1000;
     }
 
     @Override

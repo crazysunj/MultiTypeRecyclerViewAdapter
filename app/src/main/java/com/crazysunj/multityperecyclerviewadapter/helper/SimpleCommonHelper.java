@@ -29,8 +29,8 @@ public class SimpleCommonHelper extends AsynAdapterHelper<MultiHeaderEntity, Com
     @Override
     protected void registerMoudle() {
 
-        registerMoudle(TYPE_ONE)
-                .level(LEVEL_FIRST)
+        registerMoudle(LEVEL_FIRST)
+                .type(TYPE_ONE)
                 .layoutResId(R.layout.item_first)
                 .headerResId(R.layout.item_header)
                 .loading()
@@ -39,8 +39,8 @@ public class SimpleCommonHelper extends AsynAdapterHelper<MultiHeaderEntity, Com
                 .register();
 
 
-        registerMoudle(TYPE_TWO)
-                .level(LEVEL_FOURTH)
+        registerMoudle(LEVEL_FOURTH)
+                .type(TYPE_TWO)
                 .layoutResId(R.layout.item_fourth)
                 .headerResId(R.layout.item_header_img)
                 .loading()
@@ -48,8 +48,8 @@ public class SimpleCommonHelper extends AsynAdapterHelper<MultiHeaderEntity, Com
                 .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
                 .register();
 
-        registerMoudle(TYPE_THREE)
-                .level(LEVEL_SENCOND)
+        registerMoudle(LEVEL_SENCOND)
+                .type(TYPE_THREE)
                 .layoutResId(R.layout.item_second)
                 .headerResId(R.layout.item_header_img)
                 .loading()
@@ -57,15 +57,15 @@ public class SimpleCommonHelper extends AsynAdapterHelper<MultiHeaderEntity, Com
                 .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
                 .register();
 
-        registerMoudle(TYPE_FOUR)
-                .level(LEVEL_THIRD)
+        registerMoudle(LEVEL_THIRD)
+                .type(TYPE_FOUR)
                 .layoutResId(R.layout.item_third)
                 .headerResId(R.layout.item_header_img)
                 .loading()
                 .loadingLayoutResId(R.layout.layout_default_shimmer_view)
                 .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
                 .register();
-        
+
     }
 
     public long getHeaderId(int position) {

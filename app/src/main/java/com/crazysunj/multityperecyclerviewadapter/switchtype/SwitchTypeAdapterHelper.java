@@ -12,52 +12,42 @@ import com.crazysunj.multityperecyclerviewadapter.R;
 
 public class SwitchTypeAdapterHelper extends AsynAdapterHelper<MultiTypeEntity, SwitchTypeAdapter> {
 
+    public static final int LEVEL_FIRST = 0;
+    public static final int LEVEL_SECOND = 1;
+    public static final int LEVEL_THIRD = 2;
+    public static final int LEVEL_FOURTH = 3;
+
     public SwitchTypeAdapterHelper() {
         super(null);
     }
 
     @Override
     protected void registerMoudle() {
-        registerMoudle(FirstType.TYPE_1)
-                .level(0)
+        registerMoudle(LEVEL_FIRST)
+                .type(FirstType.TYPE_1)
                 .layoutResId(R.layout.item_first)
+                .type(SwtichType.TYPE_A)
+                .layoutResId(R.layout.item_switch_type)
                 .register();
 
-        registerMoudle(SecondType.TYPE_2)
-                .level(1)
+        registerMoudle(LEVEL_SECOND)
+                .type(SecondType.TYPE_2)
                 .layoutResId(R.layout.item_second)
+                .type(SwtichType.TYPE_B)
+                .layoutResId(R.layout.item_switch_type)
                 .register();
 
-        registerMoudle(ThirdType.TYPE_3)
-                .level(2)
+        registerMoudle(LEVEL_THIRD)
+                .type(ThirdType.TYPE_3)
                 .layoutResId(R.layout.item_third)
+                .type(SwtichType.TYPE_C)
+                .layoutResId(R.layout.item_switch_type)
                 .register();
 
-
-        registerMoudle(FourthType.TYPE_4)
-                .level(3)
+        registerMoudle(LEVEL_FOURTH)
+                .type(FourthType.TYPE_4)
                 .layoutResId(R.layout.item_fourth)
-                .register();
-
-
-        registerMoudle(SwtichType.TYPE_A)
-                .level(4)
-                .layoutResId(R.layout.item_switch_type)
-                .register();
-
-        registerMoudle(SwtichType.TYPE_B)
-                .level(5)
-                .layoutResId(R.layout.item_switch_type)
-                .register();
-
-
-        registerMoudle(SwtichType.TYPE_C)
-                .level(6)
-                .layoutResId(R.layout.item_switch_type)
-                .register();
-
-        registerMoudle(SwtichType.TYPE_D)
-                .level(7)
+                .type(SwtichType.TYPE_D)
                 .layoutResId(R.layout.item_switch_type)
                 .register();
     }

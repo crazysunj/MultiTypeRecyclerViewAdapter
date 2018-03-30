@@ -8,7 +8,6 @@ import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.helper.CommonHelperAdapter;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
 import com.crazysunj.multityperecyclerviewadapter.R;
-import com.crazysunj.multityperecyclerviewadapter.apt.RxAptHelperAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
 import com.crazysunj.multityperecyclerviewadapter.data.LoadingEntity;
@@ -31,7 +30,7 @@ import com.crazysunj.multityperecyclerviewadapter.sticky.ThirdStickyItem;
  * Created by sunjian on 2017/5/4.
  */
 
-public class SimpleCommonHelperAdapter extends CommonHelperAdapter<MultiHeaderEntity, CommonShimmerVH,SimpleCommonHelper>
+public class SimpleCommonHelperAdapter extends CommonHelperAdapter<MultiHeaderEntity, CommonShimmerVH, SimpleCommonHelper>
         implements StickyHeaderAdapter<CommonShimmerVH> {
 
 
@@ -39,25 +38,25 @@ public class SimpleCommonHelperAdapter extends CommonHelperAdapter<MultiHeaderEn
         super(helper);
         helper.setEmptyAdapter(new EmptyEntityAdapter<MultiHeaderEntity>() {
             @Override
-            public MultiHeaderEntity createEmptyEntity(int type) {
+            public MultiHeaderEntity createEmptyEntity(int type, int level) {
                 return new SimpleEmptyEntity(type);
             }
         });
         helper.setErrorAdapter(new ErrorEntityAdapter<MultiHeaderEntity>() {
             @Override
-            public MultiHeaderEntity createErrorEntity(int type) {
+            public MultiHeaderEntity createErrorEntity(int type, int level) {
                 return new SimpleErrorEntity(type);
             }
         });
         helper.setLoadingAdapter(new LoadingEntityAdapter<MultiHeaderEntity>() {
             @Override
-            public MultiHeaderEntity createLoadingEntity(int type) {
-                return new LoadingEntity(type - RxAptHelperAdapterHelper.LOADING_DATA_TYPE_DIFFER);
+            public MultiHeaderEntity createLoadingEntity(int type, int level) {
+                return new LoadingEntity(type);
             }
 
             @Override
-            public MultiHeaderEntity createLoadingHeaderEntity(int type) {
-                return new LoadingEntity(type - RxAptHelperAdapterHelper.LOADING_HEADER_TYPE_DIFFER);
+            public MultiHeaderEntity createLoadingHeaderEntity(int type, int level) {
+                return new LoadingEntity(type);
             }
 
             @Override

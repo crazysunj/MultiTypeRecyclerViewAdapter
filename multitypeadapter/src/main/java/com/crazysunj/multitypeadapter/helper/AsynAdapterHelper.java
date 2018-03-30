@@ -111,8 +111,8 @@ public abstract class AsynAdapterHelper<T extends MultiTypeEntity, A extends Rec
             final T newHeader = mHandleBase.getNewHeader();
             final T newFooter = mHandleBase.getNewFooter();
             final int refreshType = mHandleBase.getRefreshType();
-            final int type = mHandleBase.getType();
-            DiffUtil.DiffResult result = handleRefresh(newData, newHeader, newFooter, type, refreshType);
+            final int level = mHandleBase.getLevel();
+            DiffUtil.DiffResult result = handleRefresh(newData, newHeader, newFooter, level, refreshType);
             Message message = mHandler.obtainMessage(HANDLE_DATA_UPDATE);
             message.obj = result;
             message.sendToTarget();

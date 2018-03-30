@@ -168,7 +168,7 @@ public class RxAptStandardLinearActivity extends AppCompatActivity {
             }
             Toast.makeText(this, "移除了第" + (position + 1) + "个数据,Type为" + itemType, Toast.LENGTH_SHORT).show();
             getTextView(itemType)
-                    .setText(String.format(Locale.getDefault(), "类型%d的数量：%d", itemType + 1, helper.getDataWithType(itemType).getData().size()));
+                    .setText(String.format(Locale.getDefault(), "类型%d的数量：%d", itemType + 1, helper.getDataWithLevel(itemType).getData().size()));
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -225,22 +225,22 @@ public class RxAptStandardLinearActivity extends AppCompatActivity {
 
     public void click5(View view) {
 
-        helper.clearMoudle(SimpleHelper.TYPE_ONE);
+        helper.clearMoudle(0);
     }
 
     public void click6(View view) {
 
-        helper.clearMoudle(SimpleHelper.TYPE_THREE);
+        helper.clearMoudle(1);
     }
 
     public void click7(View view) {
-        helper.clearMoudle(SimpleHelper.TYPE_FOUR);
+        helper.clearMoudle(2);
 
     }
 
     public void click8(View view) {
 
-        helper.clearMoudle(SimpleHelper.TYPE_TWO);
+        helper.clearMoudle(3);
     }
 
     public void click9(View view) {

@@ -50,25 +50,25 @@ public class ErrorAndrEmptyHelperAdapter extends BaseQuickAdapter<StickyItem, Sh
         helper.bindAdapter(this);
         helper.setEmptyAdapter(new EmptyEntityAdapter<StickyItem>() {
             @Override
-            public StickyItem createEmptyEntity(int type) {
+            public StickyItem createEmptyEntity(int type, int level) {
                 return new ErrorAndEmptyEmptyEntity(type);
             }
         });
         helper.setErrorAdapter(new ErrorEntityAdapter<StickyItem>() {
             @Override
-            public StickyItem createErrorEntity(int type) {
+            public StickyItem createErrorEntity(int type, int level) {
                 return new ErrorAndEmptyErrorEntity(type);
             }
         });
         helper.setLoadingAdapter(new LoadingEntityAdapter<StickyItem>() {
             @Override
-            public StickyItem createLoadingEntity(int type) {
-                return new ErrorAndEmptyLoadingEntity(type - RxAptHelperAdapterHelper.LOADING_DATA_TYPE_DIFFER);
+            public StickyItem createLoadingEntity(int type, int level) {
+                return new ErrorAndEmptyLoadingEntity(type);
             }
 
             @Override
-            public StickyItem createLoadingHeaderEntity(int type) {
-                return new ErrorAndEmptyLoadingEntity(type - RxAptHelperAdapterHelper.LOADING_HEADER_TYPE_DIFFER);
+            public StickyItem createLoadingHeaderEntity(int type, int level) {
+                return new ErrorAndEmptyLoadingEntity(type);
             }
 
             @Override
@@ -98,10 +98,10 @@ public class ErrorAndrEmptyHelperAdapter extends BaseQuickAdapter<StickyItem, Sh
             }
         });
         helper.initGlobalLoadingConfig(new LoadingConfig.Builder()
-                .setLoading(SimpleHelper.TYPE_ONE, 3, true)
-                .setLoading(SimpleHelper.TYPE_TWO, 2)
-                .setLoading(SimpleHelper.TYPE_THREE, true)
-                .setLoading(SimpleHelper.TYPE_FOUR, 4, true)
+                .setLoading(SimpleHelper.LEVEL_FIRST, 3, true)
+                .setLoading(SimpleHelper.LEVEL_THIRD, 2)
+                .setLoading(SimpleHelper.LEVEL_FOURTH, true)
+                .setLoading(SimpleHelper.LEVEL_SENCOND, 4, true)
                 .build());
         mHelper = helper;
     }
@@ -147,18 +147,18 @@ public class ErrorAndrEmptyHelperAdapter extends BaseQuickAdapter<StickyItem, Sh
         } else if (item instanceof HeaderFourthItem) {
             renderHeaderFourth(helper, (HeaderFourthItem) item);
         } else if (item instanceof ErrorAndEmptyErrorEntity) {
-            if (item.getItemType() == SimpleHelper.TYPE_THREE - SimpleHelper.ERROR_TYPE_DIFFER) {
-                renderErrorSecond(helper, SimpleHelper.TYPE_THREE);
+            if (item.getItemType() == SimpleHelper.LEVEL_SENCOND - SimpleHelper.ERROR_TYPE_DIFFER) {
+                renderErrorSecond(helper, SimpleHelper.LEVEL_SENCOND);
             }
 
             if (item instanceof MyErrorAndEmptyErrorEntity) {
                 MyErrorAndEmptyErrorEntity errorEntity = (MyErrorAndEmptyErrorEntity) item;
-                if (errorEntity.getItemType() == SimpleHelper.TYPE_TWO - SimpleHelper.ERROR_TYPE_DIFFER) {
-                    renderErrorFourth(helper, errorEntity, SimpleHelper.TYPE_TWO);
+                if (errorEntity.getItemType() == SimpleHelper.LEVEL_FOURTH - SimpleHelper.ERROR_TYPE_DIFFER) {
+                    renderErrorFourth(helper, errorEntity, SimpleHelper.LEVEL_FOURTH);
                 }
             }
         } else if (item instanceof MyErrorAndEmptyEmptyEntity) {
-            renderEmptyThird(helper, (MyErrorAndEmptyEmptyEntity) item, SimpleHelper.TYPE_FOUR);
+            renderEmptyThird(helper, (MyErrorAndEmptyEmptyEntity) item, SimpleHelper.LEVEL_THIRD);
         }
     }
 
