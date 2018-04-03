@@ -353,7 +353,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
                     levelData.setHeader(entity);
                 }
             } else {
-                throw new DataException("are you sure the ture level ?");
+                throw new DataException("are you sure the ture level ? itemType = "+itemType);
             }
         }
         mNewData.addAll(mGlobalLoadingEntitys);
@@ -583,7 +583,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         if (getLevel(emptyData.getItemType()) == level) {
             notifyMoudleChanged(Collections.singletonList(emptyData), null, null, level, REFRESH_HEADER_FOOTER_DATA);
         } else {
-            throw new DataException("please set correct itemType!");
+            throw new DataException("please set correct itemType ! level = "+level);
         }
     }
 
@@ -611,7 +611,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         if (getLevel(errorData.getItemType()) == level) {
             notifyMoudleChanged(Collections.singletonList(errorData), null, null, level, REFRESH_HEADER_FOOTER_DATA);
         } else {
-            throw new DataException("please set correct itemType!");
+            throw new DataException("please set correct itemType ! level = " + level);
         }
     }
 
@@ -1574,7 +1574,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         final int level = mResourcesManager.getLevel(type);
         if (level <= DEFAULT_HEADER_LEVEL) {
             onEnd();
-            throw new DataException("boy , are you sure register this type ?");
+            throw new DataException("boy , are you sure register this type = " + type + " ?");
         }
         return level;
     }
@@ -1744,7 +1744,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         for (T t : data) {
             if (level != getLevel(t.getItemType())) {
                 onEnd();
-                throw new DataException("please check data level!");
+                throw new DataException("please check data level! level = "+level);
             }
         }
     }
@@ -1760,7 +1760,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         SparseArray<T> temHeaders = new SparseArray<>();
         SparseArray<T> temFooters = new SparseArray<>();
         for (T data : newData) {
-            int itemType = data.getItemType();
+            final int itemType = data.getItemType();
             final int level = getLevel(itemType);
             if (itemType >= 0 && itemType < HEADER_TYPE_DIFFER) {
                 List<T> dataList = temDatas.get(level);

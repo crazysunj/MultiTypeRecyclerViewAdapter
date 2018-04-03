@@ -80,4 +80,8 @@ public class MainActivity extends AppCompatActivity {
     public void click16(View view) {
         startActivity(new Intent(this, SwitchTypeActivity.class));
     }
+
+    public void click17(View view) {
+        startActivity(new Intent(this, TestLevelActivity.class));
+    }
 }

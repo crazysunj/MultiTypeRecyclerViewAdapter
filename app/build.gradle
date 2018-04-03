@@ -18,6 +18,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -25,14 +29,12 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     compile project(libs.MTRVA_File)
     compile project(libs.MTRVA_File_Anno)
     annotationProcessor project(libs.MTRVA_File_Compiler)
-//    compile libs.MTRVA_Anno
-//    compile libs.MTRVA
-//    apt libs.MTRVA_Compiler
-
+    //    compile libs.MTRVA_Anno
+    //    compile libs.MTRVA
+    //    apt libs.MTRVA_Compiler
     compile libs.appcompatV7
     compile libs.BRVAH
     compile libs.itemDecoration
@@ -41,6 +43,5 @@ dependencies {
     compile libs.rxandroid
     compile libs.rxjava
     testCompile libs.junit
-
-//    compile libs.diffutil
+    //    compile libs.diffutil
 }
