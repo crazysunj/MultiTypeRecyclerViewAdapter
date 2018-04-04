@@ -16,6 +16,7 @@
 package com.crazysunj.multitypeadapter.helper;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,8 +57,9 @@ public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends C
         return mHelper.getItemViewType(position);
     }
 
+    @NonNull
     @Override
-    public K onCreateViewHolder(ViewGroup parent, int viewType) {
+    public K onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return createCommonViewHolder(parent, mHelper.getLayoutId(viewType));
     }
 
