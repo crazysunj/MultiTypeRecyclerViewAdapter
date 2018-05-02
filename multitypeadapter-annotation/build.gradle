@@ -1,12 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'bintray-release'
 def bintrays = rootProject.ext.bintray //bintray配置
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-}
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
 
 publish {
     artifactId = 'multitypeadapter-annotation'

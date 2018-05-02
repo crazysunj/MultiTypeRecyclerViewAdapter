@@ -1,5 +1,5 @@
 ext {
-    supportVersion = "27.1.0"
+    supportVersion = "27.1.1"
     android = [
             compileSdkVersion: 27,
             buildToolsVersion: "27.0.3",
