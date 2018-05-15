@@ -92,6 +92,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="click11"
+            android:text="移除某个level from 0 count 2" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:onClick="click4"
             android:text="随机修改一个数据(包括头)" />
 

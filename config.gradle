@@ -37,7 +37,7 @@ ext {
             userOrg       : 'twsunj',
             groupId       : 'com.crazysunj',
             uploadName    : 'MultiTypeRecyclerViewAdapter',
-            publishVersion: '2.0.0',
+            publishVersion: '2.0.3',
             desc          : 'MultiTypeRecyclerViewAdapter For Android',
             website       : 'https://github.com/crazysunj/MultiTypeRecyclerViewAdapter',
             licences      : ['Apache-2.0']

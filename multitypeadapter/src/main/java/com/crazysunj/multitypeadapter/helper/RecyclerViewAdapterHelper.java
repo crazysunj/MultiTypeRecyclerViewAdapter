@@ -822,8 +822,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
      * @param position 添加的位置
      */
     public void addData(int position, @NonNull T data) {
-        checkAdapterBind();
 
+        if (position >= mData.size()) {
+            addData(data);
+            return;
+        }
+
+        checkAdapterBind();
         if (!mIsCanRefresh) {
             return;
         }
@@ -946,6 +951,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         mCurrentLevel = REFRESH_TYPE_OTHER;
         onStart();
 
+        if (position >= mData.size()) {
+            onEnd();
+            return null;
+        }
+
         T removeData = mData.remove(position);
         int internalPosition = position + getPreDataCount();
         mAdapter.notifyItemRemoved(internalPosition);
@@ -989,7 +999,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
      * @param itemCount     集合的大小
      * @return 返回被移除的集合
      */
-    public List<? extends T> removeData(int positionStart, @IntRange(from = 1) int itemCount) {
+    public List<T> removeData(int positionStart, @IntRange(from = 1) int itemCount) {
         if (itemCount == 1) {
             return Collections.singletonList(removeData(positionStart));
         }
@@ -1000,8 +1010,15 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         mCurrentLevel = REFRESH_TYPE_OTHER;
         onStart();
 
+        final int initSize = mData.size();
+        if (positionStart >= initSize) {
+            onEnd();
+            return null;
+        }
+
         List<T> removeData = new ArrayList<>();
-        for (int i = positionStart, size = positionStart + itemCount; i < size; i++) {
+        final int size = positionStart + itemCount >= initSize ? initSize : positionStart + itemCount;
+        for (int i = positionStart; i < size; i++) {
             T remove = mData.remove(positionStart);
             removeData.add(remove);
         }
@@ -1105,8 +1122,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
      * @param position 插入位置
      */
     public void addData(int position, @NonNull List<? extends T> data) {
-        checkAdapterBind();
 
+        if (position >= mData.size()) {
+            addData(data);
+            return;
+        }
+
+        checkAdapterBind();
         if (!mIsCanRefresh) {
             return;
         }
@@ -1584,6 +1606,16 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         DiffUtil.DiffResult result = DiffUtil.calculateDiff(getDiffCallBack(mData, mNewData), isDetectMoves());
         mLevelOldData.put(level, new LevelData<>(data, header, footer));
         return result;
+    }
+
+    /**
+     * 根据level获取该level第一个item的position
+     *
+     * @param level level
+     * @return int
+     */
+    public int getLevelPositionStart(int level) {
+        return getPositionStart(level);
     }
 
     private int getPositionStart(int level) {

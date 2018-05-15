@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
@@ -59,13 +60,48 @@ public class RxStandardLinearActivity extends AppCompatActivity {
 
     }
 
+    private void notifyLevel(int level, Random random) {
+        List<MultiHeaderEntity> list = new ArrayList<>();
+        MultiHeaderEntity header;
+        if (level == SimpleHelper.LEVEL_FIRST) {
+            header = new HeaderFirstItem("我是第一种类型的头--新");
+            int rand = random.nextInt(4);
+            for (int i = 0, size = rand + 1; i < size; i++) {
+                list.add(new FirstItem(String.format(Locale.getDefault(), "我是第一种类型%d--新", i)));
+            }
+            textView1.setText(String.format(Locale.getDefault(), "类型1的数量：%d", list.size()));
+        } else if (level == SimpleHelper.LEVEL_SENCOND) {
+            header = new HeaderSecondItem("我是第二种类型的头--新");
+            int rand = random.nextInt(4);
+            for (int i = 0, size = rand + 1; i < size; i++) {
+                list.add(new SecondItem(String.format(Locale.getDefault(), "我是第二种类型%d--新", i)));
+            }
+            textView2.setText(String.format(Locale.getDefault(), "类型2的数量：%d", list.size()));
+        } else if (level == SimpleHelper.LEVEL_THIRD) {
+            header = new HeaderThirdItem("我是第三种类型的头--新");
+            int rand = random.nextInt(4);
+            for (int i = 0, size = rand + 1; i < size; i++) {
+                list.add(new ThirdItem(String.format(Locale.getDefault(), "我是第三种类型%d--新", i)));
+            }
+            textView3.setText(String.format(Locale.getDefault(), "类型3的数量：%d", list.size()));
+        } else {
+            header = new HeaderFourthItem("我是第四种类型的头--新");
+            int rand = random.nextInt(4);
+            for (int i = 0, size = rand + 1; i < size; i++) {
+                list.add(new FourthItem(String.format(Locale.getDefault(), "我是第四种类型%d--新", i)));
+            }
+            textView4.setText(String.format(Locale.getDefault(), "类型4的数量：%d", list.size()));
+        }
+        helper.notifyMoudleDataAndHeaderChanged(list, header, level);
+    }
+
     @NonNull
     private List<MultiHeaderEntity> initData() {
         Random random = new Random();
         List<MultiHeaderEntity> list = new ArrayList<>();
         int firstCount = 0;
         int secondCount = 0;
-        int thidrdCount = 0;
+        int thirdCount = 0;
         int fourthCount = 0;
         list.add(new HeaderFirstItem("我是第一种类型的头"));
         list.add(new HeaderSecondItem("我是第二种类型的头"));
@@ -102,7 +138,7 @@ public class RxStandardLinearActivity extends AppCompatActivity {
         for (int i = 0, size = rand4 + 1; i < size; i++) {
             list4.add(new ThirdItem(String.format(Locale.getDefault(), "1-我是第三种类型%d", i)));
         }
-        thidrdCount += list4.size();
+        thirdCount += list4.size();
         list.addAll(list4);
 
         int rand5 = random.nextInt(4);
@@ -126,7 +162,7 @@ public class RxStandardLinearActivity extends AppCompatActivity {
         for (int i = 0, size = rand7 + 1; i < size; i++) {
             list7.add(new ThirdItem(String.format(Locale.getDefault(), "2-我是第三种类型%d", i)));
         }
-        thidrdCount += list7.size();
+        thirdCount += list7.size();
         list.addAll(list7);
 
         int rand8 = random.nextInt(4);
@@ -139,7 +175,7 @@ public class RxStandardLinearActivity extends AppCompatActivity {
 
         textView1.setText(String.format(Locale.getDefault(), "类型1的数量：%d", firstCount));
         textView2.setText(String.format(Locale.getDefault(), "类型2的数量：%d", secondCount));
-        textView3.setText(String.format(Locale.getDefault(), "类型3的数量：%d", thidrdCount));
+        textView3.setText(String.format(Locale.getDefault(), "类型3的数量：%d", thirdCount));
         textView4.setText(String.format(Locale.getDefault(), "类型4的数量：%d", fourthCount));
         return list;
     }
@@ -268,6 +304,24 @@ public class RxStandardLinearActivity extends AppCompatActivity {
         throw new RuntimeException("返回为空");
     }
 
+    public void click11(View view) {
+        Random random = new Random();
+        final int level = random.nextInt(4);
+        LevelData<MultiHeaderEntity> levelData = helper.getDataWithLevel(level);
+        List<MultiHeaderEntity> data = levelData.getData();
+        if (data == null || data.isEmpty()) {
+            Toast.makeText(this, "当前level=" + level + "数量不够，没法移除", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (levelData.getHeader() == null && data.size() <= 1) {
+            Toast.makeText(this, "当前level=" + level + "数量不够，没法移除", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int positionStart = helper.getLevelPositionStart(level);
+        helper.removeData(positionStart, 2);
+        Toast.makeText(this, "当前移除的是level=" + level, Toast.LENGTH_SHORT).show();
+    }
+
     private MultiHeaderEntity getOtherChangeItem(int level) {
 
         String date = (String) DateFormat.format("HH:mm:ss", System.currentTimeMillis());
@@ -311,13 +365,7 @@ public class RxStandardLinearActivity extends AppCompatActivity {
             Random random = new Random();
             final int level = random.nextInt(4);
             helper.notifyLoadingChanged(level);
-            textView1.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    List<MultiHeaderEntity> data = helper.getDataWithLevel(level).getData();
-                    getOtherTextView(level).setText(String.format(Locale.getDefault(), "类型%d的数量：%d", level + 1, data == null ? 0 : data.size()));
-                }
-            }, 200);
+            textView1.postDelayed(() -> notifyLevel(level, random), 1000);
         } catch (Exception e) {
             Log.d("RxStandardLinearActivit", e.getMessage());
         }
