@@ -51,6 +51,7 @@ import java.util.regex.Pattern;
  * description
  * 如果您发现哪里性能比较差或者说设计不合理，希望您能反馈给我
  * email:twsunj@gmail.com
+ * 博客有联系方式{@link <a href="http://crazysunj.com/">博客</a>}
  * level 取值范围
  * data类型 [0,1000)
  * header类型 [-1000,0)
@@ -61,14 +62,17 @@ import java.util.regex.Pattern;
  * footer类型 [-6000,-5000)
  * Created by sunjian on 2017/5/4.
  */
-
 public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A extends RecyclerView.Adapter> {
 
     protected static final String TAG = RecyclerViewAdapterHelper.class.getSimpleName();
 
-    //标准刷新，相应的type集合在一起
+    /**
+     * 标准模式，相应level在一起
+     */
     public static final int MODE_STANDARD = 0;
-    //随机模式，操作一般的数据
+    /**
+     * 随机模式，日常集合
+     */
     public static final int MODE_MIXED = 1;
 
     @IntDef({MODE_STANDARD, MODE_MIXED})
@@ -76,87 +80,163 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     public @interface RefreshMode {
     }
 
-    //闲置状态
+    /**
+     * 闲置状态
+     */
     public static final int REFRESH_TYPE_IDLE = -1;
-    //刷新数据全部
+    /**
+     * 刷新数据全部
+     */
     public static final int REFRESH_TYPE_DATA_ALL = -2;
-    //刷新loading全部
+    /**
+     * 刷新loading全部
+     */
     public static final int REFRESH_TYPE_LOAD_ALL = -3;
-    //清除操作
+    /**
+     * 清除操作
+     */
     public static final int REFRESH_TYPE_CLEAR = -4;
-    //其他
+    /**
+     * 其他
+     */
     public static final int REFRESH_TYPE_OTHER = -5;
 
-    //默认数量为0
+    /**
+     * 默认数量为0
+     */
     private static final int PRE_DATA_COUNT = 0;
 
-    //header类型差值
+    /**
+     * header类型差值
+     */
     public static final int HEADER_TYPE_DIFFER = 1000;
-    //loading-data类型差值
+    /**
+     * loading-data类型差值
+     */
     public static final int LOADING_DATA_TYPE_DIFFER = 2000;
-    //loading-header类型差值
+    /**
+     * loading-header类型差值
+     */
     public static final int LOADING_HEADER_TYPE_DIFFER = 3000;
-    //error类型差值
+    /**
+     * error类型差值
+     */
     public static final int ERROR_TYPE_DIFFER = 4000;
-    //empty类型差值
+    /**
+     * empty类型差值
+     */
     public static final int EMPTY_TYPE_DIFFER = 5000;
-    //footer类型差值
+    /**
+     * footer类型差值
+     */
     public static final int FOOTER_TYPE_DIFFER = 6000;
 
-    //默认viewType
+    /**
+     * 默认viewType
+     */
     public static final int DEFAULT_VIEW_TYPE = 0;
-    //默认头的level，处理数据只跟type有关系
+    /**
+     * 默认header的level
+     */
     static final int DEFAULT_HEADER_LEVEL = -1;
-    //只刷新头 001
+    /**
+     * 只刷新header 001
+     */
     private static final int REFRESH_HEADER = 1;
-    //只刷新底 010
+    /**
+     * 只刷新fooer 010
+     */
     private static final int REFRESH_FOOTER = 2;
-    //同时刷新头和底 011
+    /**
+     * 同时刷新header和footer 011
+     */
     private static final int REFRESH_HEADER_FOOTER = 3;
-    //只刷新数据 100
+    /**
+     * 只刷新data 100
+     */
     private static final int REFRESH_DATA = 4;
-    //同时刷新数据和头 101
+    /**
+     * 同时刷新data和header 101
+     */
     private static final int REFRESH_HEADER_DATA = 5;
-    //同时刷新数据和底 110
+    /**
+     * 同时刷新data和footer 110
+     */
     private static final int REFRESH_FOOTER_DATA = 6;
-    //同时刷新头，底，数据 111
+    /**
+     * 同时刷新header,data,footer 111
+     */
     private static final int REFRESH_HEADER_FOOTER_DATA = 7;
-    //刷新全部
+    /**
+     * 刷新全部
+     */
     private static final int REFRESH_ALL = 8;
 
-    //控制麒麟臂用户
+    /**
+     * 拦截刷新，添入队列
+     */
     private boolean mIsCanRefresh = true;
-    //随机id的默认最大值
+    /**
+     * 辅助id的默认最大值
+     */
     private long mMaxRandomId = -1;
-    //随机id的默认最小值
+    /**
+     * 辅助id的默认最小值
+     */
     private long mMinRandomId = Long.MIN_VALUE;
-    //loadingview关于数据方面的最大缓存值
+    /**
+     * loadingview关于data的最大缓存值
+     */
     private int mMaxDataCacheCount = 12;
-    //loadingview关于头方面的最大缓存值
+    /**
+     * loadingview关于header的最大缓存值
+     */
     private int mMaxSingleCacheCount = 6;
 
-    //根据level存储的数据
+    /**
+     * 根据level存储的数据
+     */
     private SparseArray<LevelData<T>> mLevelOldData;
-    //数据的缓存
+    /**
+     * loading的data缓存
+     */
     private LruCache<String, List<T>> mDataCache;
-    //头的缓存
+    /**
+     * loading的header缓存
+     */
     private LruCache<String, T> mSingleCache;
-    //老数据
+    /**
+     * 老数据
+     */
     protected List<T> mNewData;
-    //当前数据
+    /**
+     * 当前数据
+     */
     protected List<T> mData;
-    //绑定Adapter
+    /**
+     * 绑定Adapter
+     */
     protected A mAdapter;
-    //资源管理
+    /**
+     * 资源管理
+     */
     private ResourcesManager mResourcesManager;
-    //刷新队列，支持高频率刷新
+    /**
+     * 刷新队列，支持高频率刷新
+     */
     private Queue<HandleBase<T>> mRefreshQueue;
-    //全局loading刷新数据
+    /**
+     * 全局loading刷新数据
+     */
     private ArrayList<T> mGlobalLoadingEntitys;
 
-    //当前模式
+    /**
+     * 当前模式
+     */
     private int mCurrentMode;
-    //当前刷新Level
+    /**
+     * 当前刷新Level
+     */
     private int mCurrentLevel;
 
     public RecyclerViewAdapterHelper(List<T> data) {
@@ -183,7 +263,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     /**
      * 绑定adapter
      *
-     * @param adapter 绑定adapter
+     * @param adapter adapter
      */
     public void bindAdapter(A adapter) {
         mAdapter = adapter;
@@ -203,7 +283,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     /**
      * 设置加载实体类适配器
      *
-     * @param adapter 适配器
+     * @param adapter adapter
      */
     public void setLoadingAdapter(LoadingEntityAdapter<T> adapter) {
         mLoadingEntityAdapter = adapter;
@@ -214,7 +294,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     /**
      * 设置空实体类适配器
      *
-     * @param adapter 适配器
+     * @param adapter adapter
      */
     public void setEmptyAdapter(EmptyEntityAdapter<T> adapter) {
         mEmptyEntityAdapter = adapter;
@@ -225,7 +305,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     /**
      * 设置错误实体类适配器
      *
-     * @param adapter 适配器
+     * @param adapter adapter
      */
     public void setErrorAdapter(ErrorEntityAdapter<T> adapter) {
         mErrorEntityAdapter = adapter;
@@ -281,28 +361,26 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 设置随机id的最大值
+     * 设置辅助id的最大值
      *
-     * @param maxRandomId 随机id的最大值
+     * @param maxRandomId 辅助id的最大值
      */
     public void setMaxRandomId(long maxRandomId) {
         mMaxRandomId = maxRandomId;
     }
 
     /**
-     * 设置随机id的最小值
+     * 设置辅助id的最小值
      *
-     * @param minRandomId 随机id的最小值
+     * @param minRandomId 辅助id的最小值
      */
     public void setMinRandomId(long minRandomId) {
         mMinRandomId = minRandomId;
     }
 
     /**
-     * 不断向下取值，如果抛异常，你可以重新设置最大值，但切记不能重复啊，报错我可不负责啊，这么多的值都用完了，是在下输了
+     * 辅助id
      * 有特殊要求的同学可以自己设计
-     * 是不是随机有待商量
-     * 注意并发问题
      *
      * @return 返回不重复Id
      */
@@ -314,7 +392,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 全局初始化的loading集合进行刷新
+     * 刷新loading页
+     * 调用前请初始化loading全局数据{@link #initGlobalLoadingConfig(LoadingConfig)}
      */
     public void notifyLoadingChanged() {
         if (mGlobalLoadingEntitys == null) {
@@ -362,9 +441,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 全局初始化的loading集合根据level进行刷新
+     * 刷新level的loading页
+     * 调用前请初始化loading全局数据{@link #initGlobalLoadingConfig(LoadingConfig)}
      *
-     * @param level 数据类型等级
+     * @param level level
      */
     public void notifyLoadingChanged(int level) {
         if (mGlobalLoadingEntitys == null) {
@@ -394,10 +474,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 务必在调用之前确定缓存最大值，可调用setMaxHeaderCacheCount和setMaxHeaderCacheCount
-     * 对应notifyMoudleDataChanged
+     * 刷新loading的data
      *
-     * @param level     数据类型等级
+     * @param level     level
      * @param dataCount 刷新条目数
      */
     public void notifyLoadingDataChanged(int level, @IntRange(from = 1) int dataCount) {
@@ -405,16 +484,46 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         notifyMoudleChanged(datas, null, null, level, REFRESH_FOOTER_DATA);
     }
 
+    /**
+     * 刷新loading的header
+     *
+     * @param level level
+     */
+    public void notifyLoadingHeaderChanged(int level) {
+        T header = createLoadingHeader(level);
+        notifyMoudleChanged(null, header, null, level, REFRESH_HEADER_FOOTER);
+    }
+
+    /**
+     * 刷新loading的data和header
+     *
+     * @param level     level
+     * @param dataCount 刷新条目数
+     */
+    public void notifyLoadingDataAndHeaderChanged(int level, @IntRange(from = 1) int dataCount) {
+        T header = createLoadingHeader(level);
+        List<T> datas = createLoadingData(level, dataCount);
+        notifyMoudleChanged(datas, header, null, level, REFRESH_HEADER_FOOTER_DATA);
+    }
+
+    /**
+     * 可使用{@link #addData(int, List)}和{@link #getLevelPositionStart(int)}替代
+     *
+     * @param data  data
+     * @param level level
+     */
+    @Deprecated
     public void notifyMoudleDataInserted(@NonNull T data, int level) {
         notifyMoudleDataInserted(Collections.singletonList(data), level);
     }
 
     /**
-     * 在原来基础上添加一个数据集合
+     * 可使用{@link #addData(int, List)}和{@link #getLevelPositionStart(int)}替代
      *
-     * @param data  添加数据集
-     * @param level 添加数据类型等级
+     * @param data  data
+     * @param level level
      */
+    @Deprecated
     public void notifyMoudleDataInserted(@NonNull List<? extends T> data, int level) {
         LevelData<T> levelData = mLevelOldData.get(level);
         if (levelData == null) {
@@ -431,10 +540,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 只刷新数据
+     * 只刷新data
      *
-     * @param data  数据
-     * @param level 数据类型等级
+     * @param data  data
+     * @param level level
      */
     @SuppressWarnings("unchecked")
     public void notifyMoudleDataChanged(@NonNull List<? extends T> data, int level) {
@@ -446,67 +555,43 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 务必在调用之前确定缓存最大值，可调用setMaxHeaderCacheCount和setMaxHeaderCacheCount
-     * 对应notifyMoudleHeaderChanged
+     * 只刷新header
      *
-     * @param level 数据类型等级
-     */
-    public void notifyLoadingHeaderChanged(int level) {
-        T header = createLoadingHeader(level);
-        notifyMoudleChanged(null, header, null, level, REFRESH_HEADER_FOOTER);
-    }
-
-    /**
-     * 只刷新头
-     *
-     * @param header 头
-     * @param level  数据类型等级
+     * @param header header
+     * @param level  level
      */
     public void notifyMoudleHeaderChanged(@NonNull T header, int level) {
         notifyMoudleChanged(null, header, null, level, REFRESH_HEADER);
     }
 
     /**
-     * 只刷新底
+     * 只刷新footer
      *
-     * @param footer 底
-     * @param level  数据类型等级
+     * @param footer fooer
+     * @param level  level
      */
     public void notifyMoudleFooterChanged(@NonNull T footer, int level) {
         notifyMoudleChanged(null, null, footer, level, REFRESH_FOOTER);
     }
 
     /**
-     * 同时刷新头和底
+     * 同时刷新header和fooer
      *
-     * @param header 头
-     * @param footer 底
-     * @param level  数据类型等级
+     * @param header header
+     * @param footer footer
+     * @param level  level
      */
     public void notifyMoudleHeaderAndFooterChanged(@NonNull T header, @NonNull T footer, int level) {
         notifyMoudleChanged(null, header, footer, level, REFRESH_HEADER_FOOTER);
     }
 
-    /**
-     * 务必在调用之前确定缓存最大值，可调用setMaxHeaderCacheCount和setMaxHeaderCacheCount
-     * 对应notifyMoudleDataAndHeaderChanged
-     *
-     * @param level     数据类型等级
-     * @param dataCount 刷新条目数
-     */
-    public void notifyLoadingDataAndHeaderChanged(int level, @IntRange(from = 1) int dataCount) {
-        T header = createLoadingHeader(level);
-        List<T> datas = createLoadingData(level, dataCount);
-        notifyMoudleChanged(datas, header, null, level, REFRESH_HEADER_FOOTER_DATA);
-    }
-
 
     /**
-     * 同时刷新头和数据
+     * 同时刷新data和header
      *
-     * @param data   数据
-     * @param header 头
-     * @param level  数据类型等级
+     * @param data   data
+     * @param header header
+     * @param level  level
      */
     @SuppressWarnings("unchecked")
     public void notifyMoudleDataAndHeaderChanged(@NonNull List<? extends T> data, @NonNull T header, int level) {
@@ -514,11 +599,22 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 同时刷新底和数据
+     * 同时刷新data和header
      *
-     * @param data   数据
-     * @param footer 底
-     * @param level  数据类型等级
+     * @param data   data
+     * @param header header
+     * @param level  level
+     */
+    public void notifyMoudleDataAndHeaderChanged(@NonNull T data, @NonNull T header, int level) {
+        notifyMoudleChanged(Collections.singletonList(data), header, null, level, REFRESH_HEADER_DATA);
+    }
+
+    /**
+     * 同时刷新data和footer
+     *
+     * @param data   data
+     * @param footer fooer
+     * @param level  level
      */
     @SuppressWarnings("unchecked")
     public void notifyMoudleDataAndFooterChanged(@NonNull List<? extends T> data, @NonNull T footer, int level) {
@@ -526,34 +622,23 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 同时刷新头和数据
+     * 同时刷新data和fooer
      *
-     * @param data   数据
-     * @param header 头
-     * @param level  数据类型等级
-     */
-    public void notifyMoudleDataAndHeaderChanged(@NonNull T data, @NonNull T header, int level) {
-        notifyMoudleChanged(Collections.singletonList(data), header, null, level, REFRESH_HEADER_DATA);
-    }
-
-    /**
-     * 同时刷新底和数据
-     *
-     * @param data   数据
-     * @param footer 底
-     * @param level  数据类型等级
+     * @param data   data
+     * @param footer fooer
+     * @param level  level
      */
     public void notifyMoudleDataAndFooterChanged(@NonNull T data, @NonNull T footer, int level) {
         notifyMoudleChanged(Collections.singletonList(data), null, footer, level, REFRESH_FOOTER_DATA);
     }
 
     /**
-     * 同时刷新头和底和数据
+     * 同时刷新header、data和fooer
      *
-     * @param header 头
-     * @param data   数据
-     * @param footer 底
-     * @param level  数据类型等级
+     * @param header header
+     * @param data   data
+     * @param footer fooer
+     * @param level  level
      */
     @SuppressWarnings("unchecked")
     public void notifyMoudleDataAndHeaderAndFooterChanged(@NonNull T header, @NonNull List<? extends T> data, @NonNull T footer, int level) {
@@ -561,23 +646,23 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 同时刷新头和底和数据
+     * 同时刷新header、data和fooer
      *
-     * @param header 头
-     * @param data   数据
-     * @param footer 底
-     * @param level  数据类型等级
+     * @param header header
+     * @param data   data
+     * @param footer fooer
+     * @param level  level
      */
     public void notifyMoudleDataAndHeaderAndFooterChanged(@NonNull T header, @NonNull T data, @NonNull T footer, int level) {
         notifyMoudleChanged(Collections.singletonList(data), header, footer, level, REFRESH_HEADER_FOOTER_DATA);
     }
 
     /**
-     * 刷新相应类型空界面
-     * 如果刷新没有跟数据属性关联，notifyMoudleEmptyChanged(int level)
+     * 刷新空数据页面
+     * 如果调用了{@link #setEmptyAdapter(EmptyEntityAdapter)}可直接调用{@link #notifyMoudleEmptyChanged(int)}
      *
-     * @param emptyData 空数据，不能为空
-     * @param level     空数据类型等级
+     * @param emptyData 空数据
+     * @param level     level
      */
     public void notifyMoudleEmptyChanged(@NonNull T emptyData, int level) {
         if (getLevel(emptyData.getItemType()) == level) {
@@ -587,6 +672,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         }
     }
 
+    /**
+     * 需要调用{@link #setEmptyAdapter(EmptyEntityAdapter)}
+     * 如果不想设置{@link EmptyEntityAdapter}，请调用{@link #notifyMoudleEmptyChanged(MultiTypeEntity, int)}
+     *
+     * @param level level
+     */
     public void notifyMoudleEmptyChanged(int level) {
         if (mSingleCache == null) {
             mSingleCache = new LruCache<>(mMaxSingleCacheCount);
@@ -601,11 +692,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 刷新相应类型错误界面
-     * 如果刷新没有跟数据属性关联，那么调用notifyMoudleErrorChanged(int level)
+     * 刷新错误页面
+     * 如果调用了{@link #setErrorAdapter(ErrorEntityAdapter)}可直接调用{@link #notifyMoudleErrorChanged(int)}
      *
-     * @param errorData 错误数据，不能为空
-     * @param level     错误数据类型等级
+     * @param errorData 错误数据
+     * @param level     level
      */
     public void notifyMoudleErrorChanged(@NonNull T errorData, int level) {
         if (getLevel(errorData.getItemType()) == level) {
@@ -615,6 +706,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         }
     }
 
+    /**
+     * 需要调用{@link #setErrorAdapter(ErrorEntityAdapter)}
+     * 如果不想设置{@link ErrorEntityAdapter}，请调用{@link #notifyMoudleErrorChanged(MultiTypeEntity, int)}
+     *
+     * @param level level
+     */
     public void notifyMoudleErrorChanged(int level) {
         if (mSingleCache == null) {
             mSingleCache = new LruCache<>(mMaxSingleCacheCount);
@@ -629,12 +726,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 刷新全局数据并切换刷新模式
-     * <p>
+     * 切换模式并刷新全局数据
      * 默认为当前刷新模式
+     * 不支持动画，支持动画可调用{@link #notifyDataByDiff(List, int)}
      *
-     * @param newData     新数据集合
-     * @param refreshMode 刷新模式
+     * @param newData     数据
+     * @param refreshMode 模式
      */
     @SuppressWarnings("unchecked")
     public void notifyDataSetChanged(@NonNull List<? extends T> newData, @RefreshMode int refreshMode) {
@@ -662,7 +759,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     /**
      * 默认标准刷新
      *
-     * @param newData 新数据集合
+     * @param newData 数据
      */
     public void notifyDataSetChanged(@NonNull List<? extends T> newData) {
         notifyDataSetChanged(newData, mCurrentMode);
@@ -686,15 +783,89 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         onEnd();
     }
 
+    /**
+     * 直接操作数据后的全局刷新方法
+     */
+    public void notifyDataChanged() {
+        checkAdapterBind();
+        if (!mIsCanRefresh) {
+            return;
+        }
+        mCurrentLevel = REFRESH_TYPE_DATA_ALL;
+        onStart();
+        mAdapter.notifyItemRangeChanged(getPreDataCount(), mData.size());
+        onEnd();
+    }
 
     /**
-     * 数据比较后刷新，可支持异步，与Type刷新用法一样
-     * 同notifyDataSetChanged可切换模式
-     * <p>
-     * 默认为当前刷新模式
+     * 直接操作单个数据后的刷新方法
      *
-     * @param newData     刷新数据集合
-     * @param refreshMode 刷新模式
+     * @param data 数据，支持header,data,footer
+     * @see <a href="http://crazysunj.com/2017/08/14/MTRVA%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6/#%E5%85%B6%E4%BB%96">文档注意点</a>
+     */
+    public void notifyDataChanged(@NonNull T data) {
+        int position = mData.indexOf(data);
+        if (position < 0) {
+            return;
+        }
+        checkAdapterBind();
+        if (!mIsCanRefresh) {
+            return;
+        }
+        mCurrentLevel = getLevel(data.getItemType());
+        onStart();
+        mAdapter.notifyItemChanged(position + getPreDataCount());
+        onEnd();
+    }
+
+    /**
+     * 直接操作单个level后的刷新方法
+     *
+     * @param level level
+     */
+    public void notifyDataChanged(int level) {
+        LevelData<T> levelData = getDataWithLevel(level);
+        if (levelData == null) {
+            return;
+        }
+        checkAdapterBind();
+        if (!mIsCanRefresh) {
+            return;
+        }
+        mCurrentLevel = level;
+        onStart();
+
+        int positionStart = getPositionStart(level);
+        int count = 0;
+        if (levelData.getHeader() != null) {
+            count++;
+        }
+        if (levelData.getFooter() != null) {
+            count++;
+        }
+        List<T> list = levelData.getData();
+        if (list != null && !list.isEmpty()) {
+            ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(level);
+            int size = list.size();
+            if (!attrsEntity.isFolded || size <= attrsEntity.minSize) {
+                count += size;
+            } else {
+                count += attrsEntity.minSize;
+            }
+        }
+        mAdapter.notifyItemRangeChanged(positionStart + getPreDataCount(), count);
+        onEnd();
+    }
+
+
+    /**
+     * 切换模式并刷新全局数据
+     * 同{@link #notifyDataSetChanged(List, int)}
+     * 默认为当前刷新模式
+     * 支持刷新动画
+     *
+     * @param newData     数据
+     * @param refreshMode 模式
      */
     @SuppressWarnings("unchecked")
     public void notifyDataByDiff(@NonNull List<? extends T> newData, @RefreshMode int refreshMode) {
@@ -816,8 +987,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 在position位置添加数据
-     * 标准模式只支持data的添加，如果你要添加其它，完全可以调标准模式的方法
+     * 添加数据
+     * 标准模式只支持当前level
      *
      * @param position 添加的位置
      */
@@ -875,15 +1046,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         }
         mData.add(position, data);
         mAdapter.notifyItemInserted(position + getPreDataCount());
-//        compatibilityDataSizeChanged(1);
         onEnd();
     }
 
     /**
      * 添加数据
-     * 标准模式只支持data的添加，如果你要添加其它，完全可以调标准模式的方法
      *
-     * @param data 添加的数据
+     * @param data 数据
      */
     public void addData(@NonNull T data) {
         checkAdapterBind();
@@ -928,19 +1097,17 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
             list.add(data);
             mData.add(position, data);
             mAdapter.notifyItemInserted(position + getPreDataCount());
-//            compatibilityDataSizeChanged(1);
         } else {
             mData.add(data);
             mAdapter.notifyItemInserted(mData.size() + getPreDataCount());
-//            compatibilityDataSizeChanged(1);
         }
         onEnd();
     }
 
     /**
-     * 移除position位置的数据
+     * 移除数据
      *
-     * @param position 移除位置
+     * @param position 位置
      */
     public T removeData(int position) {
         checkAdapterBind();
@@ -959,7 +1126,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         T removeData = mData.remove(position);
         int internalPosition = position + getPreDataCount();
         mAdapter.notifyItemRemoved(internalPosition);
-//        compatibilityDataSizeChanged(0);
         mAdapter.notifyItemRangeChanged(internalPosition, mData.size() - internalPosition);
 
         if (mCurrentMode == MODE_STANDARD) {
@@ -991,12 +1157,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 移除集合
-     * 标准模式只能移除同一level的数据
-     * 可以根据返回的集合配合addData实现展开合拢效果
+     * 移除数据
+     * 标准模式只支持当前level
+     * 可以根据返回的集合配合{@link #addData(int, List)}实现展开闭合效果
      *
-     * @param positionStart 集合开始位置
-     * @param itemCount     集合的大小
+     * @param positionStart 位置
+     * @param itemCount     移除长度
      * @return 返回被移除的集合
      */
     public List<T> removeData(int positionStart, @IntRange(from = 1) int itemCount) {
@@ -1056,10 +1222,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 修改position位置数据
+     * 修改数据
      *
-     * @param position 修改位置
-     * @param data     修改数据，数据不可为空，不然会引起不必要的麻烦
+     * @param position 位置
+     * @param data     数据
      */
     public void setData(int position, @NonNull T data) {
         checkAdapterBind();
@@ -1115,11 +1281,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 在position位置插入数据集合
-     * 标准模式下不考虑data包含下一level或者下下个level的数据，只支持当前level
-     * 可以配合removeData实现展开合拢效果
+     * 插入数据
+     * 标准模式只支持当前level
+     * 可以配合{@link #removeData(int, int)}实现展开闭合效果
      *
-     * @param position 插入位置
+     * @param position 位置
+     * @param data     数据
      */
     public void addData(int position, @NonNull List<? extends T> data) {
 
@@ -1178,15 +1345,14 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         }
         mData.addAll(position, data);
         mAdapter.notifyItemRangeInserted(position + getPreDataCount(), data.size());
-//        compatibilityDataSizeChanged(data.size());
         onEnd();
     }
 
     /**
      * 添加数据集合
-     * 不考虑data包含下一level或者下下个level的数据，只支持当前level
+     * 标准模式只支持当前level
      *
-     * @param newData 添加的新数据集合
+     * @param newData 数据
      */
     public void addData(@NonNull List<? extends T> newData) {
         checkAdapterBind();
@@ -1227,20 +1393,18 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
             list.addAll(newData);
             mData.addAll(position, newData);
             mAdapter.notifyItemRangeInserted(position + getPreDataCount(), newData.size());
-//            compatibilityDataSizeChanged(newData.size());
         } else {
             mData.addAll(newData);
             mAdapter.notifyItemRangeInserted(mData.size() - newData.size() + getPreDataCount(), newData.size());
-//            compatibilityDataSizeChanged(newData.size());
         }
         onEnd();
     }
 
     /**
-     * 判断数据是否处于合拢状态
+     * 判断数据是否处于闭合状态
      *
-     * @param level 数据类型等级
-     * @return boolean ture为已合拢状态，false为展开状态
+     * @param level level
+     * @return boolean ture为已闭合状态，false为展开状态
      */
     public boolean isDataFolded(int level) {
         LevelData<T> levelData = getDataWithLevel(level);
@@ -1259,10 +1423,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 展开合拢type数据
+     * 展开闭合
      *
-     * @param level  数据类型集合
-     * @param isFold 是否合拢
+     * @param level  level
+     * @param isFold 是否闭合
      */
     public void foldType(int level, boolean isFold) {
         LevelData<T> levelData = getDataWithLevel(level);
@@ -1296,24 +1460,24 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
 
         if (isFold) {
             mData.removeAll(handleData);
-            mAdapter.notifyItemRangeRemoved(positionStart + getPreDataCount(), handleData.size());
-//            compatibilityDataSizeChanged(handleData.size());
+            int removePostion = positionStart + getPreDataCount();
+            mAdapter.notifyItemRangeRemoved(removePostion, handleData.size());
+            mAdapter.notifyItemRangeChanged(removePostion, mData.size() - removePostion);
             attrsEntity.isFolded = true;
         } else {
             mData.addAll(positionStart, handleData);
             mAdapter.notifyItemRangeInserted(positionStart + getPreDataCount(), handleData.size());
-//            compatibilityDataSizeChanged(handleData.size());
             attrsEntity.isFolded = false;
         }
         onEnd();
     }
 
     /**
-     * 切换模式，只切换模式以及对数据整理，并不会刷新，如果需要切换模式并刷新数据，请调用
-     * notifyDataSetChanged
+     * 切换模式，只切换模式以及对数据整理，并不会刷新，
+     * 如果需要切换模式并刷新数据，请调用{@link #notifyDataSetChanged(List, int)}或者{@link #notifyDataByDiff(List, int)}
      *
      * @param mode   模式
-     * @param isSort 是否整理数据，建议整理否则容易出现数据混乱，崩溃等问题
+     * @param isSort 是否整理数据
      */
     public void switchMode(@RefreshMode int mode, boolean isSort) {
         if (!mIsCanRefresh) {
@@ -1355,7 +1519,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 设置loadview的数据集合缓存最大值
+     * 设置loadview的data缓存最大值
      *
      * @param maxDataCacheCount 缓存最大值
      */
@@ -1364,7 +1528,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 设置loadview的头集合缓存最大值
+     * 设置loadview的header缓存最大值
      *
      * @param maxHeaderCacheCount 缓存最大值
      */
@@ -1373,7 +1537,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 如果需要，清除队列
+     * 清除队列
      */
     public void clearQueue() {
         mRefreshQueue.clear();
@@ -1410,12 +1574,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 采用队列形式防止异步数据混乱
+     * 队列管理
      *
-     * @param newData     刷新的数据
-     * @param newHeader   刷新数据顶部的头,如果不需要传空就行了
-     * @param level       刷新数据的类型,切忌,传头部类型是报错的,只要关心数据类型就行了
-     * @param refreshType 刷新类型
+     * @param newData     data
+     * @param newHeader   header
+     * @param newFooter   footer
+     * @param level       数据的等级
+     * @param refreshType 类型
      */
     protected void notifyMoudleChanged(List<T> newData, T newHeader, T newFooter, int level, int refreshType) {
 
@@ -1435,16 +1600,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
 
     /**
      * 重写此方法，实现同步或异步刷新
-     * 同步稳定，但是可能会卡顿
-     * 异步效果好，但可能会异常
-     * 根据实际情况选择相应的刷新机制
      *
      * @param refreshData 刷新数据合
      */
     protected abstract void startRefresh(HandleBase<T> refreshData);
 
     /**
-     * 防止未注册的情况发生以及更好地利用注册资源，提供抽象方法
+     * 注册资源
      */
     protected abstract void registerMoudle();
 
@@ -1466,7 +1628,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 开始刷新
+     * 处理数据，通知RV刷新
      *
      * @param diffResult 返回的diffResult
      */
@@ -1658,6 +1820,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
+     * 根据type获取level
+     *
      * @param type 数据类型
      * @return 数据类型等级
      */
@@ -1671,6 +1835,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
+     * 创建loading的data
+     *
      * @param level     数据类型等级
      * @param dataCount 显示条目数
      * @return 根据type产生loading的数据集合
@@ -1707,6 +1873,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
+     * 创建loading的header
+     *
      * @param level 数据类型等级
      * @return 根据type产生loading的头
      */
@@ -1730,6 +1898,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
+     * 初始化全局的loading数据
+     *
      * @param loadingConfig 配置项
      */
     public void initGlobalLoadingConfig(@NonNull LoadingConfig loadingConfig) {
@@ -1759,19 +1929,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 如果size一样就刷新全部
-     *
-     * @param size 修改数据数量
-     */
-//    private void compatibilityDataSizeChanged(int size) {
-//        final int dataSize = mData == null ? 0 : mData.size();
-//        if (dataSize == size) {
-//            mAdapter.notifyDataSetChanged();
-//        }
-//    }
-
-    /**
-     * 检查标准模式刷新
+     * 检查是否为标准模式
      */
     private void checkStandardMode() {
         if (mCurrentMode == MODE_MIXED) {
@@ -1782,7 +1940,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 检查随机模式刷新
+     * 检查是否为随机模式
      */
     private void checkMixedMode() {
         if (mCurrentMode == MODE_STANDARD) {
@@ -1792,7 +1950,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 检查Adapter是否为绑定
+     * 检查{@link #mAdapter}是否为绑定
+     * 如果未绑定，请调用{@link #bindAdapter(RecyclerView.Adapter)}
      */
     private void checkAdapterBind() {
         if (mAdapter == null) {
@@ -1802,7 +1961,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 检查LoadingAdapter是否为绑定
+     * 检查{@link LoadingEntityAdapter}是否为绑定
+     * 如果未绑定，请调用{@link #setLoadingAdapter(LoadingEntityAdapter)}
      */
     private void checkLoadingAdapterBind() {
         if (mLoadingEntityAdapter == null) {
@@ -1812,7 +1972,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 检查EmptyAdapter是否为绑定
+     * 检查{@link EmptyEntityAdapter}是否为绑定
+     * 如果未绑定，请调用{@link #setEmptyAdapter(EmptyEntityAdapter)}
      */
     private void checkEmptyAdapterBind() {
         if (mEmptyEntityAdapter == null) {
@@ -1822,7 +1983,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 检查ErrorAdapter是否为绑定
+     * 检查{@link ErrorEntityAdapter}是否为绑定
+     * 如果未绑定，请调用{@link #setErrorAdapter(ErrorEntityAdapter)}
      */
     private void checkErrorAdapterBind() {
         if (mErrorEntityAdapter == null) {
@@ -1831,6 +1993,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
         }
     }
 
+    /**
+     * 检查list的数据是否为同一level
+     *
+     * @param level level
+     * @param data  data
+     */
     private void checkList(int level, List<? extends T> data) {
         for (T t : data) {
             if (level != getLevel(t.getItemType())) {
@@ -1909,7 +2077,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     }
 
     /**
-     * 释放资源，谨慎使用，可能引起不必要的崩溃
+     * 释放资源，谨慎使用
      */
     public void release() {
         mRefreshQueue.clear();

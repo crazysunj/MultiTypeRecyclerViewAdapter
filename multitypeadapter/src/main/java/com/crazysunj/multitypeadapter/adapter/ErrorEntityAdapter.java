@@ -16,8 +16,7 @@
 package com.crazysunj.multitypeadapter.adapter;
 
 /**
- * description
- * <p>错误实体类的适配器
+ * 错误实体类的适配器
  * Created by sunjian on 2017/6/29.
  */
 @FunctionalInterface

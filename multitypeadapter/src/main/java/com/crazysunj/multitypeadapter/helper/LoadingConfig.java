@@ -19,11 +19,9 @@ import android.support.annotation.IntRange;
 import android.util.SparseArray;
 
 /**
- * description
- * <p>loading配置项
+ * loading配置项
  * Created by sunjian on 2017/6/9.
  */
-
 public class LoadingConfig {
 
     private SparseArray<LoadingConfigEntity> mConfigs;

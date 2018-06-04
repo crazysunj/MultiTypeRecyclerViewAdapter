@@ -22,7 +22,6 @@ import java.util.List;
  * 尽量不要在这里修改数据
  * Created by sunjian on 2017/3/27.
  */
-
 public final class LevelData<T> {
 
     private List<T> data;

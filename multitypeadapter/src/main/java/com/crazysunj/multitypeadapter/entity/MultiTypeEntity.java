@@ -17,11 +17,10 @@ package com.crazysunj.multitypeadapter.entity;
 
 /**
  * 多类型实体类接口
- * id标志不同数据项(包括头,唯一标识)
+ * id标志不同数据项(唯一标识)
  * itemType标志数据的类型
  * Created by sunjian on 2017/3/28.
  */
-
 public interface MultiTypeEntity {
 
     int getItemType();

@@ -33,12 +33,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * 异步适配器，数据差异的计算在子线程完成，避免不必要的数据量过大计算而引起的ANR，如果计算时间过长可考虑直接刷新全部数据
  * 刷新全部数据时注意，不可改变mData的引用，不然刷新无效
- * 但是同步的UI因为数据量太多而卡顿，我就无能为力了
- * 如果是使用本库而crash，一般对LayoutManager的onLayoutChildren()和scrollVerticallyBy()抓住异常就行了
- * 如果出现以上引起的crash，我希望您能反馈给我
  * Created by sunjian on 2017/4/1.
  */
-
 public abstract class AsynAdapterHelper<T extends MultiTypeEntity, A extends RecyclerView.Adapter> extends RecyclerViewAdapterHelper<T, A> {
 
     private static final int HANDLE_DATA_UPDATE = 1;

@@ -25,19 +25,22 @@ import java.util.Locale;
 import static com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper.DEFAULT_HEADER_LEVEL;
 
 /**
- * description
- * <p>
  * 资源管理
  * Created by sunjian on 2017/5/15.
  */
-
 final class ResourcesManager {
 
-    //根据type存储layoutId
+    /**
+     * 根据type存储layoutId
+     */
     private SparseIntArray mLayouts;
-    //根据type存储等级
+    /**
+     * 根据type存储等级
+     */
     private SparseIntArray mLevels;
-    //根据level存储属性
+    /**
+     * 根据level存储属性
+     */
     private SparseArray<AttrsEntity> mAttrs;
 
     private SparseArray<LevelsManager> mLevelsManagers;

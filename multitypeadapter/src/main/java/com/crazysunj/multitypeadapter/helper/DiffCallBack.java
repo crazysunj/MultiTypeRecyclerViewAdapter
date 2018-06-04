@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * 关于新老数据比较的callback，暂时不提供出去
- * 如果你有自己的比较逻辑，大可自己实现一个，关于DiffUtil的用法我就不介绍了，关于接口已经提供
+ * 如果你有自己的比较逻辑，大可自己实现一个，实现接口{@link RecyclerViewAdapterHelper#getDiffCallBack(List, List)}
  * Created by sunjian on 2017/3/28.
  */
 class DiffCallBack<T extends MultiTypeEntity> extends DiffUtil.Callback {

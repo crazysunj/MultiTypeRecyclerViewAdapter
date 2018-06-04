@@ -16,8 +16,6 @@
 package com.crazysunj.multitypeadapter.helper;
 
 /**
- * description
- * <p>
  * adapter未绑定，空指针异常
  * Created by sunjian on 2017/5/27.
  */

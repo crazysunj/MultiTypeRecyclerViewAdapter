@@ -16,8 +16,6 @@
 package com.crazysunj.multitypeadapter.helper;
 
 /**
- * description
- * <p>
  * 处理数据的时候异常
  * Created by sunjian on 2017/5/27.
  */

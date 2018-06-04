@@ -32,13 +32,10 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 /**
- * description
- * <p>
  * 一般RecyclerViewAdapter结合helper使用
  * 有具体需求的自定义
  * Created by sunjian on 2017/5/4.
  */
-
 public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends CommonViewHolder, H extends RecyclerViewAdapterHelper<T, CommonHelperAdapter>> extends RecyclerView.Adapter<K> {
 
     protected Context mContext;
