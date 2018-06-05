@@ -150,4 +150,16 @@ public class TestLevelActivity extends AppCompatActivity {
     private MultiTypeTitleEntity getLevelThirdFooter() {
         return new LevelFooterItem(TestLevelAdapter.TYPE_LEVEL_THIRD_FOOTER, String.format(Locale.getDefault(), "我是level2的尾，第%d次刷新啦", levelThirdRefreshCount));
     }
+
+    public void click5(View view) {
+        adapter.notifyRandomLevelItem();
+    }
+
+    public void click6(View view) {
+        adapter.notifyRandomLevel();
+    }
+
+    public void click7(View view) {
+        adapter.notifyRandom();
+    }
 }

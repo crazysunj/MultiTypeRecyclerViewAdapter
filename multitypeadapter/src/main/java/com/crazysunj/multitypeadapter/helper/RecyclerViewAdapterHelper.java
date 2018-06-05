@@ -48,11 +48,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * description
  * 如果您发现哪里性能比较差或者说设计不合理，希望您能反馈给我
  * email:twsunj@gmail.com
  * 博客有联系方式{@link <a href="http://crazysunj.com/">博客</a>}
- * level 取值范围
+ * type 取值范围
  * data类型 [0,1000)
  * header类型 [-1000,0)
  * loading-data类型 [-2000,-1000)
@@ -173,7 +172,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
     private static final int REFRESH_ALL = 8;
 
     /**
-     * 拦截刷新，添入队列
+     * 拦截刷新，主要防止手快
      */
     private boolean mIsCanRefresh = true;
     /**
@@ -634,12 +633,15 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
 
     /**
      * 同时刷新header、data和fooer
+     * 该方法已过时
+     * 注意{@link #notifyMoudleDataAndHeaderAndFooterChanged(MultiTypeEntity, MultiTypeEntity, MultiTypeEntity, int)}，data参数靠前
      *
      * @param header header
      * @param data   data
      * @param footer fooer
      * @param level  level
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public void notifyMoudleDataAndHeaderAndFooterChanged(@NonNull T header, @NonNull List<? extends T> data, @NonNull T footer, int level) {
         notifyMoudleChanged((List<T>) data, header, footer, level, REFRESH_HEADER_FOOTER_DATA);
@@ -653,7 +655,29 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
      * @param footer fooer
      * @param level  level
      */
-    public void notifyMoudleDataAndHeaderAndFooterChanged(@NonNull T header, @NonNull T data, @NonNull T footer, int level) {
+    @SuppressWarnings("unchecked")
+    public void notifyMoudleDataAndHeaderAndFooterChanged(@NonNull List<? extends T> data, @NonNull T header, @NonNull T footer, int level) {
+        notifyMoudleChanged((List<T>) data, header, footer, level, REFRESH_HEADER_FOOTER_DATA);
+    }
+
+    /**
+     * 同时刷新header、data和fooer
+     * 2.1.0版本调整data参数靠前，2.1.0之前header靠前，多人反馈参数不和谐问题
+     * 使用过时醒目提醒
+     * 这里对2.1.0版本之前的做了兼容，但希望大家能调整过来
+     *
+     * @param header header
+     * @param data   data
+     * @param footer fooer
+     * @param level  level
+     */
+    @Deprecated
+    public void notifyMoudleDataAndHeaderAndFooterChanged(@NonNull T data, @NonNull T header, @NonNull T footer, int level) {
+        if (data.getItemType() < 0) {
+            T temp = data;
+            data = header;
+            header = temp;
+        }
         notifyMoudleChanged(Collections.singletonList(data), header, footer, level, REFRESH_HEADER_FOOTER_DATA);
     }
 
@@ -785,6 +809,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
 
     /**
      * 直接操作数据后的全局刷新方法
+     * 该方法只支持item的改变，同{@link #setData(int, MultiTypeEntity)}
      */
     public void notifyDataChanged() {
         checkAdapterBind();
@@ -799,9 +824,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
 
     /**
      * 直接操作单个数据后的刷新方法
+     * 该方法只支持item的改变，同{@link #setData(int, MultiTypeEntity)}
      *
      * @param data 数据，支持header,data,footer
-     * @see <a href="http://crazysunj.com/2017/08/14/MTRVA%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6/#%E5%85%B6%E4%BB%96">文档注意点</a>
      */
     public void notifyDataChanged(@NonNull T data) {
         int position = mData.indexOf(data);
@@ -820,6 +845,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity, A ext
 
     /**
      * 直接操作单个level后的刷新方法
+     * 该方法只支持item的改变，同{@link #setData(int, MultiTypeEntity)}
      *
      * @param level level
      */

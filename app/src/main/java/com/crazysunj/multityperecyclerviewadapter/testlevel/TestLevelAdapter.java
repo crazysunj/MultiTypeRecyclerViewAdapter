@@ -1,11 +1,15 @@
 package com.crazysunj.multityperecyclerviewadapter.testlevel;
 
+import android.widget.Toast;
+
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
+import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multitypeadapter.helper.LoadingConfig;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * author: sunjian
@@ -88,7 +92,7 @@ public class TestLevelAdapter extends BaseAdapter<MultiTypeTitleEntity, BaseView
     }
 
     public void notifyLevelFirst(MultiTypeTitleEntity header, List<MultiTypeTitleEntity> data, MultiTypeTitleEntity footer) {
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(header, data, footer, TestLevelAdapterHelper.LEVEL_FIRST);
+        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(data, header, footer, TestLevelAdapterHelper.LEVEL_FIRST);
     }
 
     public void notifyLevelSecond(MultiTypeTitleEntity header, List<MultiTypeTitleEntity> data) {
@@ -96,6 +100,110 @@ public class TestLevelAdapter extends BaseAdapter<MultiTypeTitleEntity, BaseView
     }
 
     public void notifyLevelThird(MultiTypeTitleEntity header, List<MultiTypeTitleEntity> data, MultiTypeTitleEntity footer) {
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(header, data, footer, TestLevelAdapterHelper.LEVEL_THIRD);
+        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(data, header, footer, TestLevelAdapterHelper.LEVEL_THIRD);
+    }
+
+    int clickCount;
+
+    public void notifyRandomLevelItem() {
+        Random random = new Random();
+        int level = random.nextInt(3);
+        LevelData<MultiTypeTitleEntity> levelData = mHelper.getDataWithLevel(level);
+        int refreshType = clickCount % 3;
+        if (refreshType == 0) {
+            LevelTitleItem header = (LevelTitleItem) levelData.getHeader();
+            header.setMsg("我是修改过的header,level=" + level + " 当前点击次数=" + clickCount);
+            mHelper.notifyDataChanged(header);
+            Toast.makeText(mContext, "修改level=" + level + "  =>header", Toast.LENGTH_SHORT).show();
+        } else if (refreshType == 1) {
+            List<MultiTypeTitleEntity> data = levelData.getData();
+            MultiTypeTitleEntity entity = data.get(0);
+            if (level == TestLevelAdapterHelper.LEVEL_FIRST) {
+                int itemType = entity.getItemType();
+                if (itemType == TypeOneItem.TYPE_ONE) {
+                    TypeOneItem item = (TypeOneItem) entity;
+                    item.setMsg("我是修改过的type=" + itemType + " level=" + level + " 当前点击次数=" + clickCount);
+                } else if (itemType == TypeTwoItem.TYPE_TWO) {
+                    TypeTwoItem item = (TypeTwoItem) entity;
+                    item.setMsg("我是修改过的type=" + itemType + " level=" + level + " 当前点击次数=" + clickCount);
+                }
+            } else if (level == TestLevelAdapterHelper.LEVEL_SECOND) {
+                int itemType = entity.getItemType();
+                TypeThreeItem item = (TypeThreeItem) entity;
+                item.setMsg("我是修改过的type=" + itemType + " level=" + level + " 当前点击次数=" + clickCount);
+            } else if (level == TestLevelAdapterHelper.LEVEL_THIRD) {
+                int itemType = entity.getItemType();
+                if (itemType == TypeFourItem.TYPE_FOUR) {
+                    TypeFourItem item = (TypeFourItem) entity;
+                    item.setMsg("我是修改过的type=" + itemType + " level=" + level + " 当前点击次数=" + clickCount);
+                } else if (itemType == TypeFiveItem.TYPE_FIVE) {
+                    TypeFiveItem item = (TypeFiveItem) entity;
+                    item.setMsg("我是修改过的type=" + itemType + " level=" + level + " 当前点击次数=" + clickCount);
+                }
+            }
+            Toast.makeText(mContext, "修改level=" + level + "  =>data", Toast.LENGTH_SHORT).show();
+            mHelper.notifyDataChanged(entity);
+        } else if (refreshType == 2) {
+            LevelFooterItem footer = (LevelFooterItem) levelData.getFooter();
+            if (footer != null) {
+                footer.setMsg("我是修改过的footer,level=" + level + " 当前点击次数=" + clickCount);
+                Toast.makeText(mContext, "修改level=" + level + "  =>footer", Toast.LENGTH_SHORT).show();
+                mHelper.notifyDataChanged(footer);
+            }
+        }
+        clickCount++;
+    }
+
+
+    public void notifyRandomLevel() {
+        Random random = new Random();
+        int level = random.nextInt(3);
+        handleLevel(level);
+        Toast.makeText(mContext, "修改level=" + level, Toast.LENGTH_SHORT).show();
+        mHelper.notifyDataChanged(level);
+        clickCount++;
+    }
+
+    private void handleLevel(int level) {
+        LevelData<MultiTypeTitleEntity> levelData = mHelper.getDataWithLevel(level);
+        LevelTitleItem header = (LevelTitleItem) levelData.getHeader();
+        header.setMsg("我是修改过的header,level=" + level + " 当前点击次数=" + clickCount);
+        List<MultiTypeTitleEntity> data = levelData.getData();
+        MultiTypeTitleEntity entity = data.get(0);
+        if (level == TestLevelAdapterHelper.LEVEL_FIRST) {
+            int itemType = entity.getItemType();
+            if (itemType == TypeOneItem.TYPE_ONE) {
+                TypeOneItem item = (TypeOneItem) entity;
+                item.setMsg("我是修改过的type=" + itemType + " level=" + level + " 当前点击次数=" + clickCount);
+            } else if (itemType == TypeTwoItem.TYPE_TWO) {
+                TypeTwoItem item = (TypeTwoItem) entity;
+                item.setMsg("我是修改过的type=" + itemType + " level=" + level + " 当前点击次数=" + clickCount);
+            }
+        } else if (level == TestLevelAdapterHelper.LEVEL_SECOND) {
+            int itemType = entity.getItemType();
+            TypeThreeItem item = (TypeThreeItem) entity;
+            item.setMsg("我是修改过的type=" + itemType + " level=" + level + " 当前点击次数=" + clickCount);
+        } else if (level == TestLevelAdapterHelper.LEVEL_THIRD) {
+            int itemType = entity.getItemType();
+            if (itemType == TypeFourItem.TYPE_FOUR) {
+                TypeFourItem item = (TypeFourItem) entity;
+                item.setMsg("我是修改过的type=" + itemType + " level=" + level + " 当前点击次数=" + clickCount);
+            } else if (itemType == TypeFiveItem.TYPE_FIVE) {
+                TypeFiveItem item = (TypeFiveItem) entity;
+                item.setMsg("我是修改过的type=" + itemType + " level=" + level + " 当前点击次数=" + clickCount);
+            }
+        }
+        LevelFooterItem footer = (LevelFooterItem) levelData.getFooter();
+        if (footer != null) {
+            footer.setMsg("我是修改过的footer,level=" + level + " 当前点击次数=" + clickCount);
+        }
+    }
+
+    public void notifyRandom() {
+        handleLevel(TestLevelAdapterHelper.LEVEL_FIRST);
+        handleLevel(TestLevelAdapterHelper.LEVEL_SECOND);
+        handleLevel(TestLevelAdapterHelper.LEVEL_THIRD);
+        mHelper.notifyDataChanged();
+        clickCount++;
     }
 }

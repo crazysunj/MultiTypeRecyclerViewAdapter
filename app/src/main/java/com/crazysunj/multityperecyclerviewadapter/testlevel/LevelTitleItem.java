@@ -20,6 +20,10 @@ public class LevelTitleItem implements MultiTypeTitleEntity {
         this.msg = msg;
     }
 
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     @Override
     public String getMsg() {
         return msg;

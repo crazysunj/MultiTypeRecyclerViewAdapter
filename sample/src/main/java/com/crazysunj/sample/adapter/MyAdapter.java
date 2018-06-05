@@ -170,7 +170,7 @@ public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, 
     }
 
     public void notifyType1(List<ItemEntity1> itemEntity1s) {
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(entity1Header, itemEntity1s, entity1Footer, MyAdapterHelper.LEVEL_1);
+        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(itemEntity1s, entity1Header, entity1Footer, MyAdapterHelper.LEVEL_1);
     }
 
     public void notifyType2(List<ItemEntity2> itemEntity2s) {

@@ -117,8 +117,7 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
     public void notifyFirst(List<FirstOCEntity> entities) {
         int firstLevel = OpenCloseAdapterHelper.LEVEL_FIRST;
         mHelper.notifyMoudleDataAndHeaderAndFooterChanged(
-                new TitleOCEntity(firstLevel, "类型1"),
-                entities,
+                entities, new TitleOCEntity(firstLevel, "类型1"),
                 new FooterOCEntity(firstLevel, Constants.EXPAND),
                 firstLevel);
     }
@@ -126,8 +125,8 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
     public void notifySecond(List<SecondOCEntity> entities) {
         int secondLevel = OpenCloseAdapterHelper.LEVEL_SECOND;
         mHelper.notifyMoudleDataAndHeaderAndFooterChanged(
-                new TitleOCEntity(secondLevel, "类型2"),
                 entities,
+                new TitleOCEntity(secondLevel, "类型2"),
                 new FooterOCEntity(secondLevel, Constants.FOLD),
                 secondLevel);
     }
@@ -135,8 +134,8 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
     public void notifyThird(List<ThirdOCEntity> entities) {
         int thirdLevel = OpenCloseAdapterHelper.LEVEL_THIRD;
         mHelper.notifyMoudleDataAndHeaderAndFooterChanged(
-                new TitleOCEntity(thirdLevel, "类型3"),
                 entities,
+                new TitleOCEntity(thirdLevel, "类型3"),
                 new FooterOCEntity(thirdLevel, Constants.FOLD),
                 thirdLevel);
     }
