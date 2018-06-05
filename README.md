@@ -21,7 +21,7 @@
 * 支持异步，高频率刷新，可扩展(如配合RxJava)
 * 单个level支持Loading(加载)，Empty(空)，Error(错误)页面切换
 * 单个level支持header，footer
-* 单个level支持展开和合拢(可设置合拢最小值)
+* 单个level支持展开和闭合
 * 支持加载全局Loading(加载)页面
 * 支持注解生成类，减少工作量
 * 支持刷新生命周期回调
