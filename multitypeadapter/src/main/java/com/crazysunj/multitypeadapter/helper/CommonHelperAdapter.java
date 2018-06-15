@@ -34,8 +34,12 @@ import java.util.List;
 /**
  * 一般RecyclerViewAdapter结合helper使用
  * 有具体需求的自定义
+ * 为了能更好地集成MTRVA，希望你自己实现Adapter，可以参考这个类
+ * MTRVA尽量做到0侵入，添加MTRVA、修改MTRVA、替换MTRVA都是无感知的
+ * 这里这个类标记为过时
  * Created by sunjian on 2017/5/4.
  */
+@Deprecated
 public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends CommonViewHolder, H extends RecyclerViewAdapterHelper<T, CommonHelperAdapter>> extends RecyclerView.Adapter<K> {
 
     protected Context mContext;

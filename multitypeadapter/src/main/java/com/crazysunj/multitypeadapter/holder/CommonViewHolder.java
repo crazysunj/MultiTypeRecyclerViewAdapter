@@ -24,9 +24,11 @@ import android.widget.TextView;
 /**
  * @author sunjian
  * 常用holder，有具体需求的可以自定义
- * 这里暂提供TextView和ImageView，其他控件可使用getView(int viewId, Class<T> clazz)
+ * 这里暂提供TextView和ImageView，其他控件可使用{@link #getView(int, Class)}
+ * 过时原因可以看{@link com.crazysunj.multitypeadapter.helper.CommonHelperAdapter}
  * date 2017/5/5
  */
+@Deprecated
 public class CommonViewHolder extends RecyclerView.ViewHolder {
 
     private SparseArray<View> mViews;
