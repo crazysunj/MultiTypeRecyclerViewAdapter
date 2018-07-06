@@ -75,8 +75,8 @@ public abstract class BaseHelperAdapter<T extends MultiTypeEntity, VH extends Ba
             z = getInstancedGenericKClass(temp);
             temp = temp.getSuperclass();
         }
-        VH k = createGenericKInstance(z, view);
-        return null != k ? k : (VH) new BaseViewHolder(view);
+        VH vh = createGenericKInstance(z, view);
+        return null != vh ? vh : (VH) new BaseViewHolder(view);
     }
 
     @SuppressWarnings("unchecked")

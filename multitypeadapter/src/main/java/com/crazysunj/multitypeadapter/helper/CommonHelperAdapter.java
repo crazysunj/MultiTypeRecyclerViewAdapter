@@ -40,7 +40,7 @@ import java.util.List;
  * Created by sunjian on 2017/5/4.
  */
 @Deprecated
-public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends CommonViewHolder, H extends RecyclerViewAdapterHelper<T>> extends RecyclerView.Adapter<K> {
+public abstract class CommonHelperAdapter<T extends MultiTypeEntity, VH extends CommonViewHolder, H extends RecyclerViewAdapterHelper<T>> extends RecyclerView.Adapter<VH> {
 
     protected Context mContext;
     protected LayoutInflater mLayoutInflater;
@@ -60,7 +60,7 @@ public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends C
 
     @NonNull
     @Override
-    public K onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return createCommonViewHolder(parent, mHelper.getLayoutId(viewType));
     }
 
@@ -69,7 +69,7 @@ public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends C
         return mData.size();
     }
 
-    protected K createCommonViewHolder(ViewGroup parent, int layoutResId) {
+    protected VH createCommonViewHolder(ViewGroup parent, int layoutResId) {
         if (mContext == null) {
             mContext = parent.getContext();
         }
@@ -80,29 +80,29 @@ public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends C
     }
 
     @SuppressWarnings("unchecked")
-    protected K createCommonViewHolder(View view) {
+    protected VH createCommonViewHolder(View view) {
         Class temp = getClass();
         Class z = null;
         while (z == null && null != temp) {
             z = getInstancedGenericKClass(temp);
             temp = temp.getSuperclass();
         }
-        K k = createGenericKInstance(z, view);
-        return null != k ? k : (K) new CommonViewHolder(view);
+        VH vh = createGenericKInstance(z, view);
+        return null != vh ? vh : (VH) new CommonViewHolder(view);
     }
 
     @SuppressWarnings("unchecked")
-    private K createGenericKInstance(Class z, View view) {
+    private VH createGenericKInstance(Class z, View view) {
         try {
             Constructor constructor;
             String buffer = Modifier.toString(z.getModifiers());
             String className = z.getName();
             if (className.contains("$") && !buffer.contains("static")) {
                 constructor = z.getDeclaredConstructor(getClass(), View.class);
-                return (K) constructor.newInstance(this, view);
+                return (VH) constructor.newInstance(this, view);
             } else {
                 constructor = z.getDeclaredConstructor(View.class);
-                return (K) constructor.newInstance(view);
+                return (VH) constructor.newInstance(view);
             }
         } catch (Exception e) {
             e.printStackTrace();
