@@ -1,7 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.testlevel;
 
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multityperecyclerviewadapter.R;
+import com.crazysunj.multityperecyclerviewadapter.helper.BaseViewHolder;
 
 /**
  * author: sunjian

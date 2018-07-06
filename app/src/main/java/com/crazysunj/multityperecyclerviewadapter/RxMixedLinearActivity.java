@@ -37,11 +37,8 @@ public class RxMixedLinearActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mixed);
         setTitle("Rx混合刷新线性排布");
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-
-
         helper = new RxAdapterHelper(initData(), RxAdapterHelper.MODE_MIXED);
         SimpleRxHelperAdapter adapter = new SimpleRxHelperAdapter(helper);
-        adapter.addHeaderView(View.inflate(this, R.layout.layout_header, null));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
@@ -112,54 +109,43 @@ public class RxMixedLinearActivity extends AppCompatActivity {
             list8.add(new SecondItem(String.format(Locale.getDefault(), "2-我是第二种类型%d", i)));
         }
         list.addAll(list8);
-
         return list;
     }
 
     public void click1(View view) {
-
         helper.notifyDataSetChanged(initData(), SimpleHelper.MODE_MIXED);
     }
 
     public void click2(View view) {
-
         helper.notifyDataByDiff(initData(), SimpleHelper.MODE_MIXED);
     }
 
 
     public void click3(View view) {
-
         helper.switchMode(SimpleHelper.MODE_STANDARD);
         helper.notifyDataSetChanged();
     }
 
     public void click4(View view) {
-
         helper.notifyDataByDiff(initData(), SimpleHelper.MODE_STANDARD);
     }
 
     public void click5(View view) {
-
         Random random = new Random();
         int position = random.nextInt(helper.getData().size());
         MultiHeaderEntity addItem = getAddItem();
         helper.addData(position, addItem);
-
         Toast.makeText(this, "在" + position + "位置添加了数据,Type为" + addItem.getItemType(), Toast.LENGTH_SHORT).show();
-
     }
 
     public void click6(View view) {
 
         MultiHeaderEntity addItem = getAddItem();
         helper.addData(addItem);
-
         Toast.makeText(this, "添加的数据Type为" + addItem.getItemType(), Toast.LENGTH_SHORT).show();
-
     }
 
     private MultiHeaderEntity getAddItem() {
-
         Random random = new Random();
         int itemType = random.nextInt(4);
         String date = (String) DateFormat.format("HH:mm:ss", System.currentTimeMillis());
@@ -187,14 +173,11 @@ public class RxMixedLinearActivity extends AppCompatActivity {
             return new ThirdItem("我的天，类型3被修改了 " + date);
         }
         return new FourthItem("我的天，类型4被修改了 " + date);
-
     }
-
 
     public void click7(View view) {
         int position = new Random().nextInt(helper.getData().size());
         MultiHeaderEntity removeData = helper.removeData(position);
-
         Toast.makeText(this, "移除了position为" + position + " Type为" + removeData.getItemType(), Toast.LENGTH_SHORT).show();
     }
 
@@ -203,21 +186,16 @@ public class RxMixedLinearActivity extends AppCompatActivity {
         MultiHeaderEntity changeItem = getChangeItem();
         helper.setData(position, changeItem);
         Toast.makeText(this, "修改了position为" + position + " Type为" + changeItem.getItemType(), Toast.LENGTH_SHORT).show();
-
     }
 
     public void click9(View view) {
 
         int position = new Random().nextInt(helper.getData().size());
         helper.addData(position, initData());
-
         Toast.makeText(this, "在" + position + "位置插入数据集合", Toast.LENGTH_SHORT).show();
     }
 
     public void click10(View view) {
-
         helper.addData(initData());
-
     }
-
 }

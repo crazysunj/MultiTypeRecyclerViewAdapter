@@ -36,7 +36,6 @@ dependencies {
     //    compile libs.MTRVA
     //    apt libs.MTRVA_Compiler
     compile libs.appcompatV7
-    compile libs.BRVAH
     compile libs.itemDecoration
     compile libs.shimmer
     compile libs.recyclerview

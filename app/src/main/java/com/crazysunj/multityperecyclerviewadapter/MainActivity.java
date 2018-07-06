@@ -19,17 +19,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, LinearActivity.class));
     }
 
-    public void click2(View view) {
-        startActivity(new Intent(this, CommonLinearActivity.class));
-    }
-
-
     public void click3(View view) {
         startActivity(new Intent(this, GridActivity.class));
-    }
-
-    public void click4(View view) {
-        startActivity(new Intent(this, CommonGridActivity.class));
     }
 
     public void click5(View view) {

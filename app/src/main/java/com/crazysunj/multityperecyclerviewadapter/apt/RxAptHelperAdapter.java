@@ -1,19 +1,15 @@
 package com.crazysunj.multityperecyclerviewadapter.apt;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
-import com.crazysunj.multitypeadapter.adapter.EmptyEntityAdapter;
-import com.crazysunj.multitypeadapter.adapter.ErrorEntityAdapter;
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.annotation.AdapterHelper;
 import com.crazysunj.multitypeadapter.annotation.BindAllLevel;
 import com.crazysunj.multitypeadapter.annotation.BindHeaderRes;
 import com.crazysunj.multitypeadapter.annotation.BindLoadingHeaderRes;
 import com.crazysunj.multitypeadapter.annotation.BindLoadingLayoutRes;
-import com.crazysunj.multitypeadapter.annotation.PreDataCount;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
 import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
@@ -29,6 +25,8 @@ import com.crazysunj.multityperecyclerviewadapter.header.HeaderFirstItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderFourthItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderSecondItem;
 import com.crazysunj.multityperecyclerviewadapter.header.HeaderThirdItem;
+import com.crazysunj.multityperecyclerviewadapter.helper.BaseHelperAdapter;
+import com.crazysunj.multityperecyclerviewadapter.helper.BaseViewHolder;
 import com.crazysunj.multityperecyclerviewadapter.helper.MultiHeaderEntity;
 import com.crazysunj.multityperecyclerviewadapter.helper.ShimmerViewHolder;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
@@ -44,9 +42,8 @@ import com.crazysunj.multityperecyclerviewadapter.sticky.ThirdStickyItem;
  */
 
 @AdapterHelper(superObj = "com.crazysunj.multityperecyclerviewadapter.helper.SimpleRxAdapterHelper",
-        entity = "com.crazysunj.multityperecyclerviewadapter.helper.MultiHeaderEntity",
-        adapter = "com.crazysunj.multityperecyclerviewadapter.apt.RxAptHelperAdapter")
-public class RxAptHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, ShimmerViewHolder>
+        entity = "com.crazysunj.multityperecyclerviewadapter.helper.MultiHeaderEntity")
+public class RxAptHelperAdapter extends BaseHelperAdapter<MultiHeaderEntity, ShimmerViewHolder,RxAptHelperAdapterHelper>
         implements StickyHeaderAdapter<ShimmerViewHolder> {
 
     @BindAllLevel(type = {0}, layoutResId = {R.layout.item_first}, headerResId = R.layout.item_header)
@@ -70,26 +67,12 @@ public class RxAptHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, Shim
     @BindLoadingLayoutRes(level = {LEVEL_1, LEVEL_4, LEVEL_2, LEVEL_3})
     final int LOADING_LAYOUT_RES_ID = R.layout.layout_default_shimmer_view;
 
-
-    private RxAptHelperAdapterHelper mHelper;
     private OnErrorCallback callback;
 
     public RxAptHelperAdapter(RxAptHelperAdapterHelper helper) {
-
-        super(helper.getData());
-        helper.bindAdapter(this);
-        helper.setEmptyAdapter(new EmptyEntityAdapter<MultiHeaderEntity>() {
-            @Override
-            public MultiHeaderEntity createEmptyEntity(int type, int level) {
-                return new SimpleEmptyEntity(type);
-            }
-        });
-        helper.setErrorAdapter(new ErrorEntityAdapter<MultiHeaderEntity>() {
-            @Override
-            public MultiHeaderEntity createErrorEntity(int type, int level) {
-                return new SimpleErrorEntity(type);
-            }
-        });
+        super(helper);
+        helper.setEmptyAdapter((type, level) -> new SimpleEmptyEntity(type));
+        helper.setErrorAdapter((type, level) -> new SimpleErrorEntity(type));
         helper.setLoadingAdapter(new LoadingEntityAdapter<MultiHeaderEntity>() {
             @Override
             public MultiHeaderEntity createLoadingEntity(int type, int level) {
@@ -122,54 +105,38 @@ public class RxAptHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, Shim
         mHelper = helper;
     }
 
-    @PreDataCount()
     @Override
-    public int getHeaderLayoutCount() {
-        return super.getHeaderLayoutCount();
-    }
-
-    @Override
-    protected ShimmerViewHolder onCreateDefViewHolder(ViewGroup parent, int viewType) {
-        return createBaseViewHolder(parent, mHelper.getLayoutId(viewType));
-    }
-
-    @Override
-    protected int getDefItemViewType(int position) {
-        return mHelper.getItemViewType(position);
-    }
-
-    @Override
-    protected void convert(ShimmerViewHolder helper, MultiHeaderEntity item) {
+    protected void convert(ShimmerViewHolder holder, MultiHeaderEntity item) {
 
         if (item instanceof FirstItem) {
-            renderFirst(helper, (FirstItem) item);
+            renderFirst(holder, (FirstItem) item);
         } else if (item instanceof SecondItem) {
-            renderSecond(helper, (SecondItem) item);
+            renderSecond(holder, (SecondItem) item);
         } else if (item instanceof ThirdItem) {
-            renderThird(helper, (ThirdItem) item);
+            renderThird(holder, (ThirdItem) item);
         } else if (item instanceof FourthItem) {
-            renderFourth(helper, (FourthItem) item);
+            renderFourth(holder, (FourthItem) item);
         } else if (item instanceof HeaderFirstItem) {
-            renderHeaderFirst(helper, (HeaderFirstItem) item);
+            renderHeaderFirst(holder, (HeaderFirstItem) item);
         } else if (item instanceof HeaderSecondItem) {
-            renderHeaderSecond(helper, (HeaderSecondItem) item);
+            renderHeaderSecond(holder, (HeaderSecondItem) item);
         } else if (item instanceof HeaderThirdItem) {
-            renderHeaderThird(helper, (HeaderThirdItem) item);
+            renderHeaderThird(holder, (HeaderThirdItem) item);
         } else if (item instanceof HeaderFourthItem) {
-            renderHeaderFourth(helper, (HeaderFourthItem) item);
+            renderHeaderFourth(holder, (HeaderFourthItem) item);
         } else if (item instanceof SimpleErrorEntity) {
             if (item.getItemType() == SimpleHelper.LEVEL_SENCOND - SimpleHelper.ERROR_TYPE_DIFFER) {
-                renderErrorSecond(helper, SimpleHelper.LEVEL_SENCOND);
+                renderErrorSecond(holder, SimpleHelper.LEVEL_SENCOND);
             }
 
             if (item instanceof MyErrorEntity) {
                 MyErrorEntity errorEntity = (MyErrorEntity) item;
                 if (errorEntity.getItemType() == SimpleHelper.LEVEL_FOURTH - SimpleHelper.ERROR_TYPE_DIFFER) {
-                    renderErrorFourth(helper, errorEntity, SimpleHelper.LEVEL_FOURTH);
+                    renderErrorFourth(holder, errorEntity, SimpleHelper.LEVEL_FOURTH);
                 }
             }
         } else if (item instanceof MyEmptyEntity) {
-            renderEmptyThird(helper, (MyEmptyEntity) item, SimpleHelper.LEVEL_THIRD);
+            renderEmptyThird(holder, (MyEmptyEntity) item, SimpleHelper.LEVEL_THIRD);
         }
     }
 
@@ -189,12 +156,12 @@ public class RxAptHelperAdapter extends BaseQuickAdapter<MultiHeaderEntity, Shim
     }
 
     @Override
-    public void onViewAttachedToWindow(ShimmerViewHolder holder) {
+    public void onViewAttachedToWindow(@NonNull ShimmerViewHolder holder) {
         holder.startAnim();
     }
 
     @Override
-    public void onViewDetachedFromWindow(ShimmerViewHolder holder) {
+    public void onViewDetachedFromWindow(@NonNull ShimmerViewHolder holder) {
         holder.stopAnim();
     }
 

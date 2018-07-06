@@ -4,7 +4,7 @@ import android.support.v7.util.DiffUtil;
 
 import com.crazysunj.multitypeadapter.helper.AsynAdapterHelper;
 import com.crazysunj.sample.R;
-import com.crazysunj.sample.base.BaseAdapter;
+import com.crazysunj.sample.adapter.MyAdapter;
 import com.crazysunj.sample.base.MutiTypeTitleEntity;
 import com.crazysunj.sample.entity.ItemEntity1;
 import com.crazysunj.sample.entity.ItemEntity2;
@@ -19,7 +19,7 @@ import java.util.List;
  * description:
  */
 
-public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity, BaseAdapter> {
+public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity> {
 
     public static final int LEVEL_1 = 0;
     public static final int LEVEL_2 = 1;
@@ -73,7 +73,8 @@ public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity, Base
 
     @Override
     protected int getPreDataCount() {
-        return mAdapter.getHeaderLayoutCount();
+        final MyAdapter adapter = getBindAdapter();
+        return adapter.getHeaderLayoutCount();
     }
 
     @Override

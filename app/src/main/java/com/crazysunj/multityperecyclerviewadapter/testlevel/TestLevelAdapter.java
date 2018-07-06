@@ -2,11 +2,12 @@ package com.crazysunj.multityperecyclerviewadapter.testlevel;
 
 import android.widget.Toast;
 
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multitypeadapter.helper.LoadingConfig;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
+import com.crazysunj.multityperecyclerviewadapter.helper.BaseHelperAdapter;
+import com.crazysunj.multityperecyclerviewadapter.helper.BaseViewHolder;
 
 import java.util.List;
 import java.util.Random;
@@ -17,7 +18,7 @@ import java.util.Random;
  * description:
  */
 
-public class TestLevelAdapter extends BaseAdapter<MultiTypeTitleEntity, BaseViewHolder, TestLevelAdapterHelper> {
+public class TestLevelAdapter extends BaseHelperAdapter<MultiTypeTitleEntity, BaseViewHolder, TestLevelAdapterHelper> {
 
 
     private LevelFirstItemConvert mFirstItemConvert;
@@ -59,24 +60,24 @@ public class TestLevelAdapter extends BaseAdapter<MultiTypeTitleEntity, BaseView
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, MultiTypeTitleEntity item) {
+    protected void convert(BaseViewHolder holder, MultiTypeTitleEntity item) {
         final int itemType = item.getItemType();
         switch (itemType) {
             case TypeOneItem.TYPE_ONE:
             case TypeTwoItem.TYPE_TWO:
             case TYPE_LEVEL_FIRST_HEADER:
             case TYPE_LEVEL_FIRST_FOOTER:
-                mFirstItemConvert.convert(helper, item);
+                mFirstItemConvert.convert(holder, item);
                 break;
             case TypeThreeItem.TYPE_THREE:
             case TYPE_LEVEL_SECOND_HEADER:
-                mSecondItemConvert.convert(helper, item);
+                mSecondItemConvert.convert(holder, item);
                 break;
             case TypeFourItem.TYPE_FOUR:
             case TypeFiveItem.TYPE_FIVE:
             case TYPE_LEVEL_THIRD_HEADER:
             case TYPE_LEVEL_THIRD_FOOTER:
-                mThirdItemConvert.convert(helper, item);
+                mThirdItemConvert.convert(holder, item);
                 break;
             default:
                 break;

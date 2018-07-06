@@ -10,7 +10,7 @@ import com.crazysunj.multityperecyclerviewadapter.R;
  * description:
  */
 
-public class SwitchTypeAdapterHelper extends AsynAdapterHelper<MultiTypeEntity, SwitchTypeAdapter> {
+public class SwitchTypeAdapterHelper extends AsynAdapterHelper<MultiTypeEntity> {
 
     public static final int LEVEL_FIRST = 0;
     public static final int LEVEL_SECOND = 1;

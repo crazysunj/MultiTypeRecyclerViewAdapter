@@ -1,13 +1,13 @@
 package com.crazysunj.multityperecyclerviewadapter.apt;
 
-import android.view.ViewGroup;
+import android.support.annotation.NonNull;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multitypeadapter.annotation.AdapterHelper;
 import com.crazysunj.multitypeadapter.annotation.BindDefaultLevel;
 import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
+import com.crazysunj.multityperecyclerviewadapter.helper.BaseHelperAdapter;
+import com.crazysunj.multityperecyclerviewadapter.helper.BaseViewHolder;
 import com.crazysunj.multityperecyclerviewadapter.helper.ShimmerViewHolder;
 
 /**
@@ -16,45 +16,30 @@ import com.crazysunj.multityperecyclerviewadapter.helper.ShimmerViewHolder;
  * Created by sunjian on 2017/5/4.
  */
 
-@AdapterHelper(entity = "com.crazysunj.multityperecyclerviewadapter.data.FirstItem",
-        adapter = "com.crazysunj.multityperecyclerviewadapter.apt.AptDefaultHelperAdapter")
-public class AptDefaultHelperAdapter extends BaseQuickAdapter<FirstItem, ShimmerViewHolder> {
+@AdapterHelper(entity = "com.crazysunj.multityperecyclerviewadapter.data.FirstItem")
+public class AptDefaultHelperAdapter extends BaseHelperAdapter<FirstItem, ShimmerViewHolder, AptDefaultHelperAdapterHelper> {
 
     @BindDefaultLevel()
     final int LAYOUT_RES_ID = R.layout.item_first;
 
-    private AptDefaultHelperAdapterHelper mHelper;
-
     public AptDefaultHelperAdapter(AptDefaultHelperAdapterHelper helper) {
-
-        super(helper.getData());
+        super(helper);
         helper.bindAdapter(this);
         mHelper = helper;
     }
 
     @Override
-    protected ShimmerViewHolder onCreateDefViewHolder(ViewGroup parent, int viewType) {
-        return createBaseViewHolder(parent, mHelper.getLayoutId(viewType));
+    protected void convert(ShimmerViewHolder holder, FirstItem item) {
+        renderFirst(holder, item);
     }
 
     @Override
-    protected int getDefItemViewType(int position) {
-        return mHelper.getItemViewType(position);
-    }
-
-    @Override
-    protected void convert(ShimmerViewHolder helper, FirstItem item) {
-
-        renderFirst(helper, item);
-    }
-
-    @Override
-    public void onViewAttachedToWindow(ShimmerViewHolder holder) {
+    public void onViewAttachedToWindow(@NonNull ShimmerViewHolder holder) {
         holder.startAnim();
     }
 
     @Override
-    public void onViewDetachedFromWindow(ShimmerViewHolder holder) {
+    public void onViewDetachedFromWindow(@NonNull ShimmerViewHolder holder) {
         holder.stopAnim();
     }
 

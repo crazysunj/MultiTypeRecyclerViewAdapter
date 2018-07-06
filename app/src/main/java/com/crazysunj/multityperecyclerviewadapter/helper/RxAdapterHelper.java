@@ -1,9 +1,8 @@
 package com.crazysunj.multityperecyclerviewadapter.helper;
 
-import android.support.v7.util.DiffUtil;
+import android.annotation.SuppressLint;
 import android.util.Log;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.crazysunj.multitypeadapter.entity.HandleBase;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.R;
@@ -12,9 +11,6 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper.LEVEL_FIRST;
@@ -32,7 +28,7 @@ import static com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper.TYP
  * Created by sunjian on 2017/5/6.
  */
 
-public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity, BaseQuickAdapter> {
+public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity> {
 
     public RxAdapterHelper() {
         this(null);
@@ -46,24 +42,15 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
         super(data);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void startRefresh(HandleBase<MultiHeaderEntity> refreshData) {
         Flowable.just(refreshData)
                 .onBackpressureDrop()
-                .observeOn(Schedulers.computation())
-                .map(new Function<HandleBase<MultiHeaderEntity>, DiffUtil.DiffResult>() {
-                    @Override
-                    public DiffUtil.DiffResult apply(@NonNull HandleBase<MultiHeaderEntity> handleBase) throws Exception {
-                        return handleRefresh(handleBase.getNewData(), handleBase.getNewHeader(), handleBase.getNewFooter(), handleBase.getLevel(), handleBase.getRefreshType());
-                    }
-                })
+                .observeOn(Schedulers.io())
+                .map(handleBase -> handleRefresh(handleBase.getNewData(), handleBase.getNewHeader(), handleBase.getNewFooter(), handleBase.getLevel(), handleBase.getRefreshType()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<DiffUtil.DiffResult>() {
-                    @Override
-                    public void accept(@NonNull DiffUtil.DiffResult diffResult) throws Exception {
-                        handleResult(diffResult);
-                    }
-                });
+                .subscribe(this::handleResult);
     }
 
     public long getHeaderId(int position) {
@@ -131,11 +118,6 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
                 .errorLayoutResId(R.layout.layout_error)
                 .register();
 
-    }
-
-    @Override
-    protected int getPreDataCount() {
-        return mAdapter.getHeaderLayoutCount();
     }
 
 //    @Override

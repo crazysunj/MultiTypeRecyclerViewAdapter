@@ -17,8 +17,6 @@
         </activity>
         <activity android:name=".LinearActivity" />
         <activity android:name=".GridActivity" />
-        <activity android:name=".CommonLinearActivity" />
-        <activity android:name=".CommonGridActivity" />
         <activity android:name=".HighLightActivity" />
         <activity android:name=".RxLinearActivity" />
         <activity android:name=".RxErrorAndEmptyLinearActivity" />
@@ -35,7 +33,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".Rx180Activity" />
         <activity android:name=".switchtype.SwitchTypeActivity" />
-        <activity android:name=".TestLevelActivity"></activity>
+        <activity android:name=".TestLevelActivity"/>
     </application>
 
 </manifest>

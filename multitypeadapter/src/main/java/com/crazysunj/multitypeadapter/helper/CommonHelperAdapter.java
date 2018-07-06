@@ -40,7 +40,7 @@ import java.util.List;
  * Created by sunjian on 2017/5/4.
  */
 @Deprecated
-public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends CommonViewHolder, H extends RecyclerViewAdapterHelper<T, CommonHelperAdapter>> extends RecyclerView.Adapter<K> {
+public abstract class CommonHelperAdapter<T extends MultiTypeEntity, K extends CommonViewHolder, H extends RecyclerViewAdapterHelper<T>> extends RecyclerView.Adapter<K> {
 
     protected Context mContext;
     protected LayoutInflater mLayoutInflater;

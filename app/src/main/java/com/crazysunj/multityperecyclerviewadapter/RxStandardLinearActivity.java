@@ -183,23 +183,13 @@ public class RxStandardLinearActivity extends AppCompatActivity {
     public void click1(View view) {
 
         helper.notifyLoadingChanged();
-        view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                helper.notifyDataSetChanged(initData());
-            }
-        }, 3000);
+        view.postDelayed(() -> helper.notifyDataSetChanged(initData()), 3000);
 
     }
 
     public void click2(View view) {
         helper.notifyLoadingChanged();
-        view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                helper.notifyDataByDiff(initData());
-            }
-        }, 8000);
+        view.postDelayed(() -> helper.notifyDataByDiff(initData()), 8000);
 
     }
 

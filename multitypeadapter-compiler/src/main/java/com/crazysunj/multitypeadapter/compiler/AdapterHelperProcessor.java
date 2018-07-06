@@ -311,7 +311,7 @@ public class AdapterHelperProcessor extends AbstractProcessor {
                     .build();
 
             TypeSpec.Builder adapterHelperBuilder = TypeSpec.classBuilder(element.getSimpleName() + "Helper")
-                    .superclass(ParameterizedTypeName.get(ClassName.bestGuess(helperAnno.superObj()), entityClassName, ClassName.bestGuess(helperAnno.adapter())))
+                    .superclass(ParameterizedTypeName.get(ClassName.bestGuess(helperAnno.superObj()), entityClassName))
                     .addModifiers(Modifier.PUBLIC)
                     .addMethod(ctorFirst)
                     .addMethod(ctorSecond)

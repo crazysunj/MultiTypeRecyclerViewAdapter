@@ -1,6 +1,5 @@
 package com.crazysunj.multityperecyclerviewadapter.helper;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.crazysunj.multitypeadapter.helper.AsynAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.R;
 
@@ -10,7 +9,7 @@ import com.crazysunj.multityperecyclerviewadapter.R;
  * Created by sunjian on 2017/5/4.
  */
 
-public class SimpleHelper extends AsynAdapterHelper<MultiHeaderEntity, BaseQuickAdapter> {
+public class SimpleHelper extends AsynAdapterHelper<MultiHeaderEntity> {
 
     public static final int TYPE_ONE = 0;
     public static final int TYPE_TWO = 1;
@@ -73,10 +72,5 @@ public class SimpleHelper extends AsynAdapterHelper<MultiHeaderEntity, BaseQuick
         }
         MultiHeaderEntity data = mData.get(position - preDataCount);
         return data.getHeaderId();
-    }
-
-    @Override
-    protected int getPreDataCount() {
-        return mAdapter.getHeaderLayoutCount();
     }
 }

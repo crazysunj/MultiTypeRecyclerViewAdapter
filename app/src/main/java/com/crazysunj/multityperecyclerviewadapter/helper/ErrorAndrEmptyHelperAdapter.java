@@ -1,13 +1,9 @@
 package com.crazysunj.multityperecyclerviewadapter.helper;
 
-import android.util.Log;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
-import com.crazysunj.multitypeadapter.adapter.EmptyEntityAdapter;
-import com.crazysunj.multitypeadapter.adapter.ErrorEntityAdapter;
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.helper.LoadingConfig;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
@@ -38,28 +34,15 @@ import com.crazysunj.multityperecyclerviewadapter.sticky.ThirdStickyItem;
  * Created by sunjian on 2017/5/4.
  */
 
-public class ErrorAndrEmptyHelperAdapter extends BaseQuickAdapter<StickyItem, ShimmerViewHolder>
+public class ErrorAndrEmptyHelperAdapter extends BaseHelperAdapter<StickyItem, ShimmerViewHolder, ErrorAndEmptyAdapterHelper>
         implements StickyHeaderAdapter<ShimmerViewHolder> {
 
-    private ErrorAndEmptyAdapterHelper mHelper;
     private OnErrorCallback callback;
 
     public ErrorAndrEmptyHelperAdapter(ErrorAndEmptyAdapterHelper helper) {
-
-        super(helper.getData());
-        helper.bindAdapter(this);
-        helper.setEmptyAdapter(new EmptyEntityAdapter<StickyItem>() {
-            @Override
-            public StickyItem createEmptyEntity(int type, int level) {
-                return new ErrorAndEmptyEmptyEntity(type);
-            }
-        });
-        helper.setErrorAdapter(new ErrorEntityAdapter<StickyItem>() {
-            @Override
-            public StickyItem createErrorEntity(int type, int level) {
-                return new ErrorAndEmptyErrorEntity(type);
-            }
-        });
+        super(helper);
+        helper.setEmptyAdapter((type, level) -> new ErrorAndEmptyEmptyEntity(type));
+        helper.setErrorAdapter((type, level) -> new ErrorAndEmptyErrorEntity(type));
         helper.setLoadingAdapter(new LoadingEntityAdapter<StickyItem>() {
             @Override
             public StickyItem createLoadingEntity(int type, int level) {
@@ -103,67 +86,54 @@ public class ErrorAndrEmptyHelperAdapter extends BaseQuickAdapter<StickyItem, Sh
                 .setLoading(SimpleHelper.LEVEL_FOURTH, true)
                 .setLoading(SimpleHelper.LEVEL_SENCOND, 4, true)
                 .build());
-        mHelper = helper;
     }
 
     @Override
-    protected ShimmerViewHolder onCreateDefViewHolder(ViewGroup parent, int viewType) {
-        return createBaseViewHolder(parent, mHelper.getLayoutId(viewType));
-    }
-
-    @Override
-    public void onViewAttachedToWindow(ShimmerViewHolder holder) {
-        holder.startAnim();
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(ShimmerViewHolder holder) {
-        holder.stopAnim();
-    }
-
-
-    @Override
-    protected int getDefItemViewType(int position) {
-        return mHelper.getItemViewType(position);
-    }
-
-    @Override
-    protected void convert(ShimmerViewHolder helper, StickyItem item) {
-        Log.d(TAG, "item.getId():" + item.getId() + "item.getItemType():" + item.getItemType());
+    protected void convert(ShimmerViewHolder holder, StickyItem item) {
         if (item instanceof FirstItem) {
-            renderFirst(helper, (FirstItem) item);
+            renderFirst(holder, (FirstItem) item);
         } else if (item instanceof SecondItem) {
-            renderSecond(helper, (SecondItem) item);
+            renderSecond(holder, (SecondItem) item);
         } else if (item instanceof ThirdItem) {
-            renderThird(helper, (ThirdItem) item);
+            renderThird(holder, (ThirdItem) item);
         } else if (item instanceof FourthItem) {
-            renderFourth(helper, (FourthItem) item);
+            renderFourth(holder, (FourthItem) item);
         } else if (item instanceof HeaderFirstItem) {
-            renderHeaderFirst(helper, (HeaderFirstItem) item);
+            renderHeaderFirst(holder, (HeaderFirstItem) item);
         } else if (item instanceof HeaderSecondItem) {
-            renderHeaderSecond(helper, (HeaderSecondItem) item);
+            renderHeaderSecond(holder, (HeaderSecondItem) item);
         } else if (item instanceof HeaderThirdItem) {
-            renderHeaderThird(helper, (HeaderThirdItem) item);
+            renderHeaderThird(holder, (HeaderThirdItem) item);
         } else if (item instanceof HeaderFourthItem) {
-            renderHeaderFourth(helper, (HeaderFourthItem) item);
+            renderHeaderFourth(holder, (HeaderFourthItem) item);
         } else if (item instanceof ErrorAndEmptyErrorEntity) {
             if (item.getItemType() == SimpleHelper.LEVEL_SENCOND - SimpleHelper.ERROR_TYPE_DIFFER) {
-                renderErrorSecond(helper, SimpleHelper.LEVEL_SENCOND);
+                renderErrorSecond(holder, SimpleHelper.LEVEL_SENCOND);
             }
 
             if (item instanceof MyErrorAndEmptyErrorEntity) {
                 MyErrorAndEmptyErrorEntity errorEntity = (MyErrorAndEmptyErrorEntity) item;
                 if (errorEntity.getItemType() == SimpleHelper.LEVEL_FOURTH - SimpleHelper.ERROR_TYPE_DIFFER) {
-                    renderErrorFourth(helper, errorEntity, SimpleHelper.LEVEL_FOURTH);
+                    renderErrorFourth(holder, errorEntity, SimpleHelper.LEVEL_FOURTH);
                 }
             }
         } else if (item instanceof MyErrorAndEmptyEmptyEntity) {
-            renderEmptyThird(helper, (MyErrorAndEmptyEmptyEntity) item, SimpleHelper.LEVEL_THIRD);
+            renderEmptyThird(holder, (MyErrorAndEmptyEmptyEntity) item, SimpleHelper.LEVEL_THIRD);
         }
     }
 
-    private void renderEmptyThird(ShimmerViewHolder helper, MyErrorAndEmptyEmptyEntity item, int type) {
-        helper.setText(R.id.empty_title, item.getTitle());
+    @Override
+    public void onViewAttachedToWindow(@NonNull ShimmerViewHolder holder) {
+        holder.startAnim();
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull ShimmerViewHolder holder) {
+        holder.stopAnim();
+    }
+
+    private void renderEmptyThird(ShimmerViewHolder holder, MyErrorAndEmptyEmptyEntity item, int type) {
+        holder.setText(R.id.empty_title, item.getTitle());
     }
 
     private void renderErrorFourth(ShimmerViewHolder helper, MyErrorAndEmptyErrorEntity item, int type) {
@@ -188,7 +158,6 @@ public class ErrorAndrEmptyHelperAdapter extends BaseQuickAdapter<StickyItem, Sh
         @Override
         public void onClick(View v) {
             if (callback != null) {
-                Log.d(TAG, "type:" + type);
                 callback.onClick(v, type);
             }
         }

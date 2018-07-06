@@ -14,7 +14,7 @@ import java.util.List;
  * description:
  */
 
-public class TestLevelAdapterHelper extends AsynAdapterHelper<MultiTypeTitleEntity, BaseAdapter> {
+public class TestLevelAdapterHelper extends AsynAdapterHelper<MultiTypeTitleEntity> {
 
     public static final int LEVEL_FIRST = 0;
     public static final int LEVEL_SECOND = 1;
@@ -70,11 +70,6 @@ public class TestLevelAdapterHelper extends AsynAdapterHelper<MultiTypeTitleEnti
     protected void onEnd() {
         super.onEnd();
         Log.d(TAG, "刷新结束");
-    }
-
-    @Override
-    protected int getPreDataCount() {
-        return mAdapter.getHeaderLayoutCount();
     }
 
     @Override

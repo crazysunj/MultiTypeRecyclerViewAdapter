@@ -12,6 +12,4 @@ public @interface AdapterHelper {
     String superObj() default "com.crazysunj.multitypeadapter.helper.AsynAdapterHelper";
 
     String entity() default "com.crazysunj.multitypeadapter.entity.MultiTypeEntity";
-
-    String adapter() default "android.support.v7.widget.RecyclerView.Adapter";
 }

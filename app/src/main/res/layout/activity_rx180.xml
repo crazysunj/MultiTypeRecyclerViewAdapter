@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="click4"
-            android:text="add position1" />
+            android:text="add position2" />
 
         <Button
             android:layout_width="0dp"
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="click6"
-            android:text="add list position1" />
+            android:text="add list position2" />
 
         <Button
             android:layout_width="0dp"

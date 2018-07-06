@@ -8,6 +8,7 @@ import com.coorchice.library.SuperTextView;
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.helper.LoadingConfig;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
+import com.crazysunj.multitypeadapter.util.IDUtil;
 import com.crazysunj.sample.R;
 import com.crazysunj.sample.adapter.helper.MyAdapterHelper;
 import com.crazysunj.sample.base.BaseAdapter;
@@ -42,12 +43,12 @@ public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, 
         mHelper.setLoadingAdapter(new LoadingEntityAdapter<MutiTypeTitleEntity>() {
             @Override
             public MutiTypeTitleEntity createLoadingEntity(int type, int level) {
-                return new LoadingEntity(type, mHelper.getRandomId());
+                return new LoadingEntity(type, IDUtil.getId());
             }
 
             @Override
             public MutiTypeTitleEntity createLoadingHeaderEntity(int type, int level) {
-                return new LoadingEntity(type, mHelper.getRandomId());
+                return new LoadingEntity(type, IDUtil.getId());
             }
 
             @Override

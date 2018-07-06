@@ -1,11 +1,9 @@
 package com.crazysunj.multityperecyclerviewadapter.switchtype;
 
-import android.view.ViewGroup;
-
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 import com.crazysunj.multityperecyclerviewadapter.R;
+import com.crazysunj.multityperecyclerviewadapter.helper.BaseHelperAdapter;
+import com.crazysunj.multityperecyclerviewadapter.helper.BaseViewHolder;
 
 import java.util.List;
 
@@ -14,64 +12,44 @@ import java.util.List;
  * created on: 2017/10/19 上午11:12
  * description:
  */
+public class SwitchTypeAdapter extends BaseHelperAdapter<MultiTypeEntity, BaseViewHolder,SwitchTypeAdapterHelper> {
 
-public class SwitchTypeAdapter extends BaseQuickAdapter<MultiTypeEntity, BaseViewHolder> {
 
-
-    private SwitchTypeAdapterHelper mHelper;
 
     public SwitchTypeAdapter() {
         this(new SwitchTypeAdapterHelper());
     }
 
-    public SwitchTypeAdapter(SwitchTypeAdapterHelper helper) {
-        super(helper.getData());
-        mHelper = helper;
-        mHelper.bindAdapter(this);
-    }
-
     @Override
-    protected void convert(BaseViewHolder helper, MultiTypeEntity item) {
+    protected void convert(BaseViewHolder holder, MultiTypeEntity item) {
         switch (item.getItemType()) {
             case FirstType.TYPE_1:
-                helper.setText(R.id.item_name, ((FirstType) item).getTitle());
+                holder.setText(R.id.item_name, ((FirstType) item).getTitle());
                 break;
             case SecondType.TYPE_2:
-                helper.setText(R.id.item_name, ((SecondType) item).getTitle());
+                holder.setText(R.id.item_name, ((SecondType) item).getTitle());
                 break;
             case ThirdType.TYPE_3:
-                helper.setText(R.id.item_name, ((ThirdType) item).getTitle());
+                holder.setText(R.id.item_name, ((ThirdType) item).getTitle());
                 break;
             case FourthType.TYPE_4:
-                helper.setText(R.id.item_name, ((FourthType) item).getTitle());
+                holder.setText(R.id.item_name, ((FourthType) item).getTitle());
                 break;
             case SwtichType.TYPE_A:
             case SwtichType.TYPE_B:
             case SwtichType.TYPE_C:
             case SwtichType.TYPE_D:
-                helper.setText(R.id.item_switch_type_title, ((SwtichType) item).getTitle());
+                holder.setText(R.id.item_switch_type_title, ((SwtichType) item).getTitle());
                 break;
             default:
-                helper.setText(R.id.item_switch_type_title, ((SwtichType) item).getTitle());
+                holder.setText(R.id.item_switch_type_title, ((SwtichType) item).getTitle());
                 break;
         }
     }
 
-
-    @Override
-    protected BaseViewHolder onCreateDefViewHolder(ViewGroup parent, int viewType) {
-        return createBaseViewHolder(parent, mHelper.getLayoutId(viewType));
+    public SwitchTypeAdapter(SwitchTypeAdapterHelper helper) {
+        super(helper);
     }
-
-    @Override
-    protected int getDefItemViewType(int position) {
-        return mHelper.getItemViewType(position);
-    }
-
-    public SwitchTypeAdapterHelper getHelper() {
-        return mHelper;
-    }
-
 
     public void reset(List<MultiTypeEntity> data) {
         mHelper.notifyDataByDiff(data);

@@ -12,7 +12,7 @@ import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
  * description:
  */
 
-public abstract class BaseAdapter<T extends MutiTypeTitleEntity, K extends BaseViewHolder, H extends RecyclerViewAdapterHelper<T, BaseAdapter>> extends BaseQuickAdapter<T, K> {
+public abstract class BaseAdapter<T extends MutiTypeTitleEntity, K extends BaseViewHolder, H extends RecyclerViewAdapterHelper<T>> extends BaseQuickAdapter<T, K> {
 
     protected H mHelper;
 

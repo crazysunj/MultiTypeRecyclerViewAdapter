@@ -36,21 +36,13 @@ public class OpenCloseActivity extends AppCompatActivity {
         input.setSelection(input.getText().length());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new OpenCloseAdapter();
-        mAdapter.setOnErrorCallback(new OpenCloseAdapter.OnErrorCallback() {
-            @Override
-            public void onError(int level) {
-                if (level == OpenCloseAdapterHelper.LEVEL_FIRST) {
-                    mAdapter.notifyFirst(getFirst());
-                }
+        mAdapter.setOnErrorCallback(level -> {
+            if (level == OpenCloseAdapterHelper.LEVEL_FIRST) {
+                mAdapter.notifyFirst(getFirst());
             }
         });
 
-        mAdapter.setOnFooterClickListener(new OpenCloseAdapter.OnFooterClickListener() {
-            @Override
-            public void onFooterClick(int type, boolean isFlod) {
-                mAdapter.open(type, isFlod);
-            }
-        });
+        mAdapter.setOnFooterClickListener((type, isFlod) -> mAdapter.open(type, isFlod));
 
         recyclerView.setAdapter(mAdapter);
         initData();
@@ -64,7 +56,7 @@ public class OpenCloseActivity extends AppCompatActivity {
         data.add(new TitleOCEntity(firstTypeLevel, "类型1"));
         data.addAll(getFirst());
         data.add(new FooterOCEntity(firstTypeLevel, Constants.EXPAND));
-//        data.add(new FooterOCEntity(firstType, Constants.EXPAND, mAdapter.getHelper().getRandomId()));
+//        data.add(new FooterOCEntity(firstType, Constants.EXPAND, mAdapter.getHelper().getId()));
 
         int secondType = OpenCloseAdapterHelper.LEVEL_SECOND;
         data.add(new TitleOCEntity(secondType, "类型2"));
@@ -124,11 +116,6 @@ public class OpenCloseActivity extends AppCompatActivity {
 
     public void click4(View view) {
         mAdapter.notifyFirstLoading();
-        view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAdapter.notifyFirst(getFirst());
-            }
-        }, 2000);
+        view.postDelayed(() -> mAdapter.notifyFirst(getFirst()), 2000);
     }
 }

@@ -21,12 +21,6 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="click2"
-            android:text="一般线性排布" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:onClick="click6"
             android:text="Rx线性排布" />
 
@@ -41,12 +35,6 @@
             android:layout_height="wrap_content"
             android:onClick="click3"
             android:text="方格排布" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="click4"
-            android:text="一般方格排布" />
 
         <Button
             android:layout_width="match_parent"
@@ -111,7 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="click17"
-            android:text="2.0版本" />
+            android:text="2.0版本，直接操作数据后的刷新" />
 
     </LinearLayout>
 

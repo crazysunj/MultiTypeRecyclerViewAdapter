@@ -7,7 +7,7 @@
 
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/mtrva_logo.png)
 
-一个专注于RecyclerView优雅刷新(接管资源和数据源)、高灵活、低耦合、健壮性以及高效性的MVP模式库，支持大多数Adapter
+一个专注于RecyclerView优雅刷新(接管资源和数据源来代理进行数据处理)、高灵活、低耦合、健壮性以及高效性的MVP模式库，支持大多数Adapter
 
 ## 架构
 
@@ -28,10 +28,6 @@
 * 兼容低版本RecyclerView
 * 进阶用法，比如在多种页面之间自由切换
 
-## 效果
-
-![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/adapterHelper10.gif)
-
 ## 传送门
 
 博客：[http://crazysunj.com/](http://crazysunj.com/ "http://crazysunj.com/")
@@ -43,6 +39,8 @@ QQ邮箱：387953660@qq.com
 [版本记录](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/releases)
 
 [使用说明书](http://crazysunj.com/2017/08/14/MTRVA%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6/)
+
+由于我们专注于数据处理使得复杂布局非常简单，但我们与UI是完全解耦，开发者可以定制各种UI(使用各种Adapter)，每一种level相当于一个简单的Activity页面，想知道具体的用法，可以阅读文档；想知道具体效果，可以参考一下Demo。
 
 下载地址：[使用Demo](https://www.pgyer.com/LAZn "https://www.pgyer.com/LAZn") [首页Demo](https://www.pgyer.com/sOVg "https://www.pgyer.com/sOVg") [项目Demo](https://www.pgyer.com/EbHS "https://www.pgyer.com/EbHS")
 

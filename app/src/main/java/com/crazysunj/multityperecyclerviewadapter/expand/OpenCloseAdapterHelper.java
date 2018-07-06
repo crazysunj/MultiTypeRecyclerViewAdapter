@@ -13,7 +13,7 @@ import java.util.List;
  * Created by sunjian on 2017/7/5.
  */
 
-public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem, OpenCloseAdapter> {
+public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem> {
 
     public static final int LEVEL_FIRST = 0;
     public static final int LEVEL_SECOND = 1;
@@ -57,11 +57,6 @@ public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem, Ope
                 .footerResId(R.layout.item_footer)
                 .minSize(4)
                 .register();
-    }
-
-    @Override
-    protected int getPreDataCount() {
-        return mAdapter.getHeaderLayoutCount();
     }
 
     @Override

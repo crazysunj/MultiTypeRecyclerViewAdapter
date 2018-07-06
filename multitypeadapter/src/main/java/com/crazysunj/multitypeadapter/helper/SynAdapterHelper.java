@@ -15,8 +15,6 @@
  */
 package com.crazysunj.multitypeadapter.helper;
 
-import android.support.v7.widget.RecyclerView;
-
 import com.crazysunj.multitypeadapter.entity.HandleBase;
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 
@@ -28,7 +26,7 @@ import java.util.List;
  * 可以采用异步刷新{@link AsynAdapterHelper}
  * Created by sunjian on 2017/4/1.
  */
-public abstract class SynAdapterHelper<T extends MultiTypeEntity, A extends RecyclerView.Adapter> extends RecyclerViewAdapterHelper<T, A> {
+public abstract class SynAdapterHelper<T extends MultiTypeEntity> extends RecyclerViewAdapterHelper<T> {
 
 
     public SynAdapterHelper(List<T> data) {

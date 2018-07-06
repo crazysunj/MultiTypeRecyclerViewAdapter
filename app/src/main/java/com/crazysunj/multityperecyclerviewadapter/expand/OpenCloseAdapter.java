@@ -2,18 +2,16 @@ package com.crazysunj.multityperecyclerviewadapter.expand;
 
 
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chad.library.adapter.base.BaseViewHolder;
-import com.crazysunj.multitypeadapter.adapter.EmptyEntityAdapter;
-import com.crazysunj.multitypeadapter.adapter.ErrorEntityAdapter;
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
+import com.crazysunj.multitypeadapter.util.IDUtil;
 import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.constant.Constants;
 import com.crazysunj.multityperecyclerviewadapter.helper.BaseHelperAdapter;
+import com.crazysunj.multityperecyclerviewadapter.helper.BaseViewHolder;
 
 import java.util.List;
 
@@ -23,7 +21,7 @@ import java.util.List;
  * Created by sunjian on 2017/7/5.
  */
 
-public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenCloseAdapterHelper> {
+public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, BaseViewHolder, OpenCloseAdapterHelper> {
 
     private OnErrorCallback mErrorCallback;
     private OnFooterClickListener mOnFooterClickListener;
@@ -33,12 +31,12 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
         mHelper.setLoadingAdapter(new LoadingEntityAdapter<OpenCloseItem>() {
             @Override
             public OpenCloseItem createLoadingEntity(int type, int level) {
-                return new LoadingOCEntity(type, mHelper.getRandomId());
+                return new LoadingOCEntity(type, IDUtil.getId());
             }
 
             @Override
             public OpenCloseItem createLoadingHeaderEntity(int type, int level) {
-                return new LoadingOCEntity(type, mHelper.getRandomId());
+                return new LoadingOCEntity(type, IDUtil.getId());
             }
 
             @Override
@@ -46,48 +44,38 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
 
             }
         });
-        mHelper.setEmptyAdapter(new EmptyEntityAdapter<OpenCloseItem>() {
-            @Override
-            public OpenCloseItem createEmptyEntity(int type, int level) {
-                return new EmptyOCEntity(type, "肚子好饿" + level);
-            }
-        });
-        mHelper.setErrorAdapter(new ErrorEntityAdapter<OpenCloseItem>() {
-            @Override
-            public OpenCloseItem createErrorEntity(int type, int level) {
-                return new ErrorOCEntity(type, "我错了" + level);
-            }
-        });
+        mHelper.setEmptyAdapter((type, level) -> new EmptyOCEntity(type, "肚子好饿" + level));
+        mHelper.setErrorAdapter((type, level) -> new ErrorOCEntity(type, "我错了" + level));
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, OpenCloseItem item) {
+    protected void convert(BaseViewHolder holder, OpenCloseItem item) {
         int itemType = item.getItemType();
         switch (itemType) {
             case FirstOCEntity.OC_FIRST_TYPE:
-                renderFirst(helper, (FirstOCEntity) item);
+                renderFirst(holder, (FirstOCEntity) item);
                 break;
             case SecondOCEntity.OC_SECOND_TYPE:
-                renderSecond(helper, (SecondOCEntity) item);
+                renderSecond(holder, (SecondOCEntity) item);
                 break;
             case ThirdOCEntity.OC_THIRD_TYPE:
-                renderThird(helper, (ThirdOCEntity) item);
+                renderThird(holder, (ThirdOCEntity) item);
                 break;
             case OpenCloseAdapterHelper.LEVEL_FIRST - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
             case OpenCloseAdapterHelper.LEVEL_SECOND - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
             case OpenCloseAdapterHelper.LEVEL_THIRD - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
-                renderHeader(helper, (TitleOCEntity) item);
+                renderHeader(holder, (TitleOCEntity) item);
                 break;
             case OpenCloseAdapterHelper.LEVEL_FIRST - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
             case OpenCloseAdapterHelper.LEVEL_SECOND - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
             case OpenCloseAdapterHelper.LEVEL_THIRD - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
-                renderFooter(helper, (FooterOCEntity) item);
+                renderFooter(holder, (FooterOCEntity) item);
                 break;
             case OpenCloseAdapterHelper.LEVEL_FIRST - RecyclerViewAdapterHelper.EMPTY_TYPE_DIFFER:
-                renderEmpty(helper, (EmptyOCEntity) item);
+                renderEmpty(holder, (EmptyOCEntity) item);
                 break;
             case OpenCloseAdapterHelper.LEVEL_FIRST - RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER:
-                renderError(helper, (ErrorOCEntity) item);
+                renderError(holder, (ErrorOCEntity) item);
                 break;
             default:
                 break;
@@ -145,12 +133,9 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
         final int level = item.getItemType() + RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER;
         helper.setText(R.id.title, String.format("我是错误 flag:%s level:%s", item.getFlag(), level));
         helper.setText(R.id.message, String.format("title:%s", item.getTitle()));
-        helper.getView(R.id.retry).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mErrorCallback != null) {
-                    mErrorCallback.onError(level);
-                }
+        helper.getView(R.id.retry).setOnClickListener(v -> {
+            if (mErrorCallback != null) {
+                mErrorCallback.onError(level);
             }
         });
     }
@@ -174,19 +159,16 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
         String text = String.format("我是底 title:%s flag:%s type:%s", item.getTitle(), item.getFlag(), type);
         Log.d("FooterOCEntity", "footer: " + text);
         footer.setText(text);
-        footer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnFooterClickListener != null) {
-                    if (Constants.EXPAND.equals(item.getTitle())) {
-                        mOnFooterClickListener.onFooterClick(type, false);
-                        item.setTitle(Constants.FOLD);
-                    } else {
-                        mOnFooterClickListener.onFooterClick(type, true);
-                        item.setTitle(Constants.EXPAND);
-                    }
-                    footer.setText(String.format("我是底 title:%s flag:%s type:%s", item.getTitle(), item.getFlag(), type));
+        footer.setOnClickListener(v -> {
+            if (mOnFooterClickListener != null) {
+                if (Constants.EXPAND.equals(item.getTitle())) {
+                    mOnFooterClickListener.onFooterClick(type, false);
+                    item.setTitle(Constants.FOLD);
+                } else {
+                    mOnFooterClickListener.onFooterClick(type, true);
+                    item.setTitle(Constants.EXPAND);
                 }
+                footer.setText(String.format("我是底 title:%s flag:%s type:%s", item.getTitle(), item.getFlag(), type));
             }
         });
 
@@ -204,12 +186,7 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, OpenClose
         TextView header = helper.getView(R.id.item_header);
         final int type = item.getItemType() + RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER;
         header.setText(String.format("我是头 title:%s flag:%s type:%s", item.getTitle(), item.getFlag(), type));
-        header.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(v.getContext(), "当前是否合拢？ " + mHelper.isDataFolded(type), Toast.LENGTH_SHORT).show();
-            }
-        });
+        header.setOnClickListener(v -> Toast.makeText(v.getContext(), "当前是否合拢？ " + mHelper.isDataFolded(type), Toast.LENGTH_SHORT).show());
     }
 
     private void renderThird(BaseViewHolder helper, ThirdOCEntity item) {

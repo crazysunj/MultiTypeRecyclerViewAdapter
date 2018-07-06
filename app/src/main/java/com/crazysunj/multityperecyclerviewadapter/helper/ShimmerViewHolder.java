@@ -2,7 +2,6 @@ package com.crazysunj.multityperecyclerviewadapter.helper;
 
 import android.view.View;
 
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 public class ShimmerViewHolder extends BaseViewHolder {
