@@ -3,7 +3,7 @@
 [![](https://travis-ci.org/crazysunj/MultiTypeRecyclerViewAdapter.svg?branch=master)](https://travis-ci.org/crazysunj/MultiTypeRecyclerViewAdapter)
 [![License](https://img.shields.io/badge/license-Apache%202-brightgreen.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![API](https://img.shields.io/badge/API-14%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=14)
-[![](https://img.shields.io/github/release/crazysunj/MultiTypeRecyclerViewAdapter.svg) ](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/releases)
+[![](https://img.shields.io/github/release/crazysunj/MultiTypeRecyclerViewAdapter.svg)](https://github.com/crazysunj/MultiTypeRecyclerViewAdapter/releases)
 
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/mtrva_logo.png)
 
