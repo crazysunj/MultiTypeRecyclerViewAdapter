@@ -318,6 +318,16 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     }
 
     /**
+     * 根据索引返回item
+     *
+     * @param position 索引
+     * @return 返回的item
+     */
+    public T getItem(int position) {
+        return mData.get(position);
+    }
+
+    /**
      * 链式注册moudle
      *
      * @param level 数据类型等级
