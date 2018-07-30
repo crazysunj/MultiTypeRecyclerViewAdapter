@@ -39,12 +39,6 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="click5"
-            android:text="高亮" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:onClick="click8"
             android:text="高频率刷新测试" />
 

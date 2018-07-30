@@ -17,7 +17,6 @@
         </activity>
         <activity android:name=".LinearActivity" />
         <activity android:name=".GridActivity" />
-        <activity android:name=".HighLightActivity" />
         <activity android:name=".RxLinearActivity" />
         <activity android:name=".RxErrorAndEmptyLinearActivity" />
         <activity android:name=".RxContinuityActivity" />

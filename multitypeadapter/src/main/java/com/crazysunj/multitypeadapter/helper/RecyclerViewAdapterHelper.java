@@ -16,16 +16,12 @@
 package com.crazysunj.multitypeadapter.helper;
 
 import android.support.annotation.CallSuper;
-import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.util.ListUpdateCallback;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.util.LruCache;
 import android.util.SparseArray;
 
@@ -44,8 +40,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 如果您发现哪里性能比较差或者说设计不合理，希望您能反馈给我
@@ -2116,26 +2110,5 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         mLevelOldData = null;
         mResourcesManager.release();
         mResourcesManager = null;
-    }
-
-    /**
-     * 处理关键字高亮
-     * 该api即将移除，因为它的功能貌似和主题不搭
-     *
-     * @param originStr       被处理字符串
-     * @param keyWord         关键字
-     * @param hightLightColor 高亮颜色
-     * @return CharSequence
-     */
-    @Deprecated
-    public static CharSequence handleKeyWordHighLight
-    (String originStr, String keyWord, @ColorInt int hightLightColor) {
-        SpannableString ss = new SpannableString(originStr);
-        Pattern p = Pattern.compile(keyWord);
-        Matcher m = p.matcher(ss);
-        while (m.find()) {
-            ss.setSpan(new ForegroundColorSpan(hightLightColor), m.start(), m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        return ss;
     }
 }

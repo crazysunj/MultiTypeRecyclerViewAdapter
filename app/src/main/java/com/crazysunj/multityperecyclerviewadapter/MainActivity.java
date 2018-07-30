@@ -23,10 +23,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, GridActivity.class));
     }
 
-    public void click5(View view) {
-        startActivity(new Intent(this, HighLightActivity.class));
-    }
-
     public void click6(View view) {
         startActivity(new Intent(this, RxLinearActivity.class));
     }
