@@ -62,7 +62,7 @@ public class AdapterHelperProcessor extends AbstractProcessor {
             ClassName entityClassName = ClassName.bestGuess(helperAnno.entity());
             ParameterizedTypeName entityList = ParameterizedTypeName.get(listClassName, entityClassName);
 
-            MethodSpec.Builder registerMoudleBuilder = MethodSpec.methodBuilder("registerMoudle")
+            MethodSpec.Builder registerMoudleBuilder = MethodSpec.methodBuilder("registerModule")
                     .addAnnotation(Override.class)
                     .addModifiers(Modifier.PROTECTED)
                     .returns(void.class);
@@ -224,7 +224,7 @@ public class AdapterHelperProcessor extends AbstractProcessor {
             for (String level : levels.keySet()) {
                 StringBuilder sb = new StringBuilder();
                 sb.append("\n");
-                sb.append("registerMoudle(")
+                sb.append("registerModule(")
                         .append(level)
                         .append(")\n");
 

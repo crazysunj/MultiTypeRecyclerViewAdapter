@@ -236,7 +236,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         mResourcesManager = new ResourcesManager();
         mRefreshQueue = new LinkedList<>();
 
-        registerMoudle();
+        registerModule();
 
         if (mCurrentMode == MODE_STANDARD && !mData.isEmpty()) {
             List<T> newData = initStandardNewData(mData);
@@ -327,7 +327,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param level 数据类型等级
      * @return LevelsManager
      */
-    public ResourcesManager.LevelsManager registerMoudle(@IntRange(from = 0, to = 999) int level) {
+    public ResourcesManager.LevelsManager registerModule(@IntRange(from = 0, to = 999) int level) {
         return mResourcesManager.level(level);
     }
 
@@ -1620,7 +1620,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     /**
      * 注册资源
      */
-    protected abstract void registerMoudle();
+    protected abstract void registerModule();
 
     /**
      * 刷新生命周期-开始

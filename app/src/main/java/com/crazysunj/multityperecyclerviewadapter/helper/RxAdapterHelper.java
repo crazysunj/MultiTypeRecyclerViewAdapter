@@ -75,8 +75,8 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
     }
 
     @Override
-    protected void registerMoudle() {
-        registerMoudle(LEVEL_FIRST)
+    protected void registerModule() {
+        registerModule(LEVEL_FIRST)
                 .type(TYPE_ONE)
                 .layoutResId(R.layout.item_first)
                 .headerResId(R.layout.item_header)
@@ -85,7 +85,7 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
                 .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
                 .register();
 
-        registerMoudle(LEVEL_THIRD)
+        registerModule(LEVEL_THIRD)
                 .type(TYPE_FOUR)
                 .layoutResId(R.layout.item_third)
                 .headerResId(R.layout.item_header_img)
@@ -96,7 +96,7 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
                 .emptyLayoutResId(R.layout.layout_empty)
                 .register();
 
-        registerMoudle(LEVEL_FOURTH)
+        registerModule(LEVEL_FOURTH)
                 .type(TYPE_TWO)
                 .layoutResId(R.layout.item_fourth)
                 .headerResId(R.layout.item_header_img)
@@ -107,7 +107,7 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
                 .errorLayoutResId(R.layout.layout_error_two)
                 .register();
 
-        registerMoudle(LEVEL_SENCOND)
+        registerModule(LEVEL_SENCOND)
                 .type(TYPE_THREE)
                 .layoutResId(R.layout.item_second)
                 .headerResId(R.layout.item_header_img)

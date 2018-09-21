@@ -24,9 +24,9 @@ public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem> {
     }
 
     @Override
-    protected void registerMoudle() {
+    protected void registerModule() {
 
-        registerMoudle(LEVEL_FIRST)
+        registerModule(LEVEL_FIRST)
                 .type(FirstOCEntity.OC_FIRST_TYPE)
                 .layoutResId(R.layout.item_first)
                 .headerResId(R.layout.item_header)
@@ -42,7 +42,7 @@ public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem> {
                 .emptyLayoutResId(R.layout.layout_empty)
                 .register();
 
-        registerMoudle(LEVEL_SECOND)
+        registerModule(LEVEL_SECOND)
                 .type(SecondOCEntity.OC_SECOND_TYPE)
                 .layoutResId(R.layout.item_second)
                 .headerResId(R.layout.item_header)
@@ -50,7 +50,7 @@ public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem> {
                 .minSize(2)
                 .register();
 
-        registerMoudle(LEVEL_THIRD)
+        registerModule(LEVEL_THIRD)
                 .type(ThirdOCEntity.OC_THIRD_TYPE)
                 .layoutResId(R.layout.item_third)
                 .headerResId(R.layout.item_header)

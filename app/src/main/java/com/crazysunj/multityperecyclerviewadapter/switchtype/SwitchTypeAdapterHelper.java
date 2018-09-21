@@ -23,28 +23,28 @@ public class SwitchTypeAdapterHelper extends AsynAdapterHelper<MultiTypeEntity> 
     }
 
     @Override
-    protected void registerMoudle() {
-        registerMoudle(LEVEL_FIRST)
+    protected void registerModule() {
+        registerModule(LEVEL_FIRST)
                 .type(FirstType.TYPE_1)
                 .layoutResId(R.layout.item_first)
                 .register();
 
-        registerMoudle(LEVEL_SECOND)
+        registerModule(LEVEL_SECOND)
                 .type(SecondType.TYPE_2)
                 .layoutResId(R.layout.item_second)
                 .register();
 
-        registerMoudle(LEVEL_THIRD)
+        registerModule(LEVEL_THIRD)
                 .type(ThirdType.TYPE_3)
                 .layoutResId(R.layout.item_third)
                 .register();
 
-        registerMoudle(LEVEL_FOURTH)
+        registerModule(LEVEL_FOURTH)
                 .type(FourthType.TYPE_4)
                 .layoutResId(R.layout.item_fourth)
                 .register();
 
-        registerMoudle(LEVEL_SWITCH)
+        registerModule(LEVEL_SWITCH)
                 .type(SwtichType.TYPE_A)
                 .layoutResId(R.layout.item_switch_type)
                 .type(SwtichType.TYPE_B)

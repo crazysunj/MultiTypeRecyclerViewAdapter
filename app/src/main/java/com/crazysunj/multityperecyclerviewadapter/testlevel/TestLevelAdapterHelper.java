@@ -25,8 +25,8 @@ public class TestLevelAdapterHelper extends AsynAdapterHelper<MultiTypeTitleEnti
     }
 
     @Override
-    protected void registerMoudle() {
-        registerMoudle(LEVEL_FIRST)
+    protected void registerModule() {
+        registerModule(LEVEL_FIRST)
                 .type(TypeOneItem.TYPE_ONE)
                 .layoutResId(R.layout.item_first)
                 .type(TypeTwoItem.TYPE_TWO)
@@ -38,7 +38,7 @@ public class TestLevelAdapterHelper extends AsynAdapterHelper<MultiTypeTitleEnti
                 .loadingLayoutResId(R.layout.layout_default_shimmer_view)
                 .register();
 
-        registerMoudle(LEVEL_SECOND)
+        registerModule(LEVEL_SECOND)
                 .type(TypeThreeItem.TYPE_THREE)
                 .layoutResId(R.layout.item_third)
                 .headerResId(R.layout.item_header)
@@ -47,7 +47,7 @@ public class TestLevelAdapterHelper extends AsynAdapterHelper<MultiTypeTitleEnti
                 .loadingLayoutResId(R.layout.layout_default_shimmer_view)
                 .register();
 
-        registerMoudle(LEVEL_THIRD)
+        registerModule(LEVEL_THIRD)
                 .type(TypeFourItem.TYPE_FOUR)
                 .layoutResId(R.layout.item_fourth)
                 .type(TypeFiveItem.TYPE_FIVE)

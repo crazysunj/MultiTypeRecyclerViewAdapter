@@ -31,9 +31,9 @@ public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity> {
     }
 
     @Override
-    protected void registerMoudle() {
+    protected void registerModule() {
 
-        registerMoudle(LEVEL_1)
+        registerModule(LEVEL_1)
                 .type(ItemEntity1.TYPE_1)
                 .layoutResId(R.layout.item_1)
                 .headerResId(R.layout.header_common)
@@ -45,7 +45,7 @@ public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity> {
                 .loadingLayoutResId(R.layout.layout_loading)
                 .register();
 
-        registerMoudle(LEVEL_2)
+        registerModule(LEVEL_2)
                 .type(ItemEntity2.TYPE_2)
                 .layoutResId(R.layout.item_2)
                 .headerResId(R.layout.header_common)
@@ -54,14 +54,14 @@ public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity> {
                 .loadingLayoutResId(R.layout.layout_loading)
                 .register();
 
-        registerMoudle(LEVEL_3)
+        registerModule(LEVEL_3)
                 .type(ItemEntity3.TYPE_3)
                 .layoutResId(R.layout.item_3)
                 .loading()
                 .loadingLayoutResId(R.layout.layout_loading)
                 .register();
 
-        registerMoudle(LEVEL_4)
+        registerModule(LEVEL_4)
                 .type(ItemEntity4.TYPE_4)
                 .layoutResId(R.layout.item_4)
                 .headerResId(R.layout.header_common)
