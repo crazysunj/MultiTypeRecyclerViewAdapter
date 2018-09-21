@@ -92,7 +92,7 @@ public class RxStandardLinearActivity extends AppCompatActivity {
             }
             textView4.setText(String.format(Locale.getDefault(), "类型4的数量：%d", list.size()));
         }
-        helper.notifyMoudleDataAndHeaderChanged(list, header, level);
+        helper.notifyModuleDataAndHeaderChanged(list, header, level);
     }
 
     @NonNull
@@ -329,21 +329,21 @@ public class RxStandardLinearActivity extends AppCompatActivity {
 
     public void click5(View view) {
 
-        helper.clearMoudle(SimpleHelper.LEVEL_FIRST);
+        helper.clearModule(SimpleHelper.LEVEL_FIRST);
     }
 
     public void click6(View view) {
 
-        helper.clearMoudle(SimpleHelper.LEVEL_SENCOND);
+        helper.clearModule(SimpleHelper.LEVEL_SENCOND);
     }
 
     public void click7(View view) {
-        helper.clearMoudle(SimpleHelper.LEVEL_THIRD);
+        helper.clearModule(SimpleHelper.LEVEL_THIRD);
 
     }
 
     public void click8(View view) {
-        helper.clearMoudle(SimpleHelper.LEVEL_FOURTH);
+        helper.clearModule(SimpleHelper.LEVEL_FOURTH);
     }
 
     public void click9(View view) {

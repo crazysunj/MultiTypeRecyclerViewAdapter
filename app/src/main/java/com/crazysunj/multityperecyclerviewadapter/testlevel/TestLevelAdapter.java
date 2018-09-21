@@ -93,15 +93,15 @@ public class TestLevelAdapter extends BaseHelperAdapter<MultiTypeTitleEntity, Ba
     }
 
     public void notifyLevelFirst(MultiTypeTitleEntity header, List<MultiTypeTitleEntity> data, MultiTypeTitleEntity footer) {
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(data, header, footer, TestLevelAdapterHelper.LEVEL_FIRST);
+        mHelper.notifyModuleDataAndHeaderAndFooterChanged(data, header, footer, TestLevelAdapterHelper.LEVEL_FIRST);
     }
 
     public void notifyLevelSecond(MultiTypeTitleEntity header, List<MultiTypeTitleEntity> data) {
-        mHelper.notifyMoudleDataAndHeaderChanged(data, header, TestLevelAdapterHelper.LEVEL_SECOND);
+        mHelper.notifyModuleDataAndHeaderChanged(data, header, TestLevelAdapterHelper.LEVEL_SECOND);
     }
 
     public void notifyLevelThird(MultiTypeTitleEntity header, List<MultiTypeTitleEntity> data, MultiTypeTitleEntity footer) {
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(data, header, footer, TestLevelAdapterHelper.LEVEL_THIRD);
+        mHelper.notifyModuleDataAndHeaderAndFooterChanged(data, header, footer, TestLevelAdapterHelper.LEVEL_THIRD);
     }
 
     int clickCount;

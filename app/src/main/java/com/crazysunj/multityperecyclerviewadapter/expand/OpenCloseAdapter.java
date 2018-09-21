@@ -91,11 +91,11 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, BaseViewH
     }
 
     public void notifyFirstEmpty() {
-        mHelper.notifyMoudleEmptyChanged(OpenCloseAdapterHelper.LEVEL_FIRST);
+        mHelper.notifyModuleEmptyChanged(OpenCloseAdapterHelper.LEVEL_FIRST);
     }
 
     public void notifyFirstError() {
-        mHelper.notifyMoudleErrorChanged(OpenCloseAdapterHelper.LEVEL_FIRST);
+        mHelper.notifyModuleErrorChanged(OpenCloseAdapterHelper.LEVEL_FIRST);
     }
 
     public void notifyFirstLoading() {
@@ -104,7 +104,7 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, BaseViewH
 
     public void notifyFirst(List<FirstOCEntity> entities) {
         int firstLevel = OpenCloseAdapterHelper.LEVEL_FIRST;
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(
+        mHelper.notifyModuleDataAndHeaderAndFooterChanged(
                 entities, new TitleOCEntity(firstLevel, "类型1"),
                 new FooterOCEntity(firstLevel, Constants.EXPAND),
                 firstLevel);
@@ -112,7 +112,7 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, BaseViewH
 
     public void notifySecond(List<SecondOCEntity> entities) {
         int secondLevel = OpenCloseAdapterHelper.LEVEL_SECOND;
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(
+        mHelper.notifyModuleDataAndHeaderAndFooterChanged(
                 entities,
                 new TitleOCEntity(secondLevel, "类型2"),
                 new FooterOCEntity(secondLevel, Constants.FOLD),
@@ -121,7 +121,7 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, BaseViewH
 
     public void notifyThird(List<ThirdOCEntity> entities) {
         int thirdLevel = OpenCloseAdapterHelper.LEVEL_THIRD;
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(
+        mHelper.notifyModuleDataAndHeaderAndFooterChanged(
                 entities,
                 new TitleOCEntity(thirdLevel, "类型3"),
                 new FooterOCEntity(thirdLevel, Constants.FOLD),

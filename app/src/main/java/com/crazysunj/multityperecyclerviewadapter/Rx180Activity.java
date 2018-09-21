@@ -89,7 +89,7 @@ public class Rx180Activity extends AppCompatActivity {
             return;
         }
         String[] split = types.split("，");
-        helper.clearMoudle(get(split));
+        helper.clearModule(get(split));
     }
 
     private int[] get(String[] split) {
@@ -106,7 +106,7 @@ public class Rx180Activity extends AppCompatActivity {
             return;
         }
         String[] split = types.split("，");
-        helper.remainMoudle(get(split));
+        helper.remainModule(get(split));
     }
 
     public void click4(View view) {

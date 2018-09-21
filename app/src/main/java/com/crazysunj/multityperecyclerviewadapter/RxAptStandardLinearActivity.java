@@ -225,22 +225,22 @@ public class RxAptStandardLinearActivity extends AppCompatActivity {
 
     public void click5(View view) {
 
-        helper.clearMoudle(0);
+        helper.clearModule(0);
     }
 
     public void click6(View view) {
 
-        helper.clearMoudle(1);
+        helper.clearModule(1);
     }
 
     public void click7(View view) {
-        helper.clearMoudle(2);
+        helper.clearModule(2);
 
     }
 
     public void click8(View view) {
 
-        helper.clearMoudle(3);
+        helper.clearModule(3);
     }
 
     public void click9(View view) {

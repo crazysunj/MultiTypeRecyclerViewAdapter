@@ -171,19 +171,19 @@ public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, 
     }
 
     public void notifyType1(List<ItemEntity1> itemEntity1s) {
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(itemEntity1s, entity1Header, entity1Footer, MyAdapterHelper.LEVEL_1);
+        mHelper.notifyModuleDataAndHeaderAndFooterChanged(itemEntity1s, entity1Header, entity1Footer, MyAdapterHelper.LEVEL_1);
     }
 
     public void notifyType2(List<ItemEntity2> itemEntity2s) {
-        mHelper.notifyMoudleDataAndHeaderChanged(itemEntity2s, entity2Header, MyAdapterHelper.LEVEL_2);
+        mHelper.notifyModuleDataAndHeaderChanged(itemEntity2s, entity2Header, MyAdapterHelper.LEVEL_2);
     }
 
     public void notifyType3(ItemEntity3 itemEntity3) {
-        mHelper.notifyMoudleDataChanged(itemEntity3, MyAdapterHelper.LEVEL_3);
+        mHelper.notifyModuleDataChanged(itemEntity3, MyAdapterHelper.LEVEL_3);
     }
 
     public void notifyType4(List<ItemEntity4> itemEntity4s) {
-        mHelper.notifyMoudleDataAndHeaderChanged(itemEntity4s, entity4Header, MyAdapterHelper.LEVEL_4);
+        mHelper.notifyModuleDataAndHeaderChanged(itemEntity4s, entity4Header, MyAdapterHelper.LEVEL_4);
     }
 
     public void release() {

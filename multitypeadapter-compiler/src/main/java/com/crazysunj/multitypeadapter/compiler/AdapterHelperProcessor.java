@@ -62,7 +62,7 @@ public class AdapterHelperProcessor extends AbstractProcessor {
             ClassName entityClassName = ClassName.bestGuess(helperAnno.entity());
             ParameterizedTypeName entityList = ParameterizedTypeName.get(listClassName, entityClassName);
 
-            MethodSpec.Builder registerMoudleBuilder = MethodSpec.methodBuilder("registerModule")
+            MethodSpec.Builder registerModuleBuilder = MethodSpec.methodBuilder("registerModule")
                     .addAnnotation(Override.class)
                     .addModifiers(Modifier.PROTECTED)
                     .returns(void.class);
@@ -279,10 +279,10 @@ public class AdapterHelperProcessor extends AbstractProcessor {
                 }
 
                 sb.append(".register()");
-                registerMoudleBuilder.addStatement(sb.toString());
+                registerModuleBuilder.addStatement(sb.toString());
             }
 
-            MethodSpec registerMoudleMethod = registerMoudleBuilder.build();
+            MethodSpec registerModuleMethod = registerModuleBuilder.build();
 
             MethodSpec ctorFirst = MethodSpec.constructorBuilder()
                     .addJavadoc("无参构造，默认创建空集合\n")
@@ -316,7 +316,7 @@ public class AdapterHelperProcessor extends AbstractProcessor {
                     .addMethod(ctorFirst)
                     .addMethod(ctorSecond)
                     .addMethod(ctorThird)
-                    .addMethod(registerMoudleMethod);
+                    .addMethod(registerModuleMethod);
 
             if (preDataCountElement != null) {
                 MethodSpec preDataCountMethod = MethodSpec.methodBuilder("getPreDataCount")

@@ -65,7 +65,7 @@ public class RxLinearActivity extends AppCompatActivity {
                 list.add(new ThirdItem(String.format(Locale.getDefault(),"我是第三种类型%d", i), 12 + i));
             }
             textView3.setText(String.format(Locale.getDefault(),"类型3的数量：%d", list.size()));
-            helper.notifyMoudleDataAndHeaderChanged(list, new HeaderThirdItem("我是第三种类型的头", IDUtil.getId()), SimpleHelper.LEVEL_THIRD);
+            helper.notifyModuleDataAndHeaderChanged(list, new HeaderThirdItem("我是第三种类型的头", IDUtil.getId()), SimpleHelper.LEVEL_THIRD);
         }, 3000);
     }
 
@@ -87,7 +87,7 @@ public class RxLinearActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .subscribe(list -> {
                     textView1.setText(String.format(Locale.getDefault(), "类型1的数量：%d", list.size()));
-                    helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFirstItem(String.format(Locale.getDefault(), "我是第一种类型的头,点击次数：%d", refreshFirstCount++), IDUtil.getId()), SimpleHelper.LEVEL_FIRST);
+                    helper.notifyModuleDataAndHeaderChanged(list, new HeaderFirstItem(String.format(Locale.getDefault(), "我是第一种类型的头,点击次数：%d", refreshFirstCount++), IDUtil.getId()), SimpleHelper.LEVEL_FIRST);
                 });
 
     }
@@ -103,7 +103,7 @@ public class RxLinearActivity extends AppCompatActivity {
                 list.add(new SecondItem(String.format(Locale.getDefault(),"我是第二种类型%d", i), 6 + i));
             }
             textView2.setText(String.format(Locale.getDefault(),"类型2的数量：%d", list.size()));
-            helper.notifyMoudleDataChanged(list, SimpleHelper.LEVEL_SENCOND);
+            helper.notifyModuleDataChanged(list, SimpleHelper.LEVEL_SENCOND);
         }, 2000);
 
     }
@@ -116,7 +116,7 @@ public class RxLinearActivity extends AppCompatActivity {
     public void click3(View view) {
 
         helper.notifyLoadingHeaderChanged(SimpleHelper.LEVEL_THIRD);
-        textView3.postDelayed(() -> helper.notifyMoudleHeaderChanged(new HeaderThirdItem(String.format(Locale.getDefault(),"我是第三种类型的头,点击次数：%d", refreshThirdCount++), IDUtil.getId()), SimpleHelper.LEVEL_THIRD), 2000);
+        textView3.postDelayed(() -> helper.notifyModuleHeaderChanged(new HeaderThirdItem(String.format(Locale.getDefault(),"我是第三种类型的头,点击次数：%d", refreshThirdCount++), IDUtil.getId()), SimpleHelper.LEVEL_THIRD), 2000);
     }
 
     public void click4(View view) {
@@ -128,7 +128,7 @@ public class RxLinearActivity extends AppCompatActivity {
             }
             textView4.setText(String.format(Locale.getDefault(),"类型4的数量：%d", list.size()));
             String title = String.format(Locale.getDefault(), "我是第四种类型的头,点击次数：%d", refreshFouthCount++);
-            helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFourthItem(title, title.hashCode()), SimpleHelper.LEVEL_FOURTH);
+            helper.notifyModuleDataAndHeaderChanged(list, new HeaderFourthItem(title, title.hashCode()), SimpleHelper.LEVEL_FOURTH);
         }, 0);
     }
 }

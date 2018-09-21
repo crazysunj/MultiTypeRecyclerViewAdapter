@@ -65,7 +65,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
                         list.add(new SecondItem(String.format(Locale.getDefault(), "我是第二种类型%d", i), 6 + i));
                     }
                     textView2.setText(String.format(Locale.getDefault(), "类型2的数量：%d", list.size()));
-                    helper.notifyMoudleDataChanged(list, SimpleHelper.LEVEL_SENCOND);
+                    helper.notifyModuleDataChanged(list, SimpleHelper.LEVEL_SENCOND);
                 }, 2000);
             } else if (id == R.id.retry && type == SimpleHelper.LEVEL_FOURTH) {
                 helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_FOURTH, 3);
@@ -77,7 +77,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
                         list.add(new FourthItem(String.format(Locale.getDefault(), "我是第四种类型%d", i), 18 + i));
                     }
                     textView4.setText(String.format(Locale.getDefault(), "类型4的数量：%d", list.size()));
-                    helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFourthItem(String.format(Locale.getDefault(), "我是第四种类型的头,数量：%d", list.size()), IDUtil.getId()), SimpleHelper.LEVEL_FOURTH);
+                    helper.notifyModuleDataAndHeaderChanged(list, new HeaderFourthItem(String.format(Locale.getDefault(), "我是第四种类型的头,数量：%d", list.size()), IDUtil.getId()), SimpleHelper.LEVEL_FOURTH);
                 }, 2000);
             }
         });
@@ -91,7 +91,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
                 list.add(new FirstItem(String.format(Locale.getDefault(), "我是第一种类型%d", i), i));
             }
             textView1.setText(String.format(Locale.getDefault(), "类型1的数量：%d", list.size()));
-            helper.notifyMoudleDataAndHeaderChanged(list, new HeaderFirstItem(String.format(Locale.getDefault(), "我是第一种类型的头,点击次数：%d", refreshFirstCount++), IDUtil.getId()), SimpleHelper.LEVEL_FIRST);
+            helper.notifyModuleDataAndHeaderChanged(list, new HeaderFirstItem(String.format(Locale.getDefault(), "我是第一种类型的头,点击次数：%d", refreshFirstCount++), IDUtil.getId()), SimpleHelper.LEVEL_FIRST);
 
         }, 2000);
 
@@ -104,7 +104,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
                 list.add(new ThirdItem(String.format(Locale.getDefault(), "我是第三种类型%d", i), 12 + i));
             }
             textView3.setText(String.format(Locale.getDefault(), "类型3的数量：%d", list.size()));
-            helper.notifyMoudleDataAndHeaderChanged(list, new HeaderThirdItem("我是第三种类型的头", IDUtil.getId()), SimpleHelper.LEVEL_THIRD);
+            helper.notifyModuleDataAndHeaderChanged(list, new HeaderThirdItem("我是第三种类型的头", IDUtil.getId()), SimpleHelper.LEVEL_THIRD);
         }, 3000);
     }
 
@@ -114,7 +114,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
         helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_FIRST, 1);
         textView1.postDelayed(() -> {
             textView1.setText(String.format(Locale.getDefault(), "类型1的数量：%d", 1));
-            helper.notifyMoudleDataAndHeaderChanged(new FirstItem("我是新刷新的条目" + refreshFirstCount, System.currentTimeMillis()), new HeaderFirstItem(String.format(Locale.getDefault(), "我是第一种类型的头,点击次数：%d", refreshFirstCount++), IDUtil.getId()), SimpleHelper.LEVEL_FIRST);
+            helper.notifyModuleDataAndHeaderChanged(new FirstItem("我是新刷新的条目" + refreshFirstCount, System.currentTimeMillis()), new HeaderFirstItem(String.format(Locale.getDefault(), "我是第一种类型的头,点击次数：%d", refreshFirstCount++), IDUtil.getId()), SimpleHelper.LEVEL_FIRST);
         }, 2000);
 
     }
@@ -122,7 +122,7 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
     public void click2(View view) {
 
         helper.notifyLoadingDataChanged(SimpleHelper.LEVEL_SENCOND, 2);
-        textView2.postDelayed(() -> helper.notifyMoudleErrorChanged(SimpleHelper.LEVEL_SENCOND), 2000);
+        textView2.postDelayed(() -> helper.notifyModuleErrorChanged(SimpleHelper.LEVEL_SENCOND), 2000);
 
     }
 
@@ -131,12 +131,12 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
     public void click3(View view) {
 
         helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_THIRD, 1);
-        textView3.postDelayed(() -> helper.notifyMoudleEmptyChanged(emptyEntity, SimpleHelper.LEVEL_THIRD), 2000);
+        textView3.postDelayed(() -> helper.notifyModuleEmptyChanged(emptyEntity, SimpleHelper.LEVEL_THIRD), 2000);
     }
 
     public void click4(View view) {
 
         helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_FOURTH, 3);
-        textView4.postDelayed(() -> helper.notifyMoudleErrorChanged(errorfourthEntity, SimpleHelper.LEVEL_FOURTH), 2000);
+        textView4.postDelayed(() -> helper.notifyModuleErrorChanged(errorfourthEntity, SimpleHelper.LEVEL_FOURTH), 2000);
     }
 }

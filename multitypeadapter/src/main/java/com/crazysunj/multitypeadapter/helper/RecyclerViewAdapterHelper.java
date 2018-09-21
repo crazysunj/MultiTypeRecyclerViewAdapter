@@ -322,7 +322,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     }
 
     /**
-     * 链式注册moudle
+     * 链式注册Module
      *
      * @param level 数据类型等级
      * @return LevelsManager
@@ -402,7 +402,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         }
         mNewData.addAll(mGlobalLoadingEntitys);
 
-        notifyMoudleChanged(mNewData, null, null, REFRESH_TYPE_LOAD_ALL, REFRESH_ALL);
+        notifyModuleChanged(mNewData, null, null, REFRESH_TYPE_LOAD_ALL, REFRESH_ALL);
     }
 
     /**
@@ -435,7 +435,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
                 }
             }
         }
-        notifyMoudleChanged(loadingEntitys, header, null, level, REFRESH_HEADER_FOOTER_DATA);
+        notifyModuleChanged(loadingEntitys, header, null, level, REFRESH_HEADER_FOOTER_DATA);
     }
 
     /**
@@ -446,7 +446,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      */
     public void notifyLoadingDataChanged(int level, @IntRange(from = 1) int dataCount) {
         List<T> datas = createLoadingData(level, dataCount);
-        notifyMoudleChanged(datas, null, null, level, REFRESH_FOOTER_DATA);
+        notifyModuleChanged(datas, null, null, level, REFRESH_FOOTER_DATA);
     }
 
     /**
@@ -456,7 +456,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      */
     public void notifyLoadingHeaderChanged(int level) {
         T header = createLoadingHeader(level);
-        notifyMoudleChanged(null, header, null, level, REFRESH_HEADER_FOOTER);
+        notifyModuleChanged(null, header, null, level, REFRESH_HEADER_FOOTER);
     }
 
     /**
@@ -468,7 +468,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     public void notifyLoadingDataAndHeaderChanged(int level, @IntRange(from = 1) int dataCount) {
         T header = createLoadingHeader(level);
         List<T> datas = createLoadingData(level, dataCount);
-        notifyMoudleChanged(datas, header, null, level, REFRESH_HEADER_FOOTER_DATA);
+        notifyModuleChanged(datas, header, null, level, REFRESH_HEADER_FOOTER_DATA);
     }
 
     /**
@@ -478,8 +478,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param level level
      */
     @Deprecated
-    public void notifyMoudleDataInserted(@NonNull T data, int level) {
-        notifyMoudleDataInserted(Collections.singletonList(data), level);
+    public void notifyModuleDataInserted(@NonNull T data, int level) {
+        notifyModuleDataInserted(Collections.singletonList(data), level);
     }
 
     /**
@@ -489,7 +489,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param level level
      */
     @Deprecated
-    public void notifyMoudleDataInserted(@NonNull List<? extends T> data, int level) {
+    public void notifyModuleDataInserted(@NonNull List<? extends T> data, int level) {
         LevelData<T> levelData = mLevelOldData.get(level);
         if (levelData == null) {
             levelData = new LevelData<>(new ArrayList<T>(), null, null);
@@ -501,7 +501,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             levelData.setData(list);
         }
         list.addAll(data);
-        notifyMoudleChanged(list, levelData.getHeader(), levelData.getFooter(), level, REFRESH_HEADER_FOOTER_DATA);
+        notifyModuleChanged(list, levelData.getHeader(), levelData.getFooter(), level, REFRESH_HEADER_FOOTER_DATA);
     }
 
     /**
@@ -511,12 +511,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param level level
      */
     @SuppressWarnings("unchecked")
-    public void notifyMoudleDataChanged(@NonNull List<? extends T> data, int level) {
-        notifyMoudleChanged((List<T>) data, null, null, level, REFRESH_DATA);
+    public void notifyModuleDataChanged(@NonNull List<? extends T> data, int level) {
+        notifyModuleChanged((List<T>) data, null, null, level, REFRESH_DATA);
     }
 
-    public void notifyMoudleDataChanged(@NonNull T data, int level) {
-        notifyMoudleChanged(Collections.singletonList(data), null, null, level, REFRESH_DATA);
+    public void notifyModuleDataChanged(@NonNull T data, int level) {
+        notifyModuleChanged(Collections.singletonList(data), null, null, level, REFRESH_DATA);
     }
 
     /**
@@ -525,8 +525,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param header header
      * @param level  level
      */
-    public void notifyMoudleHeaderChanged(@NonNull T header, int level) {
-        notifyMoudleChanged(null, header, null, level, REFRESH_HEADER);
+    public void notifyModuleHeaderChanged(@NonNull T header, int level) {
+        notifyModuleChanged(null, header, null, level, REFRESH_HEADER);
     }
 
     /**
@@ -535,8 +535,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param footer fooer
      * @param level  level
      */
-    public void notifyMoudleFooterChanged(@NonNull T footer, int level) {
-        notifyMoudleChanged(null, null, footer, level, REFRESH_FOOTER);
+    public void notifyModuleFooterChanged(@NonNull T footer, int level) {
+        notifyModuleChanged(null, null, footer, level, REFRESH_FOOTER);
     }
 
     /**
@@ -546,8 +546,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param footer footer
      * @param level  level
      */
-    public void notifyMoudleHeaderAndFooterChanged(@NonNull T header, @NonNull T footer, int level) {
-        notifyMoudleChanged(null, header, footer, level, REFRESH_HEADER_FOOTER);
+    public void notifyModuleHeaderAndFooterChanged(@NonNull T header, @NonNull T footer, int level) {
+        notifyModuleChanged(null, header, footer, level, REFRESH_HEADER_FOOTER);
     }
 
 
@@ -559,8 +559,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param level  level
      */
     @SuppressWarnings("unchecked")
-    public void notifyMoudleDataAndHeaderChanged(@NonNull List<? extends T> data, @NonNull T header, int level) {
-        notifyMoudleChanged((List<T>) data, header, null, level, REFRESH_HEADER_DATA);
+    public void notifyModuleDataAndHeaderChanged(@NonNull List<? extends T> data, @NonNull T header, int level) {
+        notifyModuleChanged((List<T>) data, header, null, level, REFRESH_HEADER_DATA);
     }
 
     /**
@@ -570,8 +570,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param header header
      * @param level  level
      */
-    public void notifyMoudleDataAndHeaderChanged(@NonNull T data, @NonNull T header, int level) {
-        notifyMoudleChanged(Collections.singletonList(data), header, null, level, REFRESH_HEADER_DATA);
+    public void notifyModuleDataAndHeaderChanged(@NonNull T data, @NonNull T header, int level) {
+        notifyModuleChanged(Collections.singletonList(data), header, null, level, REFRESH_HEADER_DATA);
     }
 
     /**
@@ -582,8 +582,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param level  level
      */
     @SuppressWarnings("unchecked")
-    public void notifyMoudleDataAndFooterChanged(@NonNull List<? extends T> data, @NonNull T footer, int level) {
-        notifyMoudleChanged((List<T>) data, null, footer, level, REFRESH_FOOTER_DATA);
+    public void notifyModuleDataAndFooterChanged(@NonNull List<? extends T> data, @NonNull T footer, int level) {
+        notifyModuleChanged((List<T>) data, null, footer, level, REFRESH_FOOTER_DATA);
     }
 
     /**
@@ -593,14 +593,14 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param footer fooer
      * @param level  level
      */
-    public void notifyMoudleDataAndFooterChanged(@NonNull T data, @NonNull T footer, int level) {
-        notifyMoudleChanged(Collections.singletonList(data), null, footer, level, REFRESH_FOOTER_DATA);
+    public void notifyModuleDataAndFooterChanged(@NonNull T data, @NonNull T footer, int level) {
+        notifyModuleChanged(Collections.singletonList(data), null, footer, level, REFRESH_FOOTER_DATA);
     }
 
     /**
      * 同时刷新header、data和fooer
      * 该方法已过时
-     * 注意{@link #notifyMoudleDataAndHeaderAndFooterChanged(MultiTypeEntity, MultiTypeEntity, MultiTypeEntity, int)}，data参数靠前
+     * 注意{@link #notifyModuleDataAndHeaderAndFooterChanged(MultiTypeEntity, MultiTypeEntity, MultiTypeEntity, int)}，data参数靠前
      *
      * @param header header
      * @param data   data
@@ -609,8 +609,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      */
     @Deprecated
     @SuppressWarnings("unchecked")
-    public void notifyMoudleDataAndHeaderAndFooterChanged(@NonNull T header, @NonNull List<? extends T> data, @NonNull T footer, int level) {
-        notifyMoudleChanged((List<T>) data, header, footer, level, REFRESH_HEADER_FOOTER_DATA);
+    public void notifyModuleDataAndHeaderAndFooterChanged(@NonNull T header, @NonNull List<? extends T> data, @NonNull T footer, int level) {
+        notifyModuleChanged((List<T>) data, header, footer, level, REFRESH_HEADER_FOOTER_DATA);
     }
 
     /**
@@ -622,8 +622,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param level  level
      */
     @SuppressWarnings("unchecked")
-    public void notifyMoudleDataAndHeaderAndFooterChanged(@NonNull List<? extends T> data, @NonNull T header, @NonNull T footer, int level) {
-        notifyMoudleChanged((List<T>) data, header, footer, level, REFRESH_HEADER_FOOTER_DATA);
+    public void notifyModuleDataAndHeaderAndFooterChanged(@NonNull List<? extends T> data, @NonNull T header, @NonNull T footer, int level) {
+        notifyModuleChanged((List<T>) data, header, footer, level, REFRESH_HEADER_FOOTER_DATA);
     }
 
     /**
@@ -638,25 +638,25 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param level  level
      */
     @Deprecated
-    public void notifyMoudleDataAndHeaderAndFooterChanged(@NonNull T data, @NonNull T header, @NonNull T footer, int level) {
+    public void notifyModuleDataAndHeaderAndFooterChanged(@NonNull T data, @NonNull T header, @NonNull T footer, int level) {
         if (data.getItemType() < 0) {
             T temp = data;
             data = header;
             header = temp;
         }
-        notifyMoudleChanged(Collections.singletonList(data), header, footer, level, REFRESH_HEADER_FOOTER_DATA);
+        notifyModuleChanged(Collections.singletonList(data), header, footer, level, REFRESH_HEADER_FOOTER_DATA);
     }
 
     /**
      * 刷新空数据页面
-     * 如果调用了{@link #setEmptyAdapter(EmptyEntityAdapter)}可直接调用{@link #notifyMoudleEmptyChanged(int)}
+     * 如果调用了{@link #setEmptyAdapter(EmptyEntityAdapter)}可直接调用{@link #notifyModuleEmptyChanged(int)}
      *
      * @param emptyData 空数据
      * @param level     level
      */
-    public void notifyMoudleEmptyChanged(@NonNull T emptyData, int level) {
+    public void notifyModuleEmptyChanged(@NonNull T emptyData, int level) {
         if (getLevel(emptyData.getItemType()) == level) {
-            notifyMoudleChanged(Collections.singletonList(emptyData), null, null, level, REFRESH_HEADER_FOOTER_DATA);
+            notifyModuleChanged(Collections.singletonList(emptyData), null, null, level, REFRESH_HEADER_FOOTER_DATA);
         } else {
             throw new DataException("please set correct itemType ! level = " + level);
         }
@@ -664,11 +664,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
 
     /**
      * 需要调用{@link #setEmptyAdapter(EmptyEntityAdapter)}
-     * 如果不想设置{@link EmptyEntityAdapter}，请调用{@link #notifyMoudleEmptyChanged(MultiTypeEntity, int)}
+     * 如果不想设置{@link EmptyEntityAdapter}，请调用{@link #notifyModuleEmptyChanged(MultiTypeEntity, int)}
      *
      * @param level level
      */
-    public void notifyMoudleEmptyChanged(int level) {
+    public void notifyModuleEmptyChanged(int level) {
         if (mSingleCache == null) {
             mSingleCache = new LruCache<>(mMaxSingleCacheCount);
         }
@@ -678,19 +678,19 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             checkEmptyAdapterBind();
             emptyEntity = mEmptyEntityAdapter.createEmptyEntity(level - EMPTY_TYPE_DIFFER, level);
         }
-        notifyMoudleEmptyChanged(emptyEntity, level);
+        notifyModuleEmptyChanged(emptyEntity, level);
     }
 
     /**
      * 刷新错误页面
-     * 如果调用了{@link #setErrorAdapter(ErrorEntityAdapter)}可直接调用{@link #notifyMoudleErrorChanged(int)}
+     * 如果调用了{@link #setErrorAdapter(ErrorEntityAdapter)}可直接调用{@link #notifyModuleErrorChanged(int)}
      *
      * @param errorData 错误数据
      * @param level     level
      */
-    public void notifyMoudleErrorChanged(@NonNull T errorData, int level) {
+    public void notifyModuleErrorChanged(@NonNull T errorData, int level) {
         if (getLevel(errorData.getItemType()) == level) {
-            notifyMoudleChanged(Collections.singletonList(errorData), null, null, level, REFRESH_HEADER_FOOTER_DATA);
+            notifyModuleChanged(Collections.singletonList(errorData), null, null, level, REFRESH_HEADER_FOOTER_DATA);
         } else {
             throw new DataException("please set correct itemType ! level = " + level);
         }
@@ -698,11 +698,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
 
     /**
      * 需要调用{@link #setErrorAdapter(ErrorEntityAdapter)}
-     * 如果不想设置{@link ErrorEntityAdapter}，请调用{@link #notifyMoudleErrorChanged(MultiTypeEntity, int)}
+     * 如果不想设置{@link ErrorEntityAdapter}，请调用{@link #notifyModuleErrorChanged(MultiTypeEntity, int)}
      *
      * @param level level
      */
-    public void notifyMoudleErrorChanged(int level) {
+    public void notifyModuleErrorChanged(int level) {
         if (mSingleCache == null) {
             mSingleCache = new LruCache<>(mMaxSingleCacheCount);
         }
@@ -712,7 +712,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             checkErrorAdapterBind();
             errorEntity = mErrorEntityAdapter.createErrorEntity(level - ERROR_TYPE_DIFFER, level);
         }
-        notifyMoudleErrorChanged(errorEntity, level);
+        notifyModuleErrorChanged(errorEntity, level);
     }
 
     /**
@@ -867,7 +867,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         } else {
             mNewData.addAll(newData);
         }
-        notifyMoudleChanged(mNewData, null, null, REFRESH_TYPE_DATA_ALL, REFRESH_ALL);
+        notifyModuleChanged(mNewData, null, null, REFRESH_TYPE_DATA_ALL, REFRESH_ALL);
         mCurrentMode = refreshMode;
     }
 
@@ -885,7 +885,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      *
      * @param levels 数据类型等级
      */
-    public void clearMoudle(@NonNull int... levels) {
+    public void clearModule(@NonNull int... levels) {
         checkStandardMode();
         if (levels.length == 0) {
             return;
@@ -909,7 +909,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
                 mNewData.add(footer);
             }
         }
-        notifyMoudleChanged(mNewData, null, null, REFRESH_TYPE_DATA_ALL, REFRESH_ALL);
+        notifyModuleChanged(mNewData, null, null, REFRESH_TYPE_DATA_ALL, REFRESH_ALL);
     }
 
     /**
@@ -917,7 +917,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      *
      * @param levels 数据类型集合
      */
-    public void remainMoudle(@NonNull int... levels) {
+    public void remainModule(@NonNull int... levels) {
         checkStandardMode();
 
         if (levels.length == 0) {
@@ -952,7 +952,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             }
             mLevelOldData.put(level, levelData);
         }
-        notifyMoudleChanged(mNewData, null, null, REFRESH_TYPE_DATA_ALL, REFRESH_ALL);
+        notifyModuleChanged(mNewData, null, null, REFRESH_TYPE_DATA_ALL, REFRESH_ALL);
     }
 
     /**
@@ -1594,7 +1594,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param level       数据的等级
      * @param refreshType 类型
      */
-    protected void notifyMoudleChanged(List<T> newData, T newHeader, T newFooter, int level, int refreshType) {
+    protected void notifyModuleChanged(List<T> newData, T newHeader, T newFooter, int level, int refreshType) {
 
         boolean offer = mRefreshQueue.offer(new HandleBase<>(newData, newHeader, newFooter, level, refreshType));
 
