@@ -776,6 +776,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     /**
      * 直接操作数据后的全局刷新方法
      * 该方法只支持item的改变，同{@link #setData(int, MultiTypeEntity)}
+     * 注意点：如果notifyModule调用过快，Adapter将不会即时更新，可调用{@link #notifyDataChanged(MultiTypeEntity)}解决此问题
      */
     public void notifyDataChanged() {
         checkAdapterBind();
@@ -799,19 +800,25 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         if (position < 0) {
             return;
         }
-        checkAdapterBind();
-        if (!mIsCanRefresh) {
-            return;
+        T innerEntity = mData.get(position);
+        if (innerEntity == data) {
+            checkAdapterBind();
+            if (!mIsCanRefresh) {
+                return;
+            }
+            mCurrentLevel = getLevel(data.getItemType());
+            onStart();
+            mAdapter.notifyItemChanged(position + getPreDataCount());
+            onEnd();
+        } else {
+            setData(position, data);
         }
-        mCurrentLevel = getLevel(data.getItemType());
-        onStart();
-        mAdapter.notifyItemChanged(position + getPreDataCount());
-        onEnd();
     }
 
     /**
      * 直接操作单个level后的刷新方法
      * 该方法只支持item的改变，同{@link #setData(int, MultiTypeEntity)}
+     * 注意点：如果notifyModule调用过快，Adapter将不会即时更新，可调用{@link #notifyDataChanged(MultiTypeEntity)}解决此问题
      *
      * @param level level
      */
