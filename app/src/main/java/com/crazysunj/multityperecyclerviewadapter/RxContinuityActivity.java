@@ -1,9 +1,11 @@
 package com.crazysunj.multityperecyclerviewadapter;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.TextView;
 
@@ -48,9 +50,7 @@ public class RxContinuityActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
         recyclerView.setAdapter(adapter);
-
         refresh();
-
     }
 
     private void refresh() {
@@ -92,8 +92,6 @@ public class RxContinuityActivity extends AppCompatActivity {
     }
 
     public void click(View view) {
-
         refresh();
     }
-
 }

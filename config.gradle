@@ -1,11 +1,10 @@
 ext {
-    supportVersion = "27.1.1"
+    supportVersion = "28.0.0"
     android = [
-            compileSdkVersion: 27,
-            buildToolsVersion: "27.0.3",
+            compileSdkVersion: 28,
             minSdkVersion    : 17,
             libMinSdkVersion : 14,
-            targetSdkVersion : 27,
+            targetSdkVersion : 28,
     ]
 
     dependencies = [
@@ -15,29 +14,28 @@ ext {
             MTRVA              : 'com.crazysunj:multitypeadapter:2.1.0',
             MTRVA_Compiler     : 'com.crazysunj:multitypeadapter-compiler:2.1.0',
             MTRVA_Anno         : 'com.crazysunj:multitypeadapter-annotation:2.1.0',
-            appcompatV7        : "com.android.support:appcompat-v7:$supportVersion",
-            design             : "com.android.support:design:$supportVersion",
-            recyclerview       : "com.android.support:recyclerview-v7:$supportVersion",
             diffutil           : 'com.crazysunj:diffutil:0.0.2',
-            BRVAH              : 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.27',
+            multidex           : 'androidx.multidex:multidex:2.0.0',
+            recyclerview       : 'androidx.recyclerview:recyclerview:1.0.0',
+            appcompat          : 'androidx.appcompat:appcompat:1.0.0',
+            material          : 'com.google.android.material:material:1.0.0',
             shimmer            : 'com.facebook.shimmer:shimmer:0.1.0@aar',
             rxandroid          : 'io.reactivex.rxjava2:rxandroid:2.0.1',
             rxjava             : 'io.reactivex.rxjava2:rxjava:2.0.9',
-            itemDecoration     : 'com.crazysunj:itemdecoration:0.2.1',
+            itemDecoration     : 'com.crazysunj:itemdecoration:0.3.1-x',
             materialsearchview : 'com.miguelcatalan:materialsearchview:1.4.0',
             SuperTextView      : 'com.github.chenBingX:SuperTextView:v1.3',
             roundedimageview   : 'com.makeramen:roundedimageview:2.3.0',
             junit              : 'junit:junit:4.12',
             debugLeakcanary    : 'com.squareup.leakcanary:leakcanary-android:1.5.4',
             releaseLeakcanary  : 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4',
-            multidex           : "com.android.support:multidex:1.0.1",
     ]
 
     bintray = [
             userOrg       : 'twsunj',
             groupId       : 'com.crazysunj',
             uploadName    : 'MultiTypeRecyclerViewAdapter',
-            publishVersion: '2.3.2',
+            publishVersion: '2.3.2-x',
             desc          : 'MultiTypeRecyclerViewAdapter For Android',
             website       : 'https://github.com/crazysunj/MultiTypeRecyclerViewAdapter',
             licences      : ['Apache-2.0']

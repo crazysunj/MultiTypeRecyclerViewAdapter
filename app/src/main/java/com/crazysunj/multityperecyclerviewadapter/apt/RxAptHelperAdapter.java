@@ -1,6 +1,5 @@
 package com.crazysunj.multityperecyclerviewadapter.apt;
 
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -34,6 +33,8 @@ import com.crazysunj.multityperecyclerviewadapter.sticky.FirstStickyItem;
 import com.crazysunj.multityperecyclerviewadapter.sticky.FourthStickyItem;
 import com.crazysunj.multityperecyclerviewadapter.sticky.SecondStickyItem;
 import com.crazysunj.multityperecyclerviewadapter.sticky.ThirdStickyItem;
+
+import androidx.annotation.NonNull;
 
 /**
  * description

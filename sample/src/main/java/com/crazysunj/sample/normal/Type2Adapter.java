@@ -1,15 +1,16 @@
 package com.crazysunj.sample.normal;
 
-import android.support.annotation.Nullable;
 import android.widget.LinearLayout;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.coorchice.library.SuperTextView;
 import com.crazysunj.sample.R;
+import com.crazysunj.sample.base.BaseAdapter;
+import com.crazysunj.sample.base.BaseViewHolder;
 import com.crazysunj.sample.entity.ItemEntity2;
 
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 /**
  * author: sunjian
@@ -17,10 +18,10 @@ import java.util.List;
  * description:
  */
 
-public class Type2Adapter extends BaseQuickAdapter<ItemEntity2, BaseViewHolder> {
+public class Type2Adapter extends BaseAdapter<ItemEntity2, BaseViewHolder> {
 
     public Type2Adapter(@Nullable List<ItemEntity2> data) {
-        super(R.layout.item_2, data);
+        super(data, R.layout.item_2);
     }
 
     @Override

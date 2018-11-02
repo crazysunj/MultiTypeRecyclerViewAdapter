@@ -18,7 +18,7 @@ package com.crazysunj.multitypeadapter.helper;
 import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.util.DiffUtil;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.crazysunj.multitypeadapter.entity.HandleBase;
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;

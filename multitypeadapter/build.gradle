@@ -6,7 +6,6 @@ def libs = rootProject.ext.dependencies //依赖库配置
 def bintrays = rootProject.ext.bintray //bintray配置
 android {
     compileSdkVersion configs.compileSdkVersion
-    buildToolsVersion configs.buildToolsVersion
 
     defaultConfig {
         minSdkVersion configs.libMinSdkVersion
@@ -27,7 +26,7 @@ android {
 }
 
 dependencies {
-    compileOnly 'com.android.support:recyclerview-v7:27.1.1'
+    compileOnly 'androidx.recyclerview:recyclerview:1.0.0'
     compileOnly libs.diffutil
     compileOnly project(libs.MTRVA_File_Anno)
 }

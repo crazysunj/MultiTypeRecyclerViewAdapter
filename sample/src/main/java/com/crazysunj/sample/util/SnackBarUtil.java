@@ -1,7 +1,7 @@
 package com.crazysunj.sample.util;
 
 import android.app.Activity;
-import android.support.design.widget.Snackbar;
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * author: sunjian

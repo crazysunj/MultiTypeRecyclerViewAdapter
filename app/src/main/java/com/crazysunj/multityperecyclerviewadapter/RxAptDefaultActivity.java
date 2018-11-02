@@ -2,9 +2,6 @@ package com.crazysunj.multityperecyclerviewadapter;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.crazysunj.multityperecyclerviewadapter.apt.AptDefaultHelperAdapter;
@@ -15,6 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RxAptDefaultActivity extends AppCompatActivity {
 

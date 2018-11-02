@@ -3,14 +3,13 @@ def configs = rootProject.ext.android //android配置
 def libs = rootProject.ext.dependencies //依赖库配置
 android {
     compileSdkVersion configs.compileSdkVersion
-    buildToolsVersion configs.buildToolsVersion
     defaultConfig {
         applicationId "com.crazysunj.multityperecyclerviewadapter"
         minSdkVersion configs.minSdkVersion
         targetSdkVersion configs.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -25,22 +24,22 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile project(libs.MTRVA_File)
-    compile project(libs.MTRVA_File_Anno)
+    implementation project(libs.MTRVA_File)
+    implementation project(libs.MTRVA_File_Anno)
     annotationProcessor project(libs.MTRVA_File_Compiler)
-    //    compile libs.MTRVA_Anno
-    //    compile libs.MTRVA
-    //    apt libs.MTRVA_Compiler
-    compile libs.appcompatV7
-    compile libs.itemDecoration
-    compile libs.shimmer
-    compile libs.recyclerview
-    compile libs.rxandroid
-    compile libs.rxjava
-    testCompile libs.junit
-    //    compile libs.diffutil
+    //    implementation libs.MTRVA_Anno
+    //    implementation libs.MTRVA
+    //    annotationProcessor libs.MTRVA_Compiler
+    implementation libs.appcompat
+    implementation libs.itemDecoration
+    implementation libs.shimmer
+    implementation libs.recyclerview
+    implementation libs.rxandroid
+    implementation libs.rxjava
+    testImplementation libs.junit
+    //    implementation libs.diffutil
 }

@@ -1,12 +1,13 @@
 package com.crazysunj.sample.adapter;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.coorchice.library.SuperTextView;
 import com.crazysunj.sample.R;
+import com.crazysunj.sample.base.BaseViewHolder;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * author: sunjian

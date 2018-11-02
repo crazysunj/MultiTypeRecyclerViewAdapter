@@ -1,12 +1,13 @@
 package com.crazysunj.multityperecyclerviewadapter.testlevel;
 
-import android.support.v7.util.DiffUtil;
 import android.util.Log;
 
 import com.crazysunj.multitypeadapter.helper.AsynAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.R;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.DiffUtil;
 
 /**
  * author: sunjian

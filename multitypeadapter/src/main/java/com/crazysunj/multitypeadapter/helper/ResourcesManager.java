@@ -15,12 +15,13 @@
  */
 package com.crazysunj.multitypeadapter.helper;
 
-import android.support.annotation.IntRange;
-import android.support.annotation.LayoutRes;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 
 import java.util.Locale;
+
+import androidx.annotation.IntRange;
+import androidx.annotation.LayoutRes;
 
 import static com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper.DEFAULT_HEADER_LEVEL;
 

@@ -2,10 +2,10 @@ package com.crazysunj.multityperecyclerviewadapter;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -53,7 +53,7 @@ public class GridActivity extends AppCompatActivity {
         textView4 = (TextView) findViewById(R.id.text4);
         helper = new SimpleHelper();
         SimpleHelperAdapter adapter = new SimpleHelperAdapter(helper);
-        layout = new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false);
+        layout = new GridLayoutManager(this, 4, RecyclerView.VERTICAL, false);
 
         recyclerView.setLayoutManager(layout);
 //        recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));

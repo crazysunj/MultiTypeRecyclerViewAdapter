@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
  */
 
 public class MD5Util {
-    
+
     public static String stringToMD5(String string) {
         byte[] hash;
 
@@ -27,8 +27,9 @@ public class MD5Util {
 
         StringBuilder hex = new StringBuilder(hash.length * 2);
         for (byte b : hash) {
-            if ((b & 0xFF) < 0x10)
+            if ((b & 0xFF) < 0x10) {
                 hex.append("0");
+            }
             hex.append(Integer.toHexString(b & 0xFF));
         }
 

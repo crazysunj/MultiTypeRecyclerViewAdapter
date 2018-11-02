@@ -1,15 +1,18 @@
 package com.crazysunj.sample.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPropertyAnimatorListener;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.ViewPropertyAnimatorListener;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 /**
  * author: sunjian
@@ -43,6 +46,7 @@ public class FloatingActionButtonAnimBehavior extends FloatingActionButton.Behav
             // User scrolled down and the FAB is currently visible -> hide the FAB
 //            animateOut(child);
             child.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+                @SuppressLint("RestrictedApi")
                 @Override
                 public void onHidden(FloatingActionButton fab) {
                     fab.setVisibility(View.INVISIBLE);
@@ -59,14 +63,17 @@ public class FloatingActionButtonAnimBehavior extends FloatingActionButton.Behav
     private void animateOut(final FloatingActionButton button) {
         ViewCompat.animate(button).translationY(button.getHeight() + getMarginBottom(button)).setInterpolator(INTERPOLATOR).withLayer()
                 .setListener(new ViewPropertyAnimatorListener() {
+                    @Override
                     public void onAnimationStart(View view) {
                         mIsAnimatingOut = true;
                     }
 
+                    @Override
                     public void onAnimationCancel(View view) {
                         mIsAnimatingOut = false;
                     }
 
+                    @Override
                     public void onAnimationEnd(View view) {
                         mIsAnimatingOut = false;
                         view.setVisibility(View.INVISIBLE);
@@ -76,6 +83,7 @@ public class FloatingActionButtonAnimBehavior extends FloatingActionButton.Behav
     }
 
     // Same animation that FloatingActionButton.Behavior uses to show the FAB when the AppBarLayout enters
+    @SuppressLint("RestrictedApi")
     private void animateIn(FloatingActionButton button) {
         button.setVisibility(View.VISIBLE);
         ViewCompat.animate(button).translationY(0)

@@ -15,7 +15,7 @@
  */
 package com.crazysunj.multitypeadapter.helper;
 
-import android.support.v7.util.DiffUtil;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 

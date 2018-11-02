@@ -1,8 +1,8 @@
 package com.crazysunj.multityperecyclerviewadapter.testlevel;
 
-import android.support.v7.util.DiffUtil;
-
 import java.util.List;
+
+import androidx.recyclerview.widget.DiffUtil;
 
 /**
  * author: sunjian

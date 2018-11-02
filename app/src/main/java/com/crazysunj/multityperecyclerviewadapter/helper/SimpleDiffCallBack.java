@@ -15,9 +15,9 @@
  */
 package com.crazysunj.multityperecyclerviewadapter.helper;
 
-import android.support.v7.util.DiffUtil;
-
 import java.util.List;
+
+import androidx.recyclerview.widget.DiffUtil;
 
 /**
  * 关于新老数据比较的callback，暂时不提供出去

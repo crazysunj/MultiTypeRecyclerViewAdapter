@@ -1,10 +1,6 @@
 package com.crazysunj.multityperecyclerviewadapter;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -24,6 +20,11 @@ import com.crazysunj.multityperecyclerviewadapter.helper.SimpleRxHelperAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class Rx180Activity extends AppCompatActivity {
 

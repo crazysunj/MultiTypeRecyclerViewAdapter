@@ -15,13 +15,6 @@
  */
 package com.crazysunj.multitypeadapter.helper;
 
-import android.support.annotation.CallSuper;
-import android.support.annotation.IntDef;
-import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.util.ListUpdateCallback;
-import android.support.v7.widget.RecyclerView;
 import android.util.LruCache;
 import android.util.SparseArray;
 
@@ -40,6 +33,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.IntDef;
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListUpdateCallback;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 如果您发现哪里性能比较差或者说设计不合理，希望您能反馈给我

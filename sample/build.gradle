@@ -3,7 +3,6 @@ def configs = rootProject.ext.android //android配置
 def libs = rootProject.ext.dependencies //依赖库配置
 android {
     compileSdkVersion configs.compileSdkVersion
-    buildToolsVersion configs.buildToolsVersion
 
     defaultConfig {
         applicationId "com.crazysunj.sample"
@@ -12,7 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
     buildTypes {
@@ -29,25 +28,24 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile project(libs.MTRVA_File)
-    compile libs.design
-    compile libs.rxandroid
-    compile libs.rxjava
-    compile libs.BRVAH
-    compile libs.materialsearchview
-    compile libs.SuperTextView
-    compile libs.roundedimageview
-    testCompile libs.junit
+    implementation project(libs.MTRVA_File)
+    implementation libs.material
+    implementation libs.rxandroid
+    implementation libs.rxjava
+    implementation libs.materialsearchview
+    implementation libs.SuperTextView
+    implementation libs.roundedimageview
+    testImplementation libs.junit
 
-    compile libs.appcompatV7
-    compile libs.recyclerview
-//    compile libs.diffutil
-    compile libs.itemDecoration
-    compile libs.multidex
-    debugCompile libs.debugLeakcanary
-    releaseCompile libs.releaseLeakcanary
+//    implementation libs.diffutil
+    implementation libs.appcompat
+    implementation libs.recyclerview
+    implementation libs.itemDecoration
+    implementation libs.multidex
+    debugImplementation libs.debugLeakcanary
+    releaseImplementation libs.releaseLeakcanary
 }

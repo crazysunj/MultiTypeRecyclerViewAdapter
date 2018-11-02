@@ -3,15 +3,16 @@ package com.crazysunj.sample.adapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.coorchice.library.SuperTextView;
+import com.crazysunj.itemdecoration.grid.GridLayoutDividerItemDecoration;
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.helper.LoadingConfig;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multitypeadapter.util.IDUtil;
 import com.crazysunj.sample.R;
 import com.crazysunj.sample.adapter.helper.MyAdapterHelper;
-import com.crazysunj.sample.base.BaseAdapter;
+import com.crazysunj.sample.base.BaseHelperAdapter;
+import com.crazysunj.sample.base.BaseViewHolder;
 import com.crazysunj.sample.base.MutiTypeTitleEntity;
 import com.crazysunj.sample.constant.Constants;
 import com.crazysunj.sample.entity.CommonFooterEntity;
@@ -21,8 +22,15 @@ import com.crazysunj.sample.entity.ItemEntity2;
 import com.crazysunj.sample.entity.ItemEntity3;
 import com.crazysunj.sample.entity.ItemEntity4;
 import com.crazysunj.sample.entity.LoadingEntity;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
+
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * author: sunjian
@@ -30,15 +38,15 @@ import java.util.List;
  * description:
  */
 
-public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, MyAdapterHelper> {
+public class MyHelperAdapter extends BaseHelperAdapter<MutiTypeTitleEntity, BaseViewHolder, MyAdapterHelper> {
 
 
-    private CommonHeadEntity entity1Header = new CommonHeadEntity(ItemEntity1.HEADER_TITLE, ItemEntity1.TYPE_1);
-    private CommonHeadEntity entity2Header = new CommonHeadEntity(ItemEntity2.HEADER_TITLE, ItemEntity2.TYPE_2);
-    private CommonHeadEntity entity4Header = new CommonHeadEntity(ItemEntity4.HEADER_TITLE, ItemEntity4.TYPE_4);
-    private CommonFooterEntity entity1Footer = new CommonFooterEntity(Constants.EXPAND, ItemEntity1.TYPE_1);
+    private CommonHeadEntity entity1Header = new CommonHeadEntity(ItemEntity1.HEADER_TITLE, MyAdapterHelper.LEVEL_1);
+    private CommonHeadEntity entity2Header = new CommonHeadEntity(ItemEntity2.HEADER_TITLE, MyAdapterHelper.LEVEL_2);
+    private CommonHeadEntity entity4Header = new CommonHeadEntity(ItemEntity4.HEADER_TITLE, MyAdapterHelper.LEVEL_4);
+    private CommonFooterEntity entity1Footer = new CommonFooterEntity(Constants.EXPAND, MyAdapterHelper.LEVEL_1);
 
-    public MyAdapter() {
+    public MyHelperAdapter() {
         super(new MyAdapterHelper());
         mHelper.setLoadingAdapter(new LoadingEntityAdapter<MutiTypeTitleEntity>() {
             @Override
@@ -58,10 +66,12 @@ public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, 
         });
 
         mHelper.initGlobalLoadingConfig(new LoadingConfig.Builder()
+                .setLoading(MyAdapterHelper.LEVEL_HEAD, 1, false)
                 .setLoading(MyAdapterHelper.LEVEL_1, 2, true)
                 .setLoading(MyAdapterHelper.LEVEL_2, 1, true)
                 .setLoading(MyAdapterHelper.LEVEL_3, 1)
                 .setLoading(MyAdapterHelper.LEVEL_4, 1, true)
+                .setLoading(MyAdapterHelper.LEVEL_FOOT, 1, false)
                 .build());
     }
 
@@ -69,6 +79,9 @@ public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, 
     protected void convert(BaseViewHolder helper, MutiTypeTitleEntity item) {
         int itemType = item.getItemType();
         switch (itemType) {
+            case MyAdapterHelper.TYPE_HEAD:
+                renderHead(helper);
+                break;
             case ItemEntity1.TYPE_1:
                 renderEntity1(helper, (ItemEntity1) item);
                 break;
@@ -81,6 +94,9 @@ public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, 
             case ItemEntity4.TYPE_4:
                 renderEntity4(helper, (ItemEntity4) item);
                 break;
+            case MyAdapterHelper.TYPE_FOOT:
+                renderFoot(helper);
+                break;
             case MyAdapterHelper.LEVEL_1 - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
             case MyAdapterHelper.LEVEL_2 - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
             case MyAdapterHelper.LEVEL_3 - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
@@ -92,6 +108,33 @@ public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, 
             default:
                 break;
         }
+    }
+
+    private void renderFoot(BaseViewHolder helper) {
+        if (mContext instanceof FragmentActivity) {
+            FragmentActivity activity = (FragmentActivity) mContext;
+            TextView title = helper.getTextView(R.id.title);
+            title.setText("为您精选");
+            TabLayout tab = helper.getView(R.id.footer_tab, TabLayout.class);
+            ViewPager pager = helper.getView(R.id.footer_pager, ViewPager.class);
+            pager.setAdapter(new FooterVPAdapter(activity.getSupportFragmentManager()));
+            tab.setupWithViewPager(pager);
+        }
+    }
+
+    private void renderHead(BaseViewHolder helper) {
+        RecyclerView headRV = helper.getView(R.id.head_list, RecyclerView.class);
+        headRV.setLayoutManager(new GridLayoutManager(mContext, 4));
+        HeadAdapter headAdapter = new HeadAdapter();
+        headRV.addItemDecoration(new GridLayoutDividerItemDecoration.Builder()
+                .setLeftMargin(40)
+                .setTopMargin(30)
+                .setRightMargin(40)
+                .setBottomMargin(30)
+                .setDividerColor(ContextCompat.getColor(mContext, R.color.color_line))
+                .setDividerHeight(1)
+                .build());
+        headRV.setAdapter(headAdapter);
     }
 
     private void renderEntity1(BaseViewHolder helper, ItemEntity1 item) {
@@ -168,6 +211,46 @@ public class MyAdapter extends BaseAdapter<MutiTypeTitleEntity, BaseViewHolder, 
 
     public void notifyLoading() {
         mHelper.notifyLoadingChanged();
+    }
+
+    public void notifyHead() {
+        mHelper.notifyModuleDataChanged(new MutiTypeTitleEntity() {
+
+            @Override
+            public int getItemType() {
+                return MyAdapterHelper.TYPE_HEAD;
+            }
+
+            @Override
+            public long getId() {
+                return "banner图".hashCode();
+            }
+
+            @Override
+            public String getTitle() {
+                return "banner图";
+            }
+        }, MyAdapterHelper.LEVEL_HEAD);
+    }
+
+    public void notifyFoot() {
+        mHelper.notifyModuleDataChanged(new MutiTypeTitleEntity() {
+
+            @Override
+            public int getItemType() {
+                return MyAdapterHelper.TYPE_FOOT;
+            }
+
+            @Override
+            public long getId() {
+                return "底部Tab".hashCode();
+            }
+
+            @Override
+            public String getTitle() {
+                return "底部Tab";
+            }
+        }, MyAdapterHelper.LEVEL_FOOT);
     }
 
     public void notifyType1(List<ItemEntity1> itemEntity1s) {

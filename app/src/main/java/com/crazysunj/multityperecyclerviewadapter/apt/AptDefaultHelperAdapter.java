@@ -1,7 +1,5 @@
 package com.crazysunj.multityperecyclerviewadapter.apt;
 
-import android.support.annotation.NonNull;
-
 import com.crazysunj.multitypeadapter.annotation.AdapterHelper;
 import com.crazysunj.multitypeadapter.annotation.BindDefaultLevel;
 import com.crazysunj.multityperecyclerviewadapter.R;
@@ -9,6 +7,8 @@ import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.helper.BaseHelperAdapter;
 import com.crazysunj.multityperecyclerviewadapter.helper.BaseViewHolder;
 import com.crazysunj.multityperecyclerviewadapter.helper.ShimmerViewHolder;
+
+import androidx.annotation.NonNull;
 
 /**
  * description

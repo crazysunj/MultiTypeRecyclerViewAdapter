@@ -1,10 +1,7 @@
 package com.crazysunj.sample.adapter.helper;
 
-import android.support.v7.util.DiffUtil;
-
 import com.crazysunj.multitypeadapter.helper.AsynAdapterHelper;
 import com.crazysunj.sample.R;
-import com.crazysunj.sample.adapter.MyAdapter;
 import com.crazysunj.sample.base.MutiTypeTitleEntity;
 import com.crazysunj.sample.entity.ItemEntity1;
 import com.crazysunj.sample.entity.ItemEntity2;
@@ -12,6 +9,8 @@ import com.crazysunj.sample.entity.ItemEntity3;
 import com.crazysunj.sample.entity.ItemEntity4;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.DiffUtil;
 
 /**
  * author: sunjian
@@ -21,10 +20,14 @@ import java.util.List;
 
 public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity> {
 
-    public static final int LEVEL_1 = 0;
-    public static final int LEVEL_2 = 1;
-    public static final int LEVEL_3 = 2;
-    public static final int LEVEL_4 = 3;
+    public static final int LEVEL_HEAD = 0;
+    public static final int LEVEL_1 = 1;
+    public static final int LEVEL_2 = 2;
+    public static final int LEVEL_3 = 3;
+    public static final int LEVEL_4 = 4;
+    public static final int LEVEL_FOOT = 5;
+    public static final int TYPE_HEAD = 4;
+    public static final int TYPE_FOOT = 5;
 
     public MyAdapterHelper() {
         super(null);
@@ -32,6 +35,13 @@ public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity> {
 
     @Override
     protected void registerModule() {
+
+        registerModule(LEVEL_HEAD)
+                .type(TYPE_HEAD)
+                .layoutResId(R.layout.head_home)
+                .loading()
+                .loadingLayoutResId(R.layout.layout_loading)
+                .register();
 
         registerModule(LEVEL_1)
                 .type(ItemEntity1.TYPE_1)
@@ -69,12 +79,13 @@ public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity> {
                 .loadingHeaderResId(R.layout.layout_loading_header)
                 .loadingLayoutResId(R.layout.layout_loading)
                 .register();
-    }
 
-    @Override
-    protected int getPreDataCount() {
-        final MyAdapter adapter = getBindAdapter();
-        return adapter.getHeaderLayoutCount();
+        registerModule(LEVEL_FOOT)
+                .type(TYPE_FOOT)
+                .layoutResId(R.layout.footer_home)
+                .loading()
+                .loadingLayoutResId(R.layout.layout_loading)
+                .register();
     }
 
     @Override

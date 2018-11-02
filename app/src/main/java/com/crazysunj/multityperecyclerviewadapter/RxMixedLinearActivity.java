@@ -1,10 +1,6 @@
 package com.crazysunj.multityperecyclerviewadapter;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Toast;
@@ -26,6 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RxMixedLinearActivity extends AppCompatActivity {
 
@@ -139,7 +140,6 @@ public class RxMixedLinearActivity extends AppCompatActivity {
     }
 
     public void click6(View view) {
-
         MultiHeaderEntity addItem = getAddItem();
         helper.addData(addItem);
         Toast.makeText(this, "添加的数据Type为" + addItem.getItemType(), Toast.LENGTH_SHORT).show();

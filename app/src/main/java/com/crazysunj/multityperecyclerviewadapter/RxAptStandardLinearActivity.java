@@ -1,10 +1,10 @@
 package com.crazysunj.multityperecyclerviewadapter;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.TextView;
@@ -224,12 +224,10 @@ public class RxAptStandardLinearActivity extends AppCompatActivity {
     }
 
     public void click5(View view) {
-
         helper.clearModule(0);
     }
 
     public void click6(View view) {
-
         helper.clearModule(1);
     }
 
@@ -239,12 +237,10 @@ public class RxAptStandardLinearActivity extends AppCompatActivity {
     }
 
     public void click8(View view) {
-
         helper.clearModule(3);
     }
 
     public void click9(View view) {
-
         helper.clear();
     }
 }

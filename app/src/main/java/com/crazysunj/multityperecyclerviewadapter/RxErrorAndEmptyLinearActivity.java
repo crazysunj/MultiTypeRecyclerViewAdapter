@@ -1,9 +1,11 @@
 package com.crazysunj.multityperecyclerviewadapter;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.TextView;
 
@@ -109,18 +111,14 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
     }
 
     public void click1(View view) {
-
-
         helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_FIRST, 1);
         textView1.postDelayed(() -> {
             textView1.setText(String.format(Locale.getDefault(), "类型1的数量：%d", 1));
             helper.notifyModuleDataAndHeaderChanged(new FirstItem("我是新刷新的条目" + refreshFirstCount, System.currentTimeMillis()), new HeaderFirstItem(String.format(Locale.getDefault(), "我是第一种类型的头,点击次数：%d", refreshFirstCount++), IDUtil.getId()), SimpleHelper.LEVEL_FIRST);
         }, 2000);
-
     }
 
     public void click2(View view) {
-
         helper.notifyLoadingDataChanged(SimpleHelper.LEVEL_SENCOND, 2);
         textView2.postDelayed(() -> helper.notifyModuleErrorChanged(SimpleHelper.LEVEL_SENCOND), 2000);
 
@@ -129,13 +127,11 @@ public class RxErrorAndEmptyLinearActivity extends AppCompatActivity {
     private int refreshFirstCount = 0;
 
     public void click3(View view) {
-
         helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_THIRD, 1);
         textView3.postDelayed(() -> helper.notifyModuleEmptyChanged(emptyEntity, SimpleHelper.LEVEL_THIRD), 2000);
     }
 
     public void click4(View view) {
-
         helper.notifyLoadingDataAndHeaderChanged(SimpleHelper.LEVEL_FOURTH, 3);
         textView4.postDelayed(() -> helper.notifyModuleErrorChanged(errorfourthEntity, SimpleHelper.LEVEL_FOURTH), 2000);
     }

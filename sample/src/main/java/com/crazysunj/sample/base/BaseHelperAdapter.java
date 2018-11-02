@@ -5,42 +5,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
+import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * author: sunjian
- * created on: 2018/9/25 上午10:58
- * description:
+ * description
+ * <p>
+ * Created by sunjian on 2017/7/5.
  */
-public abstract class BaseAdapter<T extends Object, VH extends BaseViewHolder> extends RecyclerView.Adapter<VH> {
+public abstract class BaseHelperAdapter<T extends MultiTypeEntity, VH extends BaseViewHolder, H extends RecyclerViewAdapterHelper<T>> extends RecyclerView.Adapter<VH> {
 
     protected Context mContext;
     protected LayoutInflater mLayoutInflater;
     protected List<T> mData;
-    private int mLayoutId;
+    protected H mHelper;
 
-    public BaseAdapter(@LayoutRes int layoutId) {
-        this(null, layoutId);
+    public BaseHelperAdapter(H helper) {
+        mData = helper.getData();
+        helper.bindAdapter(this);
+        mHelper = helper;
     }
 
-    public BaseAdapter(List<T> data, @LayoutRes int layoutId) {
-        mData = data == null ? new ArrayList<>() : data;
-        mLayoutId = layoutId;
-    }
-
-    @NonNull
     @Override
-    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return createBaseViewHolder(parent, mLayoutId);
+    public int getItemViewType(int position) {
+        return mHelper.getItemViewType(position);
     }
 
     @Override
@@ -48,8 +45,12 @@ public abstract class BaseAdapter<T extends Object, VH extends BaseViewHolder> e
         convert(holder, mData.get(position));
     }
 
-    protected void convert(VH holder, T item) {
+    protected abstract void convert(VH holder, T item);
 
+    @NonNull
+    @Override
+    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return createBaseViewHolder(parent, mHelper.getLayoutId(viewType));
     }
 
     @Override

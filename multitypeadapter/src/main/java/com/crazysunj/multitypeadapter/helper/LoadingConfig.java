@@ -15,7 +15,7 @@
  */
 package com.crazysunj.multitypeadapter.helper;
 
-import android.support.annotation.IntRange;
+import androidx.annotation.IntRange;
 import android.util.SparseArray;
 
 /**
