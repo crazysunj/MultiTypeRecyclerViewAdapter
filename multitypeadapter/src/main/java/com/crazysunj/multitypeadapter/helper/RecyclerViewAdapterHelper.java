@@ -1,17 +1,17 @@
-/**
- * Copyright 2017 Sun Jian
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+/*
+  Copyright 2017 Sun Jian
+  <p>
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  <p>
+  http://www.apache.org/licenses/LICENSE-2.0
+  <p>
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
  */
 package com.crazysunj.multitypeadapter.helper;
 
@@ -43,6 +43,9 @@ import androidx.recyclerview.widget.ListUpdateCallback;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
+ * @author: sunjian
+ * created on: 2017/5/4
+ * description:
  * 如果您发现哪里性能比较差或者说设计不合理，希望您能反馈给我
  * email:twsunj@gmail.com
  * 博客有联系方式{@link <a href="http://crazysunj.com/">博客</a>}
@@ -54,7 +57,6 @@ import androidx.recyclerview.widget.RecyclerView;
  * error类型 [-4000,-3000)
  * empty类型 [-5000,-4000)
  * footer类型 [-6000,-5000)
- * Created by sunjian on 2017/5/4.
  */
 public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
 
@@ -265,7 +267,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         return (A) mAdapter;
     }
 
-    private LoadingEntityAdapter<T> mLoadingEntityAdapter;//加载实体类适配器
+    /**
+     * 加载实体类适配器
+     */
+    private LoadingEntityAdapter<T> mLoadingEntityAdapter;
 
     /**
      * 设置加载实体类适配器
@@ -276,7 +281,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         mLoadingEntityAdapter = adapter;
     }
 
-    private EmptyEntityAdapter<T> mEmptyEntityAdapter;//空实体类适配器
+    /**
+     * 空实体类适配器
+     */
+    private EmptyEntityAdapter<T> mEmptyEntityAdapter;
 
     /**
      * 设置空实体类适配器
@@ -287,7 +295,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         mEmptyEntityAdapter = adapter;
     }
 
-    private ErrorEntityAdapter<T> mErrorEntityAdapter;//错误实体类适配器
+    /**
+     * 错误实体类适配器
+     */
+    private ErrorEntityAdapter<T> mErrorEntityAdapter;
 
     /**
      * 设置错误实体类适配器
