@@ -31,6 +31,34 @@ public class TestLevelAdapter extends BaseHelperAdapter<MultiTypeTitleEntity, Ba
     public static final int TYPE_LEVEL_THIRD_HEADER = TestLevelAdapterHelper.LEVEL_THIRD - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER;
     public static final int TYPE_LEVEL_THIRD_FOOTER = TestLevelAdapterHelper.LEVEL_THIRD - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER;
 
+    public TestLevelAdapter(TestLevelAdapterHelper helper) {
+        super(helper);
+        mFirstItemConvert = new LevelFirstItemConvert();
+        mSecondItemConvert = new LevelSecondItemConvert();
+        mThirdItemConvert = new LevelThirdItemConvert();
+        mHelper.setLoadingAdapter(new LoadingEntityAdapter<MultiTypeTitleEntity>() {
+            @Override
+            public MultiTypeTitleEntity createLoadingEntity(int type, int level) {
+                return new LevelLoadingItem(type);
+            }
+
+            @Override
+            public MultiTypeTitleEntity createLoadingHeaderEntity(int type, int level) {
+                return new LevelLoadingItem(type);
+            }
+
+            @Override
+            public void bindLoadingEntity(MultiTypeTitleEntity loadingEntity, int position) {
+
+            }
+        });
+        mHelper.initGlobalLoadingConfig(new LoadingConfig.Builder()
+                .setLoading(TestLevelAdapterHelper.LEVEL_FIRST, 3, true)
+                .setLoading(TestLevelAdapterHelper.LEVEL_SECOND, 2, true)
+                .setLoading(TestLevelAdapterHelper.LEVEL_THIRD, 2, true)
+                .build());
+    }
+
     public TestLevelAdapter(List<MultiTypeTitleEntity> data) {
         super(new TestLevelAdapterHelper(data));
         mFirstItemConvert = new LevelFirstItemConvert();

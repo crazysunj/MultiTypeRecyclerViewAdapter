@@ -72,4 +72,8 @@ public class MainActivity extends AppCompatActivity {
     public void click17(View view) {
         startActivity(new Intent(this, TestLevelActivity.class));
     }
+
+    public void click18(View view) {
+        startActivity(new Intent(this, Refresh240Activity.class));
+    }
 }

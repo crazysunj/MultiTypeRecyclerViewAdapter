@@ -135,38 +135,39 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * 默认header的level
      */
     static final int DEFAULT_HEADER_LEVEL = -1;
+    static final int REFRESH_NONE = 0x00;
     /**
      * 只刷新header 001
      */
-    private static final int REFRESH_HEADER = 1;
+    static final int REFRESH_HEADER = 0x01;
     /**
      * 只刷新fooer 010
      */
-    private static final int REFRESH_FOOTER = 2;
+    static final int REFRESH_FOOTER = 0x02;
     /**
      * 同时刷新header和footer 011
      */
-    private static final int REFRESH_HEADER_FOOTER = 3;
+    private static final int REFRESH_HEADER_FOOTER = 0x03;
     /**
      * 只刷新data 100
      */
-    private static final int REFRESH_DATA = 4;
+    static final int REFRESH_DATA = 0x04;
     /**
      * 同时刷新data和header 101
      */
-    private static final int REFRESH_HEADER_DATA = 5;
+    private static final int REFRESH_HEADER_DATA = 0x05;
     /**
      * 同时刷新data和footer 110
      */
-    private static final int REFRESH_FOOTER_DATA = 6;
+    private static final int REFRESH_FOOTER_DATA = 0x06;
     /**
      * 同时刷新header,data,footer 111
      */
-    private static final int REFRESH_HEADER_FOOTER_DATA = 7;
+    private static final int REFRESH_HEADER_FOOTER_DATA = 0x07;
     /**
      * 刷新全部
      */
-    private static final int REFRESH_ALL = 8;
+    private static final int REFRESH_ALL = 0x08;
 
     /**
      * 拦截刷新，主要防止手快
@@ -484,39 +485,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     }
 
     /**
-     * 可使用{@link #addData(int, List)}和{@link #getLevelPositionStart(int)}替代
-     *
-     * @param data  data
-     * @param level level
-     */
-    @Deprecated
-    public void notifyModuleDataInserted(@NonNull T data, int level) {
-        notifyModuleDataInserted(Collections.singletonList(data), level);
-    }
-
-    /**
-     * 可使用{@link #addData(int, List)}和{@link #getLevelPositionStart(int)}替代
-     *
-     * @param data  data
-     * @param level level
-     */
-    @Deprecated
-    public void notifyModuleDataInserted(@NonNull List<? extends T> data, int level) {
-        LevelData<T> levelData = mLevelOldData.get(level);
-        if (levelData == null) {
-            levelData = new LevelData<>(new ArrayList<T>(), null, null);
-            mLevelOldData.put(level, levelData);
-        }
-        List<T> list = levelData.getData();
-        if (list == null) {
-            list = new ArrayList<>();
-            levelData.setData(list);
-        }
-        list.addAll(data);
-        notifyModuleChanged(list, levelData.getHeader(), levelData.getFooter(), level, REFRESH_HEADER_FOOTER_DATA);
-    }
-
-    /**
      * 只刷新data
      *
      * @param data  data
@@ -561,7 +529,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     public void notifyModuleHeaderAndFooterChanged(@NonNull T header, @NonNull T footer, int level) {
         notifyModuleChanged(null, header, footer, level, REFRESH_HEADER_FOOTER);
     }
-
 
     /**
      * 同时刷新data和header
@@ -611,22 +578,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
 
     /**
      * 同时刷新header、data和fooer
-     * 该方法已过时
-     * 注意{@link #notifyModuleDataAndHeaderAndFooterChanged(MultiTypeEntity, MultiTypeEntity, MultiTypeEntity, int)}，data参数靠前
-     *
-     * @param header header
-     * @param data   data
-     * @param footer fooer
-     * @param level  level
-     */
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public void notifyModuleDataAndHeaderAndFooterChanged(@NonNull T header, @NonNull List<? extends T> data, @NonNull T footer, int level) {
-        notifyModuleChanged((List<T>) data, header, footer, level, REFRESH_HEADER_FOOTER_DATA);
-    }
-
-    /**
-     * 同时刷新header、data和fooer
      *
      * @param header header
      * @param data   data
@@ -641,15 +592,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     /**
      * 同时刷新header、data和fooer
      * 2.1.0版本调整data参数靠前，2.1.0之前header靠前，多人反馈参数不和谐问题
-     * 使用过时醒目提醒
      * 这里对2.1.0版本之前的做了兼容，但希望大家能调整过来
      *
-     * @param header header
      * @param data   data
+     * @param header header
      * @param footer fooer
      * @param level  level
      */
-    @Deprecated
     public void notifyModuleDataAndHeaderAndFooterChanged(@NonNull T data, @NonNull T header, @NonNull T footer, int level) {
         if (data.getItemType() < 0) {
             T temp = data;
@@ -773,7 +722,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
 
     /**
      * 全局刷新
+     * 切记，该方法不能用于改变集合之后的刷新，只能用于某item修改
+     * 标记为过时，请直接调用{@link RecyclerView.Adapter#notifyDataSetChanged()}
      */
+    @Deprecated
     public void notifyDataSetChanged() {
         checkAdapterBind();
         if (!mIsCanRefresh) {
@@ -789,7 +741,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * 直接操作数据后的全局刷新方法
      * 该方法只支持item的改变，同{@link #setData(int, MultiTypeEntity)}
      * 注意点：如果notifyModule调用过快，Adapter将不会即时更新，可调用{@link #notifyDataChanged(MultiTypeEntity)}解决此问题
+     * 标记为过时，请直接调用{@link RecyclerView.Adapter#notifyDataSetChanged()}
      */
+    @Deprecated
     public void notifyDataChanged() {
         checkAdapterBind();
         if (!mIsCanRefresh) {
@@ -804,9 +758,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     /**
      * 直接操作单个数据后的刷新方法
      * 该方法只支持item的改变，同{@link #setData(int, MultiTypeEntity)}
+     * 标记为过时，请用{@link #setData(int, MultiTypeEntity)}替代
      *
      * @param data 数据，支持header,data,footer
      */
+    @Deprecated
     public void notifyDataChanged(@NonNull T data) {
         int position = mData.indexOf(data);
         if (position < 0) {
@@ -1324,9 +1280,22 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             T t = mData.get(position);
             int itemType = t.getItemType();
             final int level = getListLevel(data);
-            if (level != getLevel(itemType)) {
-                onEnd();
-                throw new DataException("the data's level can't be add");
+            int currentLevel = getLevel(itemType);
+            if (level != currentLevel) {
+                if (position - 1 >= 0) {
+                    final int preLevel = getLevel(mData.get(position - 1).getItemType());
+                    if (level < preLevel || level > currentLevel) {
+                        onEnd();
+                        throw new DataException("the data's level can't be add");
+                    } else {
+                        if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
+                            position -= 1;
+                        }
+                    }
+                } else {
+                    onEnd();
+                    throw new DataException("the data's level can't be add");
+                }
             }
             LevelData<T> levelData = mLevelOldData.get(level);
             if (levelData == null) {
@@ -1614,6 +1583,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param refreshType 类型
      */
     protected void notifyModuleChanged(List<T> newData, T newHeader, T newFooter, int level, int refreshType) {
+        if (refreshType == REFRESH_NONE) {
+            return;
+        }
 
         boolean offer = mRefreshQueue.offer(new HandleBase<>(newData, newHeader, newFooter, level, refreshType));
 

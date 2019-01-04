@@ -7,7 +7,7 @@
 
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/mtrva_logo.png)
 
-一个专注于RecyclerView优雅刷新(接管资源和数据源来代理进行数据处理)、高灵活、低耦合、健壮性以及高效性的MVP模式库，支持大多数Adapter
+一个专注于RecyclerView优雅刷新(接管资源和数据源来代理进行数据处理)、高灵活、低耦合、健壮性以及高效性的轻量级MVP模式库，支持大多数Adapter
 
 ## 架构
 

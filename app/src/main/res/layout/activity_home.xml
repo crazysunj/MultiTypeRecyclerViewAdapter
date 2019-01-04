@@ -89,11 +89,18 @@
             android:layout_height="wrap_content"
             android:onClick="click16"
             android:text="切换各种列表级type" />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="click17"
             android:text="2.0版本，直接操作数据后的刷新" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="click18"
+            android:text="2.4.0版本，新刷新工具" />
 
     </LinearLayout>
 

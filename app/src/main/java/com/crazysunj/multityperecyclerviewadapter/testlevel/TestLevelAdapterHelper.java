@@ -21,6 +21,10 @@ public class TestLevelAdapterHelper extends AsynAdapterHelper<MultiTypeTitleEnti
     public static final int LEVEL_SECOND = 1;
     public static final int LEVEL_THIRD = 2;
 
+    public TestLevelAdapterHelper() {
+        super(null);
+    }
+
     public TestLevelAdapterHelper(List<MultiTypeTitleEntity> data) {
         super(data);
     }

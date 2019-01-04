@@ -32,7 +32,8 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".Rx180Activity" />
         <activity android:name=".switchtype.SwitchTypeActivity" />
-        <activity android:name=".TestLevelActivity"/>
+        <activity android:name=".TestLevelActivity" />
+        <activity android:name=".Refresh240Activity"></activity>
     </application>
 
 </manifest>

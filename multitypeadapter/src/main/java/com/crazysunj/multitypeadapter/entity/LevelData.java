@@ -15,6 +15,7 @@
  */
 package com.crazysunj.multitypeadapter.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,13 +31,13 @@ public final class LevelData<T> {
     private T footer;
 
     public LevelData(List<T> data, T header, T footer) {
-        this.data = data;
+        this.data = data == null ? null : new ArrayList<>(data);
         this.header = header;
         this.footer = footer;
     }
 
     public void setData(List<T> data) {
-        this.data = data;
+        this.data = data == null ? null : new ArrayList<>(data);
     }
 
     public List<T> getData() {
