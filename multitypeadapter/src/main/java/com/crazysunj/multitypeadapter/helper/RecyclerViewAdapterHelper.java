@@ -387,19 +387,16 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             if (itemType >= -LOADING_DATA_TYPE_DIFFER && itemType < -HEADER_TYPE_DIFFER) {
                 level = getLevel(itemType);
                 LevelData<T> levelData = mLevelOldData.get(level);
-                List<T> data;
                 if (levelData == null) {
-                    data = new ArrayList<>();
-                    levelData = new LevelData<>(data, null, null);
+                    levelData = new LevelData<>(new ArrayList<T>(), null, null);
                     mLevelOldData.put(level, levelData);
                 } else {
-                    data = levelData.getData();
+                    List<T> data = levelData.getData();
                     if (data == null) {
-                        data = new ArrayList<>();
-                        levelData.setData(data);
+                        levelData.setData(new ArrayList<T>());
                     }
                 }
-                data.add(entity);
+                levelData.getData().add(entity);
             } else if (itemType >= -LOADING_HEADER_TYPE_DIFFER && itemType < -LOADING_DATA_TYPE_DIFFER) {
                 level = getLevel(itemType);
                 LevelData<T> levelData = mLevelOldData.get(level);
@@ -414,7 +411,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             }
         }
         mNewData.addAll(mGlobalLoadingEntitys);
-
         notifyModuleChanged(mNewData, null, null, REFRESH_TYPE_LOAD_ALL, REFRESH_ALL);
     }
 
@@ -716,6 +712,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         notifyDataSetChanged(newData, mCurrentMode);
     }
 
+    /**
+     * 该方法可以用来扩展整个页面切换空页面、错误页面等
+     * 刷新全部数据
+     *
+     * @param data 传入数据
+     */
     public void notifyDataSetChanged(@NonNull T data) {
         notifyDataSetChanged(Collections.singletonList(data));
     }
@@ -974,10 +976,32 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         if (mCurrentMode == MODE_STANDARD) {
             T t = mData.get(position);
             int itemType = t.getItemType();
-            final int level = getLevel(itemType);
-            if (level != getLevel(data.getItemType())) {
-                onEnd();
-                throw new DataException("the data's level can't be add");
+            final int level = getLevel(data.getItemType());
+            final int currentLevel = getLevel(itemType);
+            if (level != currentLevel) {
+                if (position - 1 >= 0) {
+                    final int preLevel = getLevel(mData.get(position - 1).getItemType());
+                    if (level < preLevel || level > currentLevel) {
+                        onEnd();
+                        throw new DataException("the data's level can't be add");
+                    } else {
+                        if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
+                            position -= 1;
+                        }
+                    }
+                } else if (position == 0) {
+                    if (level > currentLevel) {
+                        onEnd();
+                        throw new DataException("the data's level can't be add");
+                    } else {
+                        if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
+                            position -= 1;
+                        }
+                    }
+                } else {
+                    onEnd();
+                    throw new DataException("the data's level can't be add");
+                }
             }
             LevelData<T> levelData = mLevelOldData.get(level);
             if (levelData == null) {
@@ -987,8 +1011,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             }
             List<T> list = levelData.getData();
             if (list == null) {
-                list = new ArrayList<>();
-                levelData.setData(list);
+                levelData.setData(new ArrayList<T>());
+                list = levelData.getData();
             }
             int pos;
             if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
@@ -1065,8 +1089,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             }
             List<T> list = levelData.getData();
             if (list == null) {
-                list = new ArrayList<>();
-                levelData.setData(list);
+                levelData.setData(new ArrayList<T>());
+                list = levelData.getData();
             }
             list.add(data);
             mData.add(position, data);
@@ -1292,6 +1316,15 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
                             position -= 1;
                         }
                     }
+                } else if (position == 0) {
+                    if (level > currentLevel) {
+                        onEnd();
+                        throw new DataException("the data's level can't be add");
+                    } else {
+                        if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
+                            position -= 1;
+                        }
+                    }
                 } else {
                     onEnd();
                     throw new DataException("the data's level can't be add");
@@ -1305,8 +1338,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             }
             List<T> list = levelData.getData();
             if (list == null) {
-                list = new ArrayList<>();
-                levelData.setData(list);
+                levelData.setData(new ArrayList<T>());
+                list = levelData.getData();
             }
 
             int pos;
@@ -1387,8 +1420,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             }
             List<T> list = levelData.getData();
             if (list == null) {
-                list = new ArrayList<>();
-                levelData.setData(list);
+                levelData.setData(new ArrayList<T>());
+                list = levelData.getData();
             }
             list.addAll(newData);
             mData.addAll(position, newData);

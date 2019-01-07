@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical"
-    android:paddingBottom="30dp"
-    android:paddingTop="40dp">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/error_text"
+
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sorry，服务器出错" />
+        android:src="@mipmap/empty" />
+
 
     <TextView
-        android:id="@+id/retry"
+        android:id="@+id/empty_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:background="#000"
-        android:padding="10dp"
-        android:text="点击重试"
-        android:textColor="#fff" />
-
+        android:text="全局空页面"
+        android:textColor="#fff"
+        android:textSize="22sp" />
 </LinearLayout>

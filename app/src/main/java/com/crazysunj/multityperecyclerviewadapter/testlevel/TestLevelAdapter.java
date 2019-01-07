@@ -6,6 +6,7 @@ import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multitypeadapter.helper.LoadingConfig;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
+import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.helper.BaseHelperAdapter;
 import com.crazysunj.multityperecyclerviewadapter.helper.BaseViewHolder;
 
@@ -27,7 +28,9 @@ public class TestLevelAdapter extends BaseHelperAdapter<MultiTypeTitleEntity, Ba
 
     public static final int TYPE_LEVEL_FIRST_HEADER = TestLevelAdapterHelper.LEVEL_FIRST - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER;
     public static final int TYPE_LEVEL_FIRST_FOOTER = TestLevelAdapterHelper.LEVEL_FIRST - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER;
+    public static final int TYPE_LEVEL_FIRST_EMPTY = TestLevelAdapterHelper.LEVEL_FIRST - RecyclerViewAdapterHelper.EMPTY_TYPE_DIFFER;
     public static final int TYPE_LEVEL_SECOND_HEADER = TestLevelAdapterHelper.LEVEL_SECOND - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER;
+    public static final int TYPE_LEVEL_SECOND_ERROR = TestLevelAdapterHelper.LEVEL_SECOND - RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER;
     public static final int TYPE_LEVEL_THIRD_HEADER = TestLevelAdapterHelper.LEVEL_THIRD - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER;
     public static final int TYPE_LEVEL_THIRD_FOOTER = TestLevelAdapterHelper.LEVEL_THIRD - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER;
 
@@ -95,10 +98,12 @@ public class TestLevelAdapter extends BaseHelperAdapter<MultiTypeTitleEntity, Ba
             case TypeTwoItem.TYPE_TWO:
             case TYPE_LEVEL_FIRST_HEADER:
             case TYPE_LEVEL_FIRST_FOOTER:
+            case TYPE_LEVEL_FIRST_EMPTY:
                 mFirstItemConvert.convert(holder, item);
                 break;
             case TypeThreeItem.TYPE_THREE:
             case TYPE_LEVEL_SECOND_HEADER:
+            case TYPE_LEVEL_SECOND_ERROR:
                 mSecondItemConvert.convert(holder, item);
                 break;
             case TypeFourItem.TYPE_FOUR:
@@ -106,6 +111,9 @@ public class TestLevelAdapter extends BaseHelperAdapter<MultiTypeTitleEntity, Ba
             case TYPE_LEVEL_THIRD_HEADER:
             case TYPE_LEVEL_THIRD_FOOTER:
                 mThirdItemConvert.convert(holder, item);
+                break;
+            case TypeEmptyAllItem.TYPE_EMPTY:
+                holder.getTextView(R.id.empty_title).setText(item.getMsg());
                 break;
             default:
                 break;

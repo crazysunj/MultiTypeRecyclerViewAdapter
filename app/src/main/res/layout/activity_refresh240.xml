@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/data_list"
+        app:layout_constraintBottom_toTopOf="@+id/menu_two"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -38,6 +38,83 @@
             android:text="刷新level2" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/menu_two"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/menu_three"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/menu_one">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="click3"
+            android:text="level0空页面" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="click4"
+            android:text="level1错误页面" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="click5"
+            android:text="刷新level2加载页面" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/menu_three"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/menu_four"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/menu_two">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="click6"
+            android:text="清空数据" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="click7"
+            android:text="all(list)" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="click8"
+            android:text="all(data)" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/menu_four"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="click9"
+        android:text="1.add(6个)2.add(0,1个)3.add(0,5个)4.remove(0)5.remove(最后两个)6.修改第一个"
+        app:layout_constraintBottom_toTopOf="@+id/data_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/menu_three" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/data_list"
         android:layout_width="match_parent"
@@ -45,7 +122,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/menu_one"
+        app:layout_constraintTop_toBottomOf="@id/menu_four"
         app:layout_constraintVertical_weight="1">
 
     </androidx.recyclerview.widget.RecyclerView>

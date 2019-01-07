@@ -20,6 +20,7 @@ public class TestLevelAdapterHelper extends AsynAdapterHelper<MultiTypeTitleEnti
     public static final int LEVEL_FIRST = 0;
     public static final int LEVEL_SECOND = 1;
     public static final int LEVEL_THIRD = 2;
+    public static final int LEVEL_EMPTY_ALL = 3;
 
     public TestLevelAdapterHelper() {
         super(null);
@@ -41,6 +42,8 @@ public class TestLevelAdapterHelper extends AsynAdapterHelper<MultiTypeTitleEnti
                 .loading()
                 .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
                 .loadingLayoutResId(R.layout.layout_default_shimmer_view)
+                .empty()
+                .emptyLayoutResId(R.layout.layout_empty)
                 .register();
 
         registerModule(LEVEL_SECOND)
@@ -50,6 +53,8 @@ public class TestLevelAdapterHelper extends AsynAdapterHelper<MultiTypeTitleEnti
                 .loading()
                 .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
                 .loadingLayoutResId(R.layout.layout_default_shimmer_view)
+                .error()
+                .errorLayoutResId(R.layout.layout_error)
                 .register();
 
         registerModule(LEVEL_THIRD)
@@ -62,6 +67,11 @@ public class TestLevelAdapterHelper extends AsynAdapterHelper<MultiTypeTitleEnti
                 .loading()
                 .loadingHeaderResId(R.layout.layout_default_shimmer_header_view)
                 .loadingLayoutResId(R.layout.layout_default_shimmer_view)
+                .register();
+
+        registerModule(LEVEL_EMPTY_ALL)
+                .type(TypeEmptyAllItem.TYPE_EMPTY)
+                .layoutResId(R.layout.layout_empty_all)
                 .register();
     }
 

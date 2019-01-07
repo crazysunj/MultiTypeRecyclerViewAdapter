@@ -27,9 +27,16 @@ public class LevelFirstItemConvert implements ItemConvert<MultiTypeTitleEntity, 
             case TestLevelAdapter.TYPE_LEVEL_FIRST_FOOTER:
                 renderLevelFirstFooter(helper, (LevelFooterItem) item);
                 break;
+            case TestLevelAdapter.TYPE_LEVEL_FIRST_EMPTY:
+                renderLevelFirstEmpty(helper, item);
+                break;
             default:
                 break;
         }
+    }
+
+    private void renderLevelFirstEmpty(BaseViewHolder helper, MultiTypeTitleEntity item) {
+        helper.getTextView(R.id.empty_title).setText(item.getMsg());
     }
 
     private void renderLevelFirstFooter(BaseViewHolder helper, LevelFooterItem item) {

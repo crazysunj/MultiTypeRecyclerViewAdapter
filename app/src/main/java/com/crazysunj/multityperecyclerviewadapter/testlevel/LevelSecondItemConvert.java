@@ -1,6 +1,9 @@
 package com.crazysunj.multityperecyclerviewadapter.testlevel;
 
+import android.content.Context;
+
 import com.crazysunj.multityperecyclerviewadapter.R;
+import com.crazysunj.multityperecyclerviewadapter.Refresh240Activity;
 import com.crazysunj.multityperecyclerviewadapter.helper.BaseViewHolder;
 
 /**
@@ -21,9 +24,22 @@ public class LevelSecondItemConvert implements ItemConvert<MultiTypeTitleEntity,
             case TestLevelAdapter.TYPE_LEVEL_SECOND_HEADER:
                 renderLevelSecondHeader(helper, (LevelTitleItem) item);
                 break;
+            case TestLevelAdapter.TYPE_LEVEL_SECOND_ERROR:
+                renderLevelSecondError(helper, item);
+                break;
             default:
                 break;
         }
+    }
+
+    private void renderLevelSecondError(BaseViewHolder helper, MultiTypeTitleEntity item) {
+        helper.getTextView(R.id.error_text).setText(item.getMsg());
+        helper.getView(R.id.retry).setOnClickListener(v -> {
+            Context context = v.getContext();
+            if (context instanceof Refresh240Activity) {
+                ((Refresh240Activity) context).click1(v);
+            }
+        });
     }
 
     private void renderLevelSecondHeader(BaseViewHolder helper, LevelTitleItem item) {

@@ -3,12 +3,16 @@ package com.crazysunj.multityperecyclerviewadapter;
 import android.os.Bundle;
 import android.view.View;
 
+import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 import com.crazysunj.multitypeadapter.helper.AdapterHelper;
+import com.crazysunj.multityperecyclerviewadapter.testlevel.LevelFirstEmptyItem;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.LevelFooterItem;
+import com.crazysunj.multityperecyclerviewadapter.testlevel.LevelSecondErrorItem;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.LevelTitleItem;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.MultiTypeTitleEntity;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.TestLevelAdapter;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.TestLevelAdapterHelper;
+import com.crazysunj.multityperecyclerviewadapter.testlevel.TypeEmptyAllItem;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.TypeFiveItem;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.TypeFourItem;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.TypeThreeItem;
@@ -51,8 +55,6 @@ public class Refresh240Activity extends AppCompatActivity {
         mThirdHeaderItem = getLevelThirdHeader();
         mThirdFooterItem = getLevelThirdFooter();
         mThirdList = getLevelThirdData();
-        AdapterHelper.with(TestLevelAdapterHelper.LEVEL_THIRD)
-                .into(mHelper);
     }
 
     int levelFirstRefreshCount;
@@ -77,11 +79,29 @@ public class Refresh240Activity extends AppCompatActivity {
         return data;
     }
 
+    private List<TypeThreeItem> getFixLevelSecondData() {
+        List<TypeThreeItem> data = new ArrayList<>();
+        final int size = 6;
+        for (int i = 0; i < size; i++) {
+            data.add(new TypeThreeItem(i + 10, String.format(Locale.getDefault(), "我是level1第%d条，type为%d，第%d次刷新啦", i + 1, TypeThreeItem.TYPE_THREE, 0)));
+        }
+        return data;
+    }
+
     int levelThirdRefreshCount;
 
     private List<MultiTypeTitleEntity> getLevelThirdData() {
         List<MultiTypeTitleEntity> data = new ArrayList<>();
         final int size = random.nextInt(MAX_RANDOM) + 2;
+        for (int i = 0; i < size; i++) {
+            data.add(getLevelThirdItem(i));
+        }
+        return data;
+    }
+
+    private List<MultiTypeTitleEntity> getFixLevelThirdData() {
+        List<MultiTypeTitleEntity> data = new ArrayList<>();
+        final int size = 6;
         for (int i = 0; i < size; i++) {
             data.add(getLevelThirdItem(i));
         }
@@ -119,38 +139,34 @@ public class Refresh240Activity extends AppCompatActivity {
                 .footer(firstFooterItem)
                 .header(firstHeaderItem)
                 .footer(firstFooterItem)
+                .data((List<? extends MultiTypeEntity>) null)
                 .into(mHelper);
     }
 
     public void click1(View view) {
-//        boolean isOutChange = random.nextInt(2) == 0;
-//        List<TypeThreeItem> secondList;
-//        if (isOutChange) {
-//            secondList = new ArrayList<>(mSecondList);
-//            List<TypeThreeItem> removeList = new ArrayList<>();
-//            for (int i = 0; i < secondList.size(); i++) {
-//                TypeThreeItem threeItem = secondList.get(i);
-//                boolean isChange = random.nextInt(2) == 0;
-//                if (!isChange && removeList.size() < secondList.size() - 1) {
-//                    removeList.add(threeItem);
-//                } else {
-//                    threeItem.setMsg(String.format(Locale.getDefault(), "我是level1第%d条，type为%d，第%d次刷新啦", i + 1, TypeThreeItem.TYPE_THREE, levelSecondRefreshCount));
-//                }
-//            }
-//            secondList.removeAll(removeList);
-//        } else {
-//            secondList = getLevelSecondData();
-//        }
-//        levelSecondRefreshCount++;
-//        AdapterHelper.with(TestLevelAdapterHelper.LEVEL_SECOND)
-//                .data(secondList)
-//                .data(secondList)
-//                .data(secondList)
-//                .into(mHelper);
-        AdapterHelper.action()
-                .add()
-                .remove()
-                .all()
+        boolean isOutChange = random.nextInt(2) == 0;
+        List<TypeThreeItem> secondList;
+        if (isOutChange) {
+            secondList = new ArrayList<>(mSecondList);
+            List<TypeThreeItem> removeList = new ArrayList<>();
+            for (int i = 0; i < secondList.size(); i++) {
+                TypeThreeItem threeItem = secondList.get(i);
+                boolean isChange = random.nextInt(2) == 0;
+                if (!isChange && removeList.size() < secondList.size() - 1) {
+                    removeList.add(threeItem);
+                } else {
+                    threeItem.setMsg(String.format(Locale.getDefault(), "我是level1第%d条，type为%d，第%d次刷新啦", i + 1, TypeThreeItem.TYPE_THREE, levelSecondRefreshCount));
+                }
+            }
+            secondList.removeAll(removeList);
+        } else {
+            secondList = getLevelSecondData();
+        }
+        levelSecondRefreshCount++;
+        AdapterHelper.with(TestLevelAdapterHelper.LEVEL_SECOND)
+                .data(secondList)
+                .data(secondList)
+                .data(secondList)
                 .into(mHelper);
     }
 
@@ -191,6 +207,49 @@ public class Refresh240Activity extends AppCompatActivity {
                 .footer(thirdFooterItem)
                 .data(thirdList)
                 .header(thirdHeaderItem)
+                .into(mHelper);
+    }
+
+    public void click3(View view) {
+        AdapterHelper.with(TestLevelAdapterHelper.LEVEL_FIRST)
+                .empty(new LevelFirstEmptyItem("我是level0的空页面"))
+                .into(mHelper);
+    }
+
+    public void click4(View view) {
+        AdapterHelper.with(TestLevelAdapterHelper.LEVEL_SECOND)
+                .empty(new LevelSecondErrorItem("我是level1的错误页面"))
+                .into(mHelper);
+    }
+
+    public void click5(View view) {
+        AdapterHelper.with(TestLevelAdapterHelper.LEVEL_THIRD)
+                .loading()
+                .header()
+                .data(4)
+                .into(mHelper);
+    }
+
+    public void click6(View view) {
+        AdapterHelper.action().clear().into(mHelper);
+    }
+
+    public void click7(View view) {
+        AdapterHelper.action().all(getLevelThirdData()).into(mHelper);
+    }
+
+    public void click8(View view) {
+        AdapterHelper.action().all(new TypeEmptyAllItem("全局空页面")).into(mHelper);
+    }
+
+    public void click9(View view) {
+        AdapterHelper.action()
+                .set(0, new TypeThreeItem(16, String.format(Locale.getDefault(), "我是level1修改的条目，type为%d", TypeThreeItem.TYPE_THREE)))
+                .remove(9, 2)
+                .remove(0)
+                .add(0, getFixLevelSecondData())
+                .add(0, new TypeThreeItem(15, String.format(Locale.getDefault(), "我是level1新插的，type为%d", TypeThreeItem.TYPE_THREE)))
+                .add(getFixLevelThirdData())
                 .into(mHelper);
     }
 }

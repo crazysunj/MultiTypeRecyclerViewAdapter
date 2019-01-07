@@ -1,7 +1,6 @@
 package com.crazysunj.sample.entity;
 
 import com.crazysunj.sample.base.MutiTypeTitleEntity;
-import com.crazysunj.sample.constant.Constants;
 
 /**
  * author: sunjian
@@ -13,15 +12,17 @@ public class LoadingEntity implements MutiTypeTitleEntity {
 
     private int type;
     private long id;
+    private String msg;
 
     public LoadingEntity(int type, long id) {
         this.type = type;
         this.id = id;
+        this.msg = String.valueOf(type) + String.valueOf(id);
     }
 
     @Override
     public String getTitle() {
-        return Constants.EMPTY;
+        return msg;
     }
 
     @Override

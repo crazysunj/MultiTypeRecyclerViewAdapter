@@ -17,6 +17,7 @@ ext {
             multidex           : 'androidx.multidex:multidex:2.0.0',
             recyclerview       : 'androidx.recyclerview:recyclerview:1.0.0',
             appcompat          : 'androidx.appcompat:appcompat:1.0.0',
+            constraintlayout   : 'androidx.constraintlayout:constraintlayout:1.1.2',
             material           : 'com.google.android.material:material:1.0.0',
             shimmer            : 'com.facebook.shimmer:shimmer:0.1.0@aar',
             rxandroid          : 'io.reactivex.rxjava2:rxandroid:2.0.1',
@@ -34,7 +35,7 @@ ext {
             userOrg       : 'twsunj',
             groupId       : 'com.crazysunj',
             uploadName    : 'MultiTypeRecyclerViewAdapter',
-            publishVersion: '2.3.2-x',
+            publishVersion: '2.4.0',
             desc          : 'MultiTypeRecyclerViewAdapter For Android',
             website       : 'https://github.com/crazysunj/MultiTypeRecyclerViewAdapter',
             licences      : ['Apache-2.0']

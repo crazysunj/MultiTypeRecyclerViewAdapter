@@ -61,7 +61,6 @@ public class MyHelperAdapter extends BaseHelperAdapter<MutiTypeTitleEntity, Base
 
             @Override
             public void bindLoadingEntity(MutiTypeTitleEntity loadingEntity, int position) {
-
             }
         });
 

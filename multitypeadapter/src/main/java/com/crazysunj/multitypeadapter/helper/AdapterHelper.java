@@ -15,8 +15,6 @@
  */
 package com.crazysunj.multitypeadapter.helper;
 
-import android.util.Log;
-
 import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 
@@ -41,7 +39,6 @@ public class AdapterHelper {
         return ActionAdapterHelper.create(new ActionAdapterHelper.ActionHandler() {
             @Override
             public void call(RecyclerViewAdapterHelper helper) {
-                Log.e("ActionAdapterHelper", "action");
             }
         });
     }
@@ -241,13 +238,15 @@ public class AdapterHelper {
                 mLevel = level;
             }
 
-            public void header() {
+            public LevelLoadingAdapterHelper header() {
                 mRefreshType |= RecyclerViewAdapterHelper.REFRESH_HEADER;
+                return this;
             }
 
-            public void data(int count) {
+            public LevelLoadingAdapterHelper data(int count) {
                 mCount = count;
                 mRefreshType |= RecyclerViewAdapterHelper.REFRESH_DATA;
+                return this;
             }
 
             /**
@@ -292,6 +291,7 @@ public class AdapterHelper {
 
         /**
          * 刷新全部数据
+         * 详细见{@link RecyclerViewAdapterHelper#notifyDataSetChanged(List)}
          *
          * @param data 传入集合
          * @return ActionAdapterHelper
@@ -301,7 +301,24 @@ public class AdapterHelper {
                 @Override
                 @SuppressWarnings("unchecked")
                 public void call(RecyclerViewAdapterHelper helper) {
-                    Log.e("ActionAdapterHelper", "all");
+                    helper.notifyDataSetChanged(data);
+                    into(helper);
+                }
+            });
+        }
+
+        /**
+         * 刷新全部数据
+         * 详细见{@link RecyclerViewAdapterHelper#notifyDataSetChanged(MultiTypeEntity)}
+         *
+         * @param data 传入数据
+         * @return ActionAdapterHelper
+         */
+        public ActionAdapterHelper all(final MultiTypeEntity data) {
+            return create(new ActionHandler() {
+                @Override
+                @SuppressWarnings("unchecked")
+                public void call(RecyclerViewAdapterHelper helper) {
                     helper.notifyDataSetChanged(data);
                     into(helper);
                 }
@@ -310,6 +327,7 @@ public class AdapterHelper {
 
         /**
          * 插入数据
+         * 详细见{@link RecyclerViewAdapterHelper#addData(int, List)}
          *
          * @param position 插入位置
          * @param data     插入集合
@@ -320,7 +338,6 @@ public class AdapterHelper {
                 @Override
                 @SuppressWarnings("unchecked")
                 public void call(RecyclerViewAdapterHelper helper) {
-                    Log.e("ActionAdapterHelper", "add-position-list");
                     helper.addData(position, data);
                     into(helper);
                 }
@@ -329,6 +346,7 @@ public class AdapterHelper {
 
         /**
          * 插入数据
+         * 详细见{@link RecyclerViewAdapterHelper#addData(int, MultiTypeEntity)}
          *
          * @param position 插入位置
          * @param data     插入数据
@@ -339,7 +357,6 @@ public class AdapterHelper {
                 @Override
                 @SuppressWarnings("unchecked")
                 public void call(RecyclerViewAdapterHelper helper) {
-                    Log.e("ActionAdapterHelper", "add-position-data");
                     helper.addData(position, data);
                     into(helper);
                 }
@@ -348,6 +365,7 @@ public class AdapterHelper {
 
         /**
          * 插入数据
+         * 详细见{@link RecyclerViewAdapterHelper#addData(List)}
          *
          * @param data 插入集合
          * @return ActionAdapterHelper
@@ -357,7 +375,6 @@ public class AdapterHelper {
                 @Override
                 @SuppressWarnings("unchecked")
                 public void call(RecyclerViewAdapterHelper helper) {
-                    Log.e("ActionAdapterHelper", "add-list");
                     helper.addData(data);
                     into(helper);
                 }
@@ -366,6 +383,7 @@ public class AdapterHelper {
 
         /**
          * 插入数据
+         * 详细见{@link RecyclerViewAdapterHelper#addData(MultiTypeEntity)}
          *
          * @param data 插入数据
          * @return ActionAdapterHelper
@@ -375,7 +393,6 @@ public class AdapterHelper {
                 @Override
                 @SuppressWarnings("unchecked")
                 public void call(RecyclerViewAdapterHelper helper) {
-                    Log.e("ActionAdapterHelper", "add-data");
                     helper.addData(data);
                     into(helper);
                 }
@@ -384,6 +401,7 @@ public class AdapterHelper {
 
         /**
          * 删除数据
+         * 详细见{@link RecyclerViewAdapterHelper#removeData(int)}
          *
          * @param position 删除位置
          * @return ActionAdapterHelper
@@ -392,7 +410,6 @@ public class AdapterHelper {
             return create(new ActionHandler() {
                 @Override
                 public void call(RecyclerViewAdapterHelper helper) {
-                    Log.e("ActionAdapterHelper", "remove-position");
                     helper.removeData(position);
                     into(helper);
                 }
@@ -401,6 +418,7 @@ public class AdapterHelper {
 
         /**
          * 删除数据
+         * 详细见{@link RecyclerViewAdapterHelper#removeData(int, int)}
          *
          * @param position 删除位置
          * @param count    删除总数
@@ -410,7 +428,6 @@ public class AdapterHelper {
             return create(new ActionHandler() {
                 @Override
                 public void call(RecyclerViewAdapterHelper helper) {
-                    Log.e("ActionAdapterHelper", "remove-position-count");
                     helper.removeData(position, count);
                     into(helper);
                 }
@@ -419,6 +436,7 @@ public class AdapterHelper {
 
         /**
          * 修改数据
+         * 详细见{@link RecyclerViewAdapterHelper#setData(int, MultiTypeEntity)}
          *
          * @param position 修改位置
          * @param data     修改数据
@@ -429,7 +447,6 @@ public class AdapterHelper {
                 @Override
                 @SuppressWarnings("unchecked")
                 public void call(RecyclerViewAdapterHelper helper) {
-                    Log.e("ActionAdapterHelper", "set-position-data");
                     helper.setData(position, data);
                     into(helper);
                 }
@@ -438,6 +455,7 @@ public class AdapterHelper {
 
         /**
          * 清除所有数据
+         * 详细见{@link RecyclerViewAdapterHelper#clear()}
          *
          * @return ActionAdapterHelper
          */
@@ -445,7 +463,6 @@ public class AdapterHelper {
             return create(new ActionHandler() {
                 @Override
                 public void call(RecyclerViewAdapterHelper helper) {
-                    Log.e("ActionAdapterHelper", "clear");
                     helper.clear();
                     into(helper);
                 }
@@ -454,6 +471,7 @@ public class AdapterHelper {
 
         /**
          * 清除level数组中的数据
+         * 详细见{@link RecyclerViewAdapterHelper#clearModule(int...)}
          *
          * @param levels 清除的level数组
          * @return ActionAdapterHelper
@@ -462,7 +480,6 @@ public class AdapterHelper {
             return create(new ActionHandler() {
                 @Override
                 public void call(RecyclerViewAdapterHelper helper) {
-                    Log.e("ActionAdapterHelper", "clearModule");
                     helper.clearModule(levels);
                     into(helper);
                 }
@@ -471,6 +488,7 @@ public class AdapterHelper {
 
         /**
          * 只剩下level数组中的数据
+         * 详细见{@link RecyclerViewAdapterHelper#remainModule(int...)}
          *
          * @param levels 剩下的level数组
          * @return ActionAdapterHelper
@@ -479,7 +497,6 @@ public class AdapterHelper {
             return create(new ActionHandler() {
                 @Override
                 public void call(RecyclerViewAdapterHelper helper) {
-                    Log.e("ActionAdapterHelper", "remainModule");
                     helper.remainModule(levels);
                     into(helper);
                 }
