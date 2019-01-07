@@ -18,7 +18,7 @@
 * 使用简单快捷，支持大多数Adapter(高灵活、低耦合)
 * 一行代码刷新(附动画)单个level(可对应多个type)
 * 支持增删改查操作(健壮性)
-* 支持异步，高频率刷新，可扩展(如配合RxJava，高效性)
+* 支持异步，高频率，链式刷新，可扩展(如配合RxJava，高效性)
 * 单个level支持Loading(加载)，Empty(空)，Error(错误)页面切换
 * 单个level支持header，footer
 * 单个level支持展开和闭合
