@@ -218,7 +218,7 @@ public class Refresh240Activity extends AppCompatActivity {
 
     public void click4(View view) {
         AdapterHelper.with(TestLevelAdapterHelper.LEVEL_SECOND)
-                .empty(new LevelSecondErrorItem("我是level1的错误页面"))
+                .error(new LevelSecondErrorItem("我是level1的错误页面"))
                 .into(mHelper);
     }
 
