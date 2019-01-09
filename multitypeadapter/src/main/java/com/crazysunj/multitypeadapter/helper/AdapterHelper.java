@@ -36,9 +36,10 @@ public class AdapterHelper {
     }
 
     public static ActionAdapterHelper action() {
-        return ActionAdapterHelper.create(new ActionAdapterHelper.ActionHandler() {
+        return ActionAdapterHelper.create(new ActionAdapterHelper.CallHandler() {
             @Override
-            public void call(RecyclerViewAdapterHelper helper) {
+            public void call(ActionAdapterHelper.ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                actionHandler.action(helper);
             }
         });
     }
@@ -276,17 +277,16 @@ public class AdapterHelper {
 
     /**
      * 常规操作
-     * 注意点：执行顺序是从最底下开始的
      */
     public static class ActionAdapterHelper {
-        private ActionHandler actionHandler;
+        private CallHandler callHandler;
 
-        private ActionAdapterHelper(ActionHandler actionHandler) {
-            this.actionHandler = actionHandler;
+        private ActionAdapterHelper(CallHandler callHandler) {
+            this.callHandler = callHandler;
         }
 
-        private static ActionAdapterHelper create(ActionHandler actionHandler) {
-            return new ActionAdapterHelper(actionHandler);
+        private static ActionAdapterHelper create(CallHandler callHandler) {
+            return new ActionAdapterHelper(callHandler);
         }
 
         /**
@@ -297,12 +297,17 @@ public class AdapterHelper {
          * @return ActionAdapterHelper
          */
         public ActionAdapterHelper all(final List<? extends MultiTypeEntity> data) {
-            return create(new ActionHandler() {
+            return create(new CallHandler() {
                 @Override
-                @SuppressWarnings("unchecked")
-                public void call(RecyclerViewAdapterHelper helper) {
-                    helper.notifyDataSetChanged(data);
-                    into(helper);
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.notifyDataSetChanged(data);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
                 }
             });
         }
@@ -315,12 +320,17 @@ public class AdapterHelper {
          * @return ActionAdapterHelper
          */
         public ActionAdapterHelper all(final MultiTypeEntity data) {
-            return create(new ActionHandler() {
+            return create(new CallHandler() {
                 @Override
-                @SuppressWarnings("unchecked")
-                public void call(RecyclerViewAdapterHelper helper) {
-                    helper.notifyDataSetChanged(data);
-                    into(helper);
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.notifyDataSetChanged(data);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
                 }
             });
         }
@@ -334,12 +344,17 @@ public class AdapterHelper {
          * @return ActionAdapterHelper
          */
         public ActionAdapterHelper add(final int position, @NonNull final List<? extends MultiTypeEntity> data) {
-            return create(new ActionHandler() {
+            return create(new CallHandler() {
                 @Override
-                @SuppressWarnings("unchecked")
-                public void call(RecyclerViewAdapterHelper helper) {
-                    helper.addData(position, data);
-                    into(helper);
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.addData(position, data);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
                 }
             });
         }
@@ -353,12 +368,17 @@ public class AdapterHelper {
          * @return ActionAdapterHelper
          */
         public ActionAdapterHelper add(final int position, @NonNull final MultiTypeEntity data) {
-            return create(new ActionHandler() {
+            return create(new CallHandler() {
                 @Override
-                @SuppressWarnings("unchecked")
-                public void call(RecyclerViewAdapterHelper helper) {
-                    helper.addData(position, data);
-                    into(helper);
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.addData(position, data);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
                 }
             });
         }
@@ -371,12 +391,17 @@ public class AdapterHelper {
          * @return ActionAdapterHelper
          */
         public ActionAdapterHelper add(@NonNull final List<? extends MultiTypeEntity> data) {
-            return create(new ActionHandler() {
+            return create(new CallHandler() {
                 @Override
-                @SuppressWarnings("unchecked")
-                public void call(RecyclerViewAdapterHelper helper) {
-                    helper.addData(data);
-                    into(helper);
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.addData(data);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
                 }
             });
         }
@@ -389,12 +414,17 @@ public class AdapterHelper {
          * @return ActionAdapterHelper
          */
         public ActionAdapterHelper add(@NonNull final MultiTypeEntity data) {
-            return create(new ActionHandler() {
+            return create(new CallHandler() {
                 @Override
-                @SuppressWarnings("unchecked")
-                public void call(RecyclerViewAdapterHelper helper) {
-                    helper.addData(data);
-                    into(helper);
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.addData(data);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
                 }
             });
         }
@@ -407,11 +437,16 @@ public class AdapterHelper {
          * @return ActionAdapterHelper
          */
         public ActionAdapterHelper remove(final int position) {
-            return create(new ActionHandler() {
+            return create(new CallHandler() {
                 @Override
-                public void call(RecyclerViewAdapterHelper helper) {
-                    helper.removeData(position);
-                    into(helper);
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.removeData(position);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
                 }
             });
         }
@@ -425,11 +460,16 @@ public class AdapterHelper {
          * @return ActionAdapterHelper
          */
         public ActionAdapterHelper remove(final int position, final int count) {
-            return create(new ActionHandler() {
+            return create(new CallHandler() {
                 @Override
-                public void call(RecyclerViewAdapterHelper helper) {
-                    helper.removeData(position, count);
-                    into(helper);
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.removeData(position, count);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
                 }
             });
         }
@@ -443,12 +483,17 @@ public class AdapterHelper {
          * @return ActionAdapterHelper
          */
         public ActionAdapterHelper set(final int position, @NonNull final MultiTypeEntity data) {
-            return create(new ActionHandler() {
+            return create(new CallHandler() {
                 @Override
-                @SuppressWarnings("unchecked")
-                public void call(RecyclerViewAdapterHelper helper) {
-                    helper.setData(position, data);
-                    into(helper);
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.setData(position, data);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
                 }
             });
         }
@@ -460,11 +505,16 @@ public class AdapterHelper {
          * @return ActionAdapterHelper
          */
         public ActionAdapterHelper clear() {
-            return create(new ActionHandler() {
+            return create(new CallHandler() {
                 @Override
-                public void call(RecyclerViewAdapterHelper helper) {
-                    helper.clear();
-                    into(helper);
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.clear();
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
                 }
             });
         }
@@ -477,11 +527,16 @@ public class AdapterHelper {
          * @return ActionAdapterHelper
          */
         public ActionAdapterHelper clearModule(@NonNull final int... levels) {
-            return create(new ActionHandler() {
+            return create(new CallHandler() {
                 @Override
-                public void call(RecyclerViewAdapterHelper helper) {
-                    helper.clearModule(levels);
-                    into(helper);
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.clearModule(levels);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
                 }
             });
         }
@@ -494,27 +549,50 @@ public class AdapterHelper {
          * @return ActionAdapterHelper
          */
         public ActionAdapterHelper remainModule(@NonNull final int... levels) {
-            return create(new ActionHandler() {
+            return create(new CallHandler() {
                 @Override
-                public void call(RecyclerViewAdapterHelper helper) {
-                    helper.remainModule(levels);
-                    into(helper);
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.remainModule(levels);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
                 }
             });
         }
 
 
         public void into(RecyclerViewAdapterHelper helper) {
-            actionHandler.call(helper);
+            callHandler.call(new ActionHandler() {
+                @Override
+                public void action(RecyclerViewAdapterHelper helper) {
+                }
+            }, helper);
+        }
+
+        private void into(ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+            callHandler.call(actionHandler, helper);
         }
 
         private interface ActionHandler {
             /**
-             * 回调helper
+             * 处理helper
              *
              * @param helper RecyclerViewAdapterHelper
              */
-            void call(RecyclerViewAdapterHelper helper);
+            void action(RecyclerViewAdapterHelper helper);
+        }
+
+        private interface CallHandler {
+            /**
+             * 回调helper
+             *
+             * @param actionHandler ActionHandler
+             * @param helper        RecyclerViewAdapterHelper
+             */
+            void call(ActionHandler actionHandler, RecyclerViewAdapterHelper helper);
         }
     }
 

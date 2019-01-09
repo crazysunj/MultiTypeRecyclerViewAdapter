@@ -244,12 +244,12 @@ public class Refresh240Activity extends AppCompatActivity {
 
     public void click9(View view) {
         AdapterHelper.action()
-                .set(0, new TypeThreeItem(16, String.format(Locale.getDefault(), "我是level1修改的条目，type为%d", TypeThreeItem.TYPE_THREE)))
-                .remove(9, 2)
-                .remove(0)
-                .add(0, getFixLevelSecondData())
-                .add(0, new TypeThreeItem(15, String.format(Locale.getDefault(), "我是level1新插的，type为%d", TypeThreeItem.TYPE_THREE)))
                 .add(getFixLevelThirdData())
+                .add(0, new TypeThreeItem(15, String.format(Locale.getDefault(), "我是level1新插的，type为%d", TypeThreeItem.TYPE_THREE)))
+                .add(0, getFixLevelSecondData())
+                .remove(0)
+                .remove(9, 2)
+                .set(0, new TypeThreeItem(16, String.format(Locale.getDefault(), "我是level1修改的条目，type为%d", TypeThreeItem.TYPE_THREE)))
                 .into(mHelper);
     }
 }
