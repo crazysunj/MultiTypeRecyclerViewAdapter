@@ -148,7 +148,7 @@ public class AdapterHelper {
                 final int positionStart = helper.getLevelPositionStart(mLevel);
                 Object header = levelData == null ? null : levelData.getHeader();
                 Object footer = levelData == null ? null : levelData.getFooter();
-                final int dataSize = data == null ? 0 : data.size();
+                final int dataSize = helper.getDataSize(mLevel);
                 if (intersectant(mData, data)) {
                     final int positionDataStart = positionStart + (header == null ? 0 : 1);
                     // 这里的算法有待调整，效果不是很好

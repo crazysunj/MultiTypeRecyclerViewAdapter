@@ -1807,6 +1807,30 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     }
 
     /**
+     * 获取level的data展示部分的长度，主要是折叠的存在
+     *
+     * @param level int
+     * @return int
+     */
+    public int getDataSize(int level) {
+        LevelData<T> data = mLevelOldData.get(level);
+        if (data == null) {
+            return 0;
+        }
+        List<T> list = data.getData();
+        if (list == null || list.isEmpty()) {
+            return 0;
+        }
+
+        ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(level);
+        int size = list.size();
+        if (!attrsEntity.isFolded || size <= attrsEntity.minSize) {
+            return size;
+        }
+        return attrsEntity.minSize;
+    }
+
+    /**
      * 根据level获取该level第一个item的position
      *
      * @param level level
