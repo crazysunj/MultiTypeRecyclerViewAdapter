@@ -46,8 +46,8 @@ public class MyHelperAdapter extends BaseHelperAdapter<MutiTypeTitleEntity, Base
     private CommonHeadEntity entity4Header = new CommonHeadEntity(ItemEntity4.HEADER_TITLE, MyAdapterHelper.LEVEL_4);
     private CommonFooterEntity entity1Footer = new CommonFooterEntity(Constants.EXPAND, MyAdapterHelper.LEVEL_1);
 
-    public MyHelperAdapter() {
-        super(new MyAdapterHelper());
+    public MyHelperAdapter(MyAdapterHelper.DataChangeCallback callback) {
+        super(new MyAdapterHelper(callback));
         mHelper.setLoadingAdapter(new LoadingEntityAdapter<MutiTypeTitleEntity>() {
             @Override
             public MutiTypeTitleEntity createLoadingEntity(int type, int level) {

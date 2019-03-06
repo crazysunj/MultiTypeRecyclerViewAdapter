@@ -15,7 +15,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbarLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             app:contentScrim="@color/color_white"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
@@ -79,16 +79,17 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
         android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
         android:onClick="scrollTop"
         android:scaleType="centerInside"
         android:src="@mipmap/ic_back_top"
         app:backgroundTint="@color/color_white"
         app:backgroundTintMode="src_in"
-        app:fabSize="mini"
+        app:fabCustomSize="40dp"
         app:layout_anchor="@+id/recyclerview"
         app:layout_anchorGravity="right|bottom"
-        app:layout_behavior="com.crazysunj.sample.view.FloatingActionButtonAnimBehavior" />
+        app:layout_behavior="com.crazysunj.sample.view.FloatingActionButtonAnimBehavior"
+        app:maxImageSize="20dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

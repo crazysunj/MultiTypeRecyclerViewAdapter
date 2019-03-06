@@ -28,9 +28,11 @@ public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity> {
     public static final int LEVEL_FOOT = 5;
     public static final int TYPE_HEAD = 4;
     public static final int TYPE_FOOT = 5;
+    private DataChangeCallback callback;
 
-    public MyAdapterHelper() {
+    public MyAdapterHelper(DataChangeCallback callback) {
         super(null);
+        this.callback = callback;
     }
 
     @Override
@@ -86,6 +88,23 @@ public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity> {
                 .loading()
                 .loadingLayoutResId(R.layout.layout_loading)
                 .register();
+    }
+
+    @Override
+    protected void onEnd() {
+        if (callback != null) {
+            callback.onEnd(getCurrentRefreshLevel());
+        }
+        super.onEnd();
+    }
+
+    public interface DataChangeCallback {
+        /**
+         * 这里只提供结束时的回调，开始的同理
+         *
+         * @param level level
+         */
+        void onEnd(int level);
     }
 
     @Override
