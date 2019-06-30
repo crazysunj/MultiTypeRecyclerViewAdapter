@@ -42,6 +42,8 @@ QQ邮箱：387953660@qq.com
 
 由于我们专注于数据处理使得复杂布局非常简单，但我们与UI是完全解耦，开发者可以定制各种UI(使用各种Adapter)，每一种level相当于一个简单的Activity页面，想知道具体的用法，可以阅读文档；想知道具体效果，可以参考一下Demo。
 
+下个版本会更好支持动态注册。
+
 下载地址：[使用Demo](https://www.pgyer.com/LAZn "https://www.pgyer.com/LAZn") [首页Demo](https://www.pgyer.com/sOVg "https://www.pgyer.com/sOVg") [项目Demo](https://www.pgyer.com/EbHS "https://www.pgyer.com/EbHS")
 
 **欢迎大家的star(fork)**
