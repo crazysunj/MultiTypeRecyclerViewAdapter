@@ -3,14 +3,14 @@ jdk: oraclejdk8
 sudo: false
 android:
   components:
-    - android-29
+    - android-28
     - extra-android-support
     - extra-android-m2repository
     - platform-tools
     - tools
   before_install:
     - chmod +x gradlew
-    - yes | sdkmanager "platforms;android-29"
+    - yes | sdkmanager "platforms;android-28"
   licenses:
     - 'android-sdk-license.*'
 script: ./gradlew assembleRelease
