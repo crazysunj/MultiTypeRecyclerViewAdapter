@@ -15,11 +15,11 @@
  */
 package com.crazysunj.multitypeadapter.helper;
 
+import androidx.recyclerview.widget.DiffUtil;
+
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 
 import java.util.List;
-
-import androidx.recyclerview.widget.DiffUtil;
 
 /**
  * @author: sunjian
@@ -29,35 +29,36 @@ import androidx.recyclerview.widget.DiffUtil;
  */
 class DiffCallBack<T extends MultiTypeEntity> extends DiffUtil.Callback {
 
-    private List<T> mOldDatas;
-    private List<T> mNewDatas;
+    private List<T> mOldData;
+    private List<T> mNewData;
 
-    DiffCallBack(List<T> mOldDatas, List<T> mNewDatas) {
-        this.mOldDatas = mOldDatas;
-        this.mNewDatas = mNewDatas;
+    DiffCallBack(List<T> oldData, List<T> newData) {
+        this.mOldData = oldData;
+        this.mNewData = newData;
     }
 
     @Override
     public int getOldListSize() {
-        return mOldDatas == null ? 0 : mOldDatas.size();
+        return mOldData == null ? 0 : mOldData.size();
     }
 
     @Override
     public int getNewListSize() {
-        return mNewDatas == null ? 0 : mNewDatas.size();
+        return mNewData == null ? 0 : mNewData.size();
     }
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        T oldItem = mOldDatas.get(oldItemPosition);
-        T newItem = mNewDatas.get(newItemPosition);
+        T oldItem = mOldData.get(oldItemPosition);
+        T newItem = mNewData.get(newItemPosition);
+        // 先把不同itemType过滤掉
         return !(oldItem == null || newItem == null) && oldItem.getItemType() == newItem.getItemType();
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        T oldItem = mOldDatas.get(oldItemPosition);
-        T newItem = mNewDatas.get(newItemPosition);
-        return oldItem.getId() == newItem.getId();
+        T oldItem = mOldData.get(oldItemPosition);
+        T newItem = mNewData.get(newItemPosition);
+        return oldItem.equals(newItem);
     }
 }

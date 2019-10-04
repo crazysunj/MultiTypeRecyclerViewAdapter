@@ -1,5 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.data;
 
+import androidx.annotation.Nullable;
+
 import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 import com.crazysunj.multityperecyclerviewadapter.sticky.FirstStickyItem;
@@ -22,6 +24,7 @@ public class FirstItem implements FirstStickyItem {
 
     public FirstItem(String name) {
         this.name = name;
+         id = UUID.nameUUIDFromBytes((name + stickyName).getBytes()).hashCode();
     }
 
     public FirstItem(String name, long id) {
@@ -38,11 +41,11 @@ public class FirstItem implements FirstStickyItem {
     }
 
     @Override
-    public long getId() {
-        if (id == 0) {
-            return id = UUID.nameUUIDFromBytes((name + stickyName).getBytes()).hashCode();
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof FirstItem)) {
+            return false;
         }
-        return id;
+        return id == ((FirstItem) obj).id;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.testlevel;
 
+import androidx.annotation.Nullable;
+
 /**
  * author: sunjian
  * created on: 2018/4/3 上午11:11
@@ -30,7 +32,13 @@ public class TypeEmptyAllItem implements MultiTypeTitleEntity {
     }
 
     @Override
-    public long getId() {
-        return 0;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof TypeEmptyAllItem)) {
+            return false;
+        }
+        if (msg == null) {
+            return false;
+        }
+        return msg.equals(((TypeEmptyAllItem) obj).msg);
     }
 }

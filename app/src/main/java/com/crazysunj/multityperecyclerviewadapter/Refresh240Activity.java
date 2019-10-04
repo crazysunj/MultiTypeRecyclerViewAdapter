@@ -1,8 +1,14 @@
 package com.crazysunj.multityperecyclerviewadapter;
 
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 import com.crazysunj.multitypeadapter.helper.AdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.LevelFirstEmptyItem;
@@ -18,13 +24,10 @@ import com.crazysunj.multityperecyclerviewadapter.testlevel.TypeFourItem;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.TypeThreeItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class Refresh240Activity extends AppCompatActivity {
 
@@ -239,14 +242,18 @@ public class Refresh240Activity extends AppCompatActivity {
     }
 
     public void click8(View view) {
-        AdapterHelper.action().all(new TypeEmptyAllItem("全局空页面")).into(mHelper);
+        SparseArray<LevelData<MultiTypeEntity>> levelData = new SparseArray<>();
+        levelData.put(TestLevelAdapterHelper.LEVEL_EMPTY_ALL, new LevelData<>(
+                Collections.singletonList(new TypeEmptyAllItem("全局空页面")), null, null));
+        AdapterHelper.action().all(levelData).into(mHelper);
     }
 
     public void click9(View view) {
+        AdapterHelper.action().clear().into(mHelper);
         AdapterHelper.action()
-                .add(getFixLevelThirdData())
-                .add(0, new TypeThreeItem(15, String.format(Locale.getDefault(), "我是level1新插的，type为%d", TypeThreeItem.TYPE_THREE)))
-                .add(0, getFixLevelSecondData())
+                .add(getFixLevelThirdData(), TestLevelAdapterHelper.LEVEL_THIRD)
+                .add(0, new TypeThreeItem(15, String.format(Locale.getDefault(), "我是level1新插的，type为%d", TypeThreeItem.TYPE_THREE)), TestLevelAdapterHelper.LEVEL_SECOND)
+                .add(0, getFixLevelSecondData(), TestLevelAdapterHelper.LEVEL_SECOND)
                 .remove(0)
                 .remove(9, 2)
                 .set(0, new TypeThreeItem(16, String.format(Locale.getDefault(), "我是level1修改的条目，type为%d", TypeThreeItem.TYPE_THREE)))

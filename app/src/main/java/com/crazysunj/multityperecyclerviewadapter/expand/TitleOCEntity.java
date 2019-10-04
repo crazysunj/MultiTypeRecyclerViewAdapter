@@ -1,5 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.expand;
 
+import androidx.annotation.Nullable;
+
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 
@@ -22,6 +24,7 @@ public class TitleOCEntity implements OpenCloseItem {
     public TitleOCEntity(int type, String title) {
         this.type = type;
         this.title = title;
+        id = UUID.nameUUIDFromBytes((FLAG + title).getBytes()).hashCode();
     }
 
     @Override
@@ -40,11 +43,17 @@ public class TitleOCEntity implements OpenCloseItem {
     }
 
     @Override
-    public long getId() {
-        if (id == 0) {
-            return id = UUID.nameUUIDFromBytes((FLAG + title).getBytes()).hashCode();
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof TitleOCEntity)) {
+            return false;
         }
-        return id;
+        if (id != ((TitleOCEntity) obj).id) {
+            return false;
+        }
+        if (title == null) {
+            return false;
+        }
+        return title.equals(((TitleOCEntity) obj).title);
     }
 
     @Override

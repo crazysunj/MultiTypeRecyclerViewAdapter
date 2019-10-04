@@ -7,8 +7,6 @@ import com.crazysunj.multitypeadapter.entity.HandleBase;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.R;
 
-import java.util.List;
-
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -30,16 +28,14 @@ import static com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper.TYP
 
 public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity> {
 
+    public RxAdapterHelper(@RefreshMode int mode) {
+        super(mode);
+        registerModule();
+    }
+
     public RxAdapterHelper() {
-        this(null);
-    }
-
-    public RxAdapterHelper(List<MultiHeaderEntity> data, @RefreshMode int mode) {
-        super(data, mode);
-    }
-
-    public RxAdapterHelper(List<MultiHeaderEntity> data) {
-        super(data);
+        super();
+        registerModule();
     }
 
     @SuppressLint("CheckResult")
@@ -74,8 +70,7 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
         Log.d(TAG, "刷新结束");
     }
 
-    @Override
-    protected void registerModule() {
+    private void registerModule() {
         registerModule(LEVEL_FIRST)
                 .type(TYPE_ONE)
                 .layoutResId(R.layout.item_first)
@@ -119,9 +114,4 @@ public class RxAdapterHelper extends RecyclerViewAdapterHelper<MultiHeaderEntity
                 .register();
 
     }
-
-//    @Override
-//    protected DiffUtil.Callback getDiffCallBack(List<MultiHeaderEntity> oldData, List<MultiHeaderEntity> newData) {
-//        return new SimpleDiffCallBack(oldData, newData);
-//    }
 }

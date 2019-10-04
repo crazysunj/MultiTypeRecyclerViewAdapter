@@ -30,61 +30,61 @@ import androidx.annotation.IntRange;
  */
 public class LoadingConfig {
 
-    private SparseArray<LoadingConfigEntity> mConfigs;
+    private SparseArray<LoadingConfigEntity> mConfigMap;
 
     public LoadingConfig() {
-        if (mConfigs == null) {
-            mConfigs = new SparseArray<>();
+        if (mConfigMap == null) {
+            mConfigMap = new SparseArray<>();
         }
     }
 
     private LoadingConfig(SparseArray<LoadingConfigEntity> configs) {
-        mConfigs = configs;
+        mConfigMap = configs;
     }
 
     public void setLoading(int level, @IntRange(from = 1) int count, boolean isHaveHeader) {
-        mConfigs.put(level, new LoadingConfigEntity(count, isHaveHeader));
+        mConfigMap.put(level, new LoadingConfigEntity(count, isHaveHeader));
     }
 
     public void setLoading(int level, @IntRange(from = 1) int count) {
-        mConfigs.put(level, new LoadingConfigEntity(count));
+        mConfigMap.put(level, new LoadingConfigEntity(count));
     }
 
     public void setLoading(int level, boolean isHaveHeader) {
-        mConfigs.put(level, new LoadingConfigEntity(isHaveHeader));
+        mConfigMap.put(level, new LoadingConfigEntity(isHaveHeader));
     }
 
     public static class Builder {
 
-        private SparseArray<LoadingConfigEntity> mBuilderConfigs;
+        private SparseArray<LoadingConfigEntity> mBuilderConfigMap;
 
         public Builder() {
-            if (mBuilderConfigs == null) {
-                mBuilderConfigs = new SparseArray<>();
+            if (mBuilderConfigMap == null) {
+                mBuilderConfigMap = new SparseArray<>();
             }
         }
 
         public Builder setLoading(int level, @IntRange(from = 1) int count, boolean isHaveHeader) {
-            mBuilderConfigs.put(level, new LoadingConfigEntity(count, isHaveHeader));
+            mBuilderConfigMap.put(level, new LoadingConfigEntity(count, isHaveHeader));
             return this;
         }
 
         public Builder setLoading(int level, @IntRange(from = 1) int count) {
-            mBuilderConfigs.put(level, new LoadingConfigEntity(count));
+            mBuilderConfigMap.put(level, new LoadingConfigEntity(count));
             return this;
         }
 
         public Builder setLoading(int level, boolean isHaveHeader) {
-            mBuilderConfigs.put(level, new LoadingConfigEntity(isHaveHeader));
+            mBuilderConfigMap.put(level, new LoadingConfigEntity(isHaveHeader));
             return this;
         }
 
         public LoadingConfig build() {
-            return new LoadingConfig(mBuilderConfigs);
+            return new LoadingConfig(mBuilderConfigMap);
         }
     }
 
     SparseArray<LoadingConfigEntity> getConfigs() {
-        return mConfigs;
+        return mConfigMap;
     }
 }

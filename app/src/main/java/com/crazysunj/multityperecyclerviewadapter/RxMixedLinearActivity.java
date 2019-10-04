@@ -5,6 +5,11 @@ import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
 import com.crazysunj.multityperecyclerviewadapter.data.FourthItem;
 import com.crazysunj.multityperecyclerviewadapter.data.SecondItem;
@@ -23,11 +28,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 public class RxMixedLinearActivity extends AppCompatActivity {
 
     private RxAdapterHelper helper;
@@ -38,11 +38,11 @@ public class RxMixedLinearActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mixed);
         setTitle("Rx混合刷新线性排布");
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        helper = new RxAdapterHelper(initData(), RxAdapterHelper.MODE_MIXED);
+        helper = new RxAdapterHelper( RxAdapterHelper.MODE_MIXED);
         SimpleRxHelperAdapter adapter = new SimpleRxHelperAdapter(helper);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-
+        helper.notifyDataSetChanged(initData());
     }
 
     @NonNull
@@ -114,21 +114,7 @@ public class RxMixedLinearActivity extends AppCompatActivity {
     }
 
     public void click1(View view) {
-        helper.notifyDataSetChanged(initData(), SimpleHelper.MODE_MIXED);
-    }
-
-    public void click2(View view) {
-        helper.notifyDataByDiff(initData(), SimpleHelper.MODE_MIXED);
-    }
-
-
-    public void click3(View view) {
-        helper.switchMode(SimpleHelper.MODE_STANDARD);
-        helper.notifyDataSetChanged();
-    }
-
-    public void click4(View view) {
-        helper.notifyDataByDiff(initData(), SimpleHelper.MODE_STANDARD);
+        helper.notifyDataSetChanged(initData());
     }
 
     public void click5(View view) {
@@ -189,7 +175,6 @@ public class RxMixedLinearActivity extends AppCompatActivity {
     }
 
     public void click9(View view) {
-
         int position = new Random().nextInt(helper.getData().size());
         helper.addData(position, initData());
         Toast.makeText(this, "在" + position + "位置插入数据集合", Toast.LENGTH_SHORT).show();

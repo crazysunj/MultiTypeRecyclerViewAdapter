@@ -1,1 +1,1 @@
-include ':app', ':multitypeadapter', ':multitypeadapter-compiler', ':multitypeadapter-annotation', ':sample'
+include ':app', ':multitypeadapter', ':sample'

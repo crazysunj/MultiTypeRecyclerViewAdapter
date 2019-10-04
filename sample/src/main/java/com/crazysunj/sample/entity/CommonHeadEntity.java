@@ -1,5 +1,7 @@
 package com.crazysunj.sample.entity;
 
+import androidx.annotation.Nullable;
+
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.sample.base.MutiTypeTitleEntity;
 
@@ -32,7 +34,10 @@ public class CommonHeadEntity implements MutiTypeTitleEntity {
     }
 
     @Override
-    public long getId() {
-        return id;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof CommonHeadEntity)) {
+            return false;
+        }
+        return id == ((CommonHeadEntity) obj).id;
     }
 }

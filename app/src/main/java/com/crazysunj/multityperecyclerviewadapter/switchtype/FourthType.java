@@ -1,8 +1,8 @@
 package com.crazysunj.multityperecyclerviewadapter.switchtype;
 
-import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
+import androidx.annotation.Nullable;
 
-import static com.crazysunj.multityperecyclerviewadapter.switchtype.ThirdType.TYPE_3;
+import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 
 
 /**
@@ -31,9 +31,11 @@ public class FourthType implements MultiTypeEntity {
     public int getItemType() {
         return TYPE_4;
     }
-
     @Override
-    public long getId() {
-        return id;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof FourthType)) {
+            return false;
+        }
+        return id == ((FourthType) obj).id;
     }
 }

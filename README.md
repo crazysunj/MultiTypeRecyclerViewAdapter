@@ -7,7 +7,7 @@
 
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/mtrva_logo.png)
 
-一个专注于RecyclerView优雅刷新(接管资源和数据源来代理进行数据处理)、高灵活、低耦合、健壮性以及高效性的轻量级MVP模式库，支持大多数Adapter
+一个专注于RecyclerView优雅刷新(接管资源和数据源来代理Adapter进行数据处理)的轻量级MVP模式库，让你更关注UI逻辑，对Adapter进行组件化封装（大型UI框架也可）效果更佳
 
 ## 架构
 
@@ -15,18 +15,15 @@
 
 ## 特点
 
-* 使用简单快捷，支持大多数Adapter(高灵活、低耦合)
-* 一行代码刷新(附动画)单个level(可对应多个type)
-* 支持增删改查操作(健壮性)
-* 支持异步，高频率，链式刷新，可扩展(如配合RxJava，高效性)
+* 一行代码刷新(附动画)单个level(一个level可对应多个type)
+* 支持常规增删改查操作
+* 支持异步，高频率，链式刷新，可扩展(如配合RxJava)
 * 单个level支持Loading(加载)，Empty(空)，Error(错误)页面切换
 * 单个level支持header，footer
-* 单个level支持展开和闭合
-* 支持加载全局Loading(加载)页面
-* 支持注解生成类，减少工作量
+* 单个level支持展开和闭合(附动画)
 * 支持刷新生命周期回调
-* 兼容低版本及AndroidX版本RecyclerView
-* 进阶用法，比如在多种页面之间自由切换
+* 异步差量计算数据，只刷新改动部分，对比算法可自定义
+* 支持动态注册资源(根据服务端返回数据解析注册，不再静态写死)
 
 ## 传送门
 
@@ -42,9 +39,7 @@ QQ邮箱：387953660@qq.com
 
 由于我们专注于数据处理使得复杂布局非常简单，但我们与UI是完全解耦，开发者可以定制各种UI(使用各种Adapter)，每一种level相当于一个简单的Activity页面，想知道具体的用法，可以阅读文档；想知道具体效果，可以参考一下Demo。
 
-下个版本会更好支持动态注册。
-
-下载地址：[使用Demo](https://www.pgyer.com/LAZn "https://www.pgyer.com/LAZn") [首页Demo](https://www.pgyer.com/sOVg "https://www.pgyer.com/sOVg") [项目Demo](https://www.pgyer.com/EbHS "https://www.pgyer.com/EbHS")
+下载地址（失效了不要慌，毕竟是免费的，有时候比较忙没有更新）：[使用Demo](https://www.pgyer.com/LAZn "https://www.pgyer.com/LAZn") [首页Demo](https://www.pgyer.com/sOVg "https://www.pgyer.com/sOVg") [项目Demo](https://www.pgyer.com/EbHS "https://www.pgyer.com/EbHS")
 
 **欢迎大家的star(fork)**
 

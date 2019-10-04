@@ -23,7 +23,13 @@ package com.crazysunj.multitypeadapter.helper;
  */
 class LoadingConfigEntity {
 
+    /**
+     * 需要展示多少个
+     */
     int count;
+    /**
+     * 是否拥有头部
+     */
     boolean isHaveHeader;
 
     LoadingConfigEntity(boolean isHaveHeader) {

@@ -1,5 +1,7 @@
 package com.crazysunj.sample.entity;
 
+import androidx.annotation.Nullable;
+
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.sample.base.MutiTypeTitleEntity;
 
@@ -36,7 +38,11 @@ public class CommonFooterEntity implements MutiTypeTitleEntity {
     }
 
     @Override
-    public long getId() {
-        return id;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof CommonFooterEntity)) {
+            return false;
+        }
+        return id == ((CommonFooterEntity) obj).id;
     }
+
 }

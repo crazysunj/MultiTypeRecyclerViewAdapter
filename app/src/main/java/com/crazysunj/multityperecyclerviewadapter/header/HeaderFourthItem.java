@@ -1,5 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.header;
 
+import androidx.annotation.Nullable;
+
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 import com.crazysunj.multityperecyclerviewadapter.sticky.FourthStickyItem;
 
@@ -17,6 +19,7 @@ public class HeaderFourthItem implements FourthStickyItem {
 
     public HeaderFourthItem(String name) {
         this.name = name;
+        id = UUID.nameUUIDFromBytes((name + stickyName).getBytes()).hashCode();
     }
 
     public HeaderFourthItem(String name, long id) {
@@ -29,11 +32,11 @@ public class HeaderFourthItem implements FourthStickyItem {
     }
 
     @Override
-    public long getId() {
-        if (id == 0) {
-            return id = UUID.nameUUIDFromBytes((name + stickyName).getBytes()).hashCode();
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof HeaderFourthItem)) {
+            return false;
         }
-        return id;
+        return id == ((HeaderFourthItem) obj).id;
     }
 
     @Override

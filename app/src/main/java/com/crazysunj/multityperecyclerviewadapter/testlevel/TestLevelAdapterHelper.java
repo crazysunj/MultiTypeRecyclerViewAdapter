@@ -5,10 +5,6 @@ import android.util.Log;
 import com.crazysunj.multitypeadapter.helper.AsynAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.R;
 
-import java.util.List;
-
-import androidx.recyclerview.widget.DiffUtil;
-
 /**
  * author: sunjian
  * created on: 2018/4/3 上午11:19
@@ -23,15 +19,11 @@ public class TestLevelAdapterHelper extends AsynAdapterHelper<MultiTypeTitleEnti
     public static final int LEVEL_EMPTY_ALL = 3;
 
     public TestLevelAdapterHelper() {
-        super(null);
+        super();
+        registerModule();
     }
 
-    public TestLevelAdapterHelper(List<MultiTypeTitleEntity> data) {
-        super(data);
-    }
-
-    @Override
-    protected void registerModule() {
+    private void registerModule() {
         registerModule(LEVEL_FIRST)
                 .type(TypeOneItem.TYPE_ONE)
                 .layoutResId(R.layout.item_first)
@@ -85,10 +77,5 @@ public class TestLevelAdapterHelper extends AsynAdapterHelper<MultiTypeTitleEnti
     protected void onEnd() {
         super.onEnd();
         Log.d(TAG, "刷新结束");
-    }
-
-    @Override
-    protected DiffUtil.Callback getDiffCallBack(List<MultiTypeTitleEntity> oldData, List<MultiTypeTitleEntity> newData) {
-        return new TestLevelDiffCallback(oldData, newData);
     }
 }

@@ -10,19 +10,18 @@ public class ShimmerViewHolder extends BaseViewHolder {
         super(view);
         if (view instanceof ShimmerFrameLayout) {
             final ShimmerFrameLayout shimmerView = (ShimmerFrameLayout) view;
-            shimmerView.setAutoStart(false);
+            shimmerView.stopShimmer();
         }
     }
 
     public void startAnim() {
-
         if (itemView instanceof ShimmerFrameLayout) {
             final ShimmerFrameLayout shimmerView = (ShimmerFrameLayout) itemView;
-            if (!shimmerView.isAnimationStarted()) {
+            if (!shimmerView.isShimmerStarted()) {
                 shimmerView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        shimmerView.startShimmerAnimation();
+                        shimmerView.startShimmer();
                     }
                 }, 100);
 
@@ -31,11 +30,10 @@ public class ShimmerViewHolder extends BaseViewHolder {
     }
 
     public void stopAnim() {
-
         if (itemView instanceof ShimmerFrameLayout) {
             final ShimmerFrameLayout shimmerView = (ShimmerFrameLayout) itemView;
-            if (shimmerView.isAnimationStarted()) {
-                shimmerView.setAutoStart(false);
+            if (shimmerView.isShimmerStarted()) {
+                shimmerView.stopShimmer();
             }
         }
     }

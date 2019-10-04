@@ -1,5 +1,6 @@
 package com.crazysunj.multityperecyclerviewadapter.testlevel;
 
+import android.util.SparseArray;
 import android.widget.Toast;
 
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
@@ -62,8 +63,8 @@ public class TestLevelAdapter extends BaseHelperAdapter<MultiTypeTitleEntity, Ba
                 .build());
     }
 
-    public TestLevelAdapter(List<MultiTypeTitleEntity> data) {
-        super(new TestLevelAdapterHelper(data));
+    public TestLevelAdapter() {
+        super(new TestLevelAdapterHelper());
         mFirstItemConvert = new LevelFirstItemConvert();
         mSecondItemConvert = new LevelSecondItemConvert();
         mThirdItemConvert = new LevelThirdItemConvert();
@@ -124,8 +125,8 @@ public class TestLevelAdapter extends BaseHelperAdapter<MultiTypeTitleEntity, Ba
         mHelper.notifyLoadingChanged();
     }
 
-    public void notifyAll(List<MultiTypeTitleEntity> data) {
-        mHelper.notifyDataByDiff(data);
+    public void notifyAll(SparseArray<LevelData<MultiTypeTitleEntity>> data) {
+        mHelper.notifyDataSetChanged(data);
     }
 
     public void notifyLevelFirst(MultiTypeTitleEntity header, List<MultiTypeTitleEntity> data, MultiTypeTitleEntity footer) {
@@ -150,7 +151,7 @@ public class TestLevelAdapter extends BaseHelperAdapter<MultiTypeTitleEntity, Ba
         if (refreshType == 0) {
             LevelTitleItem header = (LevelTitleItem) levelData.getHeader();
             header.setMsg("我是修改过的header,level=" + level + " 当前点击次数=" + clickCount);
-            mHelper.notifyDataChanged(header);
+            mHelper.setData(mHelper.getData().indexOf(header), header);
             Toast.makeText(mContext, "修改level=" + level + "  =>header", Toast.LENGTH_SHORT).show();
         } else if (refreshType == 1) {
             List<MultiTypeTitleEntity> data = levelData.getData();
@@ -179,13 +180,13 @@ public class TestLevelAdapter extends BaseHelperAdapter<MultiTypeTitleEntity, Ba
                 }
             }
             Toast.makeText(mContext, "修改level=" + level + "  =>data", Toast.LENGTH_SHORT).show();
-            mHelper.notifyDataChanged(entity);
+            mHelper.setData(mHelper.getData().indexOf(entity), entity);
         } else if (refreshType == 2) {
             LevelFooterItem footer = (LevelFooterItem) levelData.getFooter();
             if (footer != null) {
                 footer.setMsg("我是修改过的footer,level=" + level + " 当前点击次数=" + clickCount);
                 Toast.makeText(mContext, "修改level=" + level + "  =>footer", Toast.LENGTH_SHORT).show();
-                mHelper.notifyDataChanged(footer);
+                mHelper.setData(mHelper.getData().indexOf(footer), footer);
             }
         }
         clickCount++;
@@ -197,12 +198,15 @@ public class TestLevelAdapter extends BaseHelperAdapter<MultiTypeTitleEntity, Ba
         int level = random.nextInt(3);
         handleLevel(level);
         Toast.makeText(mContext, "修改level=" + level, Toast.LENGTH_SHORT).show();
-        mHelper.notifyDataChanged(level);
+        mHelper.notifyDataSetChanged(level);
         clickCount++;
     }
 
     private void handleLevel(int level) {
         LevelData<MultiTypeTitleEntity> levelData = mHelper.getDataWithLevel(level);
+        if (levelData == null) {
+            return;
+        }
         LevelTitleItem header = (LevelTitleItem) levelData.getHeader();
         header.setMsg("我是修改过的header,level=" + level + " 当前点击次数=" + clickCount);
         List<MultiTypeTitleEntity> data = levelData.getData();
@@ -240,7 +244,7 @@ public class TestLevelAdapter extends BaseHelperAdapter<MultiTypeTitleEntity, Ba
         handleLevel(TestLevelAdapterHelper.LEVEL_FIRST);
         handleLevel(TestLevelAdapterHelper.LEVEL_SECOND);
         handleLevel(TestLevelAdapterHelper.LEVEL_THIRD);
-        mHelper.notifyDataChanged();
+        mHelper.notifyDataSetChanged();
         clickCount++;
     }
 }

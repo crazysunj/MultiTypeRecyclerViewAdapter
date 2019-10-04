@@ -18,10 +18,10 @@ package com.crazysunj.multitypeadapter.helper;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 
-import java.util.Locale;
-
 import androidx.annotation.IntRange;
 import androidx.annotation.LayoutRes;
+
+import java.util.Locale;
 
 import static com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper.DEFAULT_HEADER_LEVEL;
 
@@ -30,82 +30,82 @@ import static com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper.DE
  * created on: 2017/5/15
  * description: 资源管理
  */
-final class ResourcesManager {
+public final class ResourcesManager {
 
     /**
      * 根据type存储layoutId
      */
-    private SparseIntArray mLayouts;
+    private SparseIntArray mLayoutMap;
     /**
      * 根据type存储等级
      */
-    private SparseIntArray mLevels;
+    private SparseIntArray mLevelMap;
     /**
      * 根据level存储属性
      */
-    private SparseArray<AttrsEntity> mAttrs;
+    private SparseArray<AttrEntity> mAttrMap;
 
-    private SparseArray<LevelsManager> mLevelsManagers;
-    private SparseArray<LoadingsManager> mLoadingsManagers;
-    private SparseArray<ErrorsManager> mErrorsManagers;
-    private SparseArray<EmptysManager> mEmptysManagers;
+    private SparseArray<LevelManager> mLevelManagerMap;
+    private SparseArray<LoadingManager> mLoadingManagerMap;
+    private SparseArray<ErrorManager> mErrorManagerMap;
+    private SparseArray<EmptyManager> mEmptyManagerMap;
 
     ResourcesManager() {
-        mLevels = new SparseIntArray();
-        mLayouts = new SparseIntArray();
-        mAttrs = new SparseArray<>();
+        mLevelMap = new SparseIntArray();
+        mLayoutMap = new SparseIntArray();
+        mAttrMap = new SparseArray<>();
     }
 
-    LevelsManager level(int level) {
-        if (mLevelsManagers == null) {
-            mLevelsManagers = new SparseArray<>();
+    LevelManager level(int level) {
+        if (mLevelManagerMap == null) {
+            mLevelManagerMap = new SparseArray<>();
         }
-        LevelsManager typesManager = mLevelsManagers.get(level);
-        if (typesManager == null) {
-            typesManager = new LevelsManager(this, level);
-            mLevelsManagers.put(level, typesManager);
+        LevelManager levelManager = mLevelManagerMap.get(level);
+        if (levelManager == null) {
+            levelManager = new LevelManager(this, level);
+            mLevelManagerMap.put(level, levelManager);
         }
-        return typesManager;
+        return levelManager;
     }
 
-    private LoadingsManager loading(int level) {
-        if (mLoadingsManagers == null) {
-            mLoadingsManagers = new SparseArray<>();
+    private LoadingManager loading(int level) {
+        if (mLoadingManagerMap == null) {
+            mLoadingManagerMap = new SparseArray<>();
         }
-        LoadingsManager loadingsManager = mLoadingsManagers.get(level);
-        if (loadingsManager == null) {
-            loadingsManager = new LoadingsManager(this, level);
-            mLoadingsManagers.put(level, loadingsManager);
+        LoadingManager loadingManager = mLoadingManagerMap.get(level);
+        if (loadingManager == null) {
+            loadingManager = new LoadingManager(this, level);
+            mLoadingManagerMap.put(level, loadingManager);
         }
-        return loadingsManager;
+        return loadingManager;
     }
 
-    private ErrorsManager error(int level) {
-        if (mErrorsManagers == null) {
-            mErrorsManagers = new SparseArray<>();
+    private ErrorManager error(int level) {
+        if (mErrorManagerMap == null) {
+            mErrorManagerMap = new SparseArray<>();
         }
-        ErrorsManager errorsManager = mErrorsManagers.get(level);
-        if (errorsManager == null) {
-            errorsManager = new ErrorsManager(this, level);
-            mErrorsManagers.put(level, errorsManager);
+        ErrorManager errorManager = mErrorManagerMap.get(level);
+        if (errorManager == null) {
+            errorManager = new ErrorManager(this, level);
+            mErrorManagerMap.put(level, errorManager);
         }
-        return errorsManager;
+        return errorManager;
     }
 
-    private EmptysManager empty(int level) {
-        if (mEmptysManagers == null) {
-            mEmptysManagers = new SparseArray<>();
+    private EmptyManager empty(int level) {
+        if (mEmptyManagerMap == null) {
+            mEmptyManagerMap = new SparseArray<>();
         }
-        EmptysManager emptysManager = mEmptysManagers.get(level);
-        if (emptysManager == null) {
-            emptysManager = new EmptysManager(this, level);
-            mEmptysManagers.put(level, emptysManager);
+        EmptyManager emptyManager = mEmptyManagerMap.get(level);
+        if (emptyManager == null) {
+            emptyManager = new EmptyManager(this, level);
+            mEmptyManagerMap.put(level, emptyManager);
         }
-        return emptysManager;
+        return emptyManager;
     }
 
     private void registerLevel(int level) {
-        LevelsManager typesManager = mLevelsManagers.get(level);
+        LevelManager typesManager = mLevelManagerMap.get(level);
         final SparseIntArray typeRes = typesManager.typeRes;
         final int size = typeRes.size();
         for (int i = 0; i < size; i++) {
@@ -114,101 +114,98 @@ final class ResourcesManager {
             if (layoutResId == 0) {
                 throw new RuntimeException(String.format(Locale.getDefault(), "are you sure register the layoutResId of level = %d?", type));
             }
-            mLevels.put(type, level);
-            mLayouts.put(type, layoutResId);
+            mLevelMap.put(type, level);
+            mLayoutMap.put(type, layoutResId);
         }
-        mAttrs.put(level, new AttrsEntity(typesManager.minSize, typesManager.isFolded));
+        mAttrMap.put(level, new AttrEntity(typesManager.minSize, typesManager.isFolded));
         final int headerResId = typesManager.headerResId;
         if (headerResId != 0) {
             final int headerType = level - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER;
-            mLevels.put(headerType, level);
-            mLayouts.put(headerType, headerResId);
+            mLevelMap.put(headerType, level);
+            mLayoutMap.put(headerType, headerResId);
         }
         final int footerResId = typesManager.footerResId;
         if (footerResId != 0) {
             final int footerType = level - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER;
-            mLevels.put(footerType, level);
-            mLayouts.put(footerType, footerResId);
+            mLevelMap.put(footerType, level);
+            mLayoutMap.put(footerType, footerResId);
         }
     }
 
     private void registerLoading(int level) {
-        LoadingsManager loadingsManager = mLoadingsManagers.get(level);
-        final int loadingLayoutResId = loadingsManager.loadingLayoutResId;
+        LoadingManager loadingManager = mLoadingManagerMap.get(level);
+        final int loadingLayoutResId = loadingManager.loadingLayoutResId;
         if (loadingLayoutResId != 0) {
             final int loadingLayoutType = level - RecyclerViewAdapterHelper.LOADING_DATA_TYPE_DIFFER;
-            mLevels.put(loadingLayoutType, level);
-            mLayouts.put(loadingLayoutType, loadingLayoutResId);
+            mLevelMap.put(loadingLayoutType, level);
+            mLayoutMap.put(loadingLayoutType, loadingLayoutResId);
         }
-        final int loadingHeaderResId = loadingsManager.loadingHeaderResId;
+        final int loadingHeaderResId = loadingManager.loadingHeaderResId;
         if (loadingHeaderResId != 0) {
             final int loadingHeaderType = level - RecyclerViewAdapterHelper.LOADING_HEADER_TYPE_DIFFER;
-            mLevels.put(loadingHeaderType, level);
-            mLayouts.put(loadingHeaderType, loadingHeaderResId);
+            mLevelMap.put(loadingHeaderType, level);
+            mLayoutMap.put(loadingHeaderType, loadingHeaderResId);
         }
     }
 
     private void registerError(int level) {
-        ErrorsManager errorsManager = mErrorsManagers.get(level);
-        final int errorLayoutResId = errorsManager.errorLayoutResId;
+        ErrorManager errorManager = mErrorManagerMap.get(level);
+        final int errorLayoutResId = errorManager.errorLayoutResId;
         if (errorLayoutResId != 0) {
             final int errorType = level - RecyclerViewAdapterHelper.ERROR_TYPE_DIFFER;
-            mLevels.put(errorType, level);
-            mLayouts.put(errorType, errorLayoutResId);
+            mLevelMap.put(errorType, level);
+            mLayoutMap.put(errorType, errorLayoutResId);
         }
     }
 
     private void registerEmpty(int level) {
-        EmptysManager emptysManager = mEmptysManagers.get(level);
-        final int emptyLayoutResId = emptysManager.emptyLayoutResId;
+        EmptyManager emptyManager = mEmptyManagerMap.get(level);
+        final int emptyLayoutResId = emptyManager.emptyLayoutResId;
         if (emptyLayoutResId != 0) {
             final int emptyType = level - RecyclerViewAdapterHelper.EMPTY_TYPE_DIFFER;
-            mLevels.put(emptyType, level);
-            mLayouts.put(emptyType, emptyLayoutResId);
+            mLevelMap.put(emptyType, level);
+            mLayoutMap.put(emptyType, emptyLayoutResId);
         }
     }
 
     void putLayoutId(int type, int layoutId) {
-        mLayouts.put(type, layoutId);
+        mLayoutMap.put(type, layoutId);
     }
 
     int getLayoutId(int type) {
-        return mLayouts.get(type);
+        return mLayoutMap.get(type);
     }
 
     void putLevel(int type, int level) {
-        mLevels.put(type, level);
+        mLevelMap.put(type, level);
     }
 
     int getLevel(int type) {
-        return mLevels.get(type, DEFAULT_HEADER_LEVEL);
+        return mLevelMap.get(type, DEFAULT_HEADER_LEVEL);
     }
 
     void release() {
-        mLevels.clear();
-        mLevels = null;
-        mLayouts.clear();
-        mLayouts = null;
-        mAttrs.clear();
-        mAttrs = null;
-        mLevelsManagers.clear();
-        mLevelsManagers = null;
-        mLoadingsManagers.clear();
-        mLoadingsManagers = null;
-        mErrorsManagers.clear();
-        mErrorsManagers = null;
-        mEmptysManagers.clear();
-        mEmptysManagers = null;
+        mLevelMap.clear();
+        mLayoutMap.clear();
+        mAttrMap.clear();
+        mLevelManagerMap.clear();
+        mLevelManagerMap = null;
+        mLoadingManagerMap.clear();
+        mLoadingManagerMap = null;
+        mErrorManagerMap.clear();
+        mErrorManagerMap = null;
+        mEmptyManagerMap.clear();
+        mEmptyManagerMap = null;
     }
 
-    AttrsEntity getAttrsEntity(int level) {
-        return mAttrs.get(level);
+    AttrEntity getAttrsEntity(int level) {
+        return mAttrMap.get(level);
     }
 
     /**
      * Type管理
      */
-    public static class LevelsManager {
+    public static class LevelManager {
 
         private ResourcesManager resourcesManager;
         private int level;
@@ -218,7 +215,7 @@ final class ResourcesManager {
         private boolean isFolded = false;
         private SparseIntArray typeRes;
 
-        LevelsManager(ResourcesManager resourcesManager, int level) {
+        LevelManager(ResourcesManager resourcesManager, int level) {
             this.resourcesManager = resourcesManager;
             this.level = level;
             typeRes = new SparseIntArray();
@@ -228,37 +225,37 @@ final class ResourcesManager {
             return new TypesManager(this, type);
         }
 
-        public LevelsManager headerResId(@LayoutRes int headerResId) {
+        public LevelManager headerResId(@LayoutRes int headerResId) {
             this.headerResId = headerResId;
             return this;
         }
 
-        public LevelsManager footerResId(@LayoutRes int footerResId) {
+        public LevelManager footerResId(@LayoutRes int footerResId) {
             this.footerResId = footerResId;
             return this;
         }
 
-        public LevelsManager minSize(int minSize) {
+        public LevelManager minSize(int minSize) {
             this.minSize = minSize;
             return this;
         }
 
-        public LevelsManager isFolded(boolean isFolded) {
+        public LevelManager isFolded(boolean isFolded) {
             this.isFolded = isFolded;
             return this;
         }
 
-        public LoadingsManager loading() {
+        public LoadingManager loading() {
             register();
             return resourcesManager.loading(level);
         }
 
-        public ErrorsManager error() {
+        public ErrorManager error() {
             register();
             return resourcesManager.error(level);
         }
 
-        public EmptysManager empty() {
+        public EmptyManager empty() {
             register();
             return resourcesManager.empty(level);
         }
@@ -275,17 +272,17 @@ final class ResourcesManager {
          * 每个level的type管理
          */
         public static class TypesManager {
-            private LevelsManager levelsManager;
+            private LevelManager levelManager;
             private int type;
 
-            TypesManager(LevelsManager levelsManager, int type) {
-                this.levelsManager = levelsManager;
+            TypesManager(LevelManager levelManager, int type) {
+                this.levelManager = levelManager;
                 this.type = type;
             }
 
-            public LevelsManager layoutResId(@LayoutRes int layoutResId) {
-                levelsManager.addType(type, layoutResId);
-                return levelsManager;
+            public LevelManager layoutResId(@LayoutRes int layoutResId) {
+                levelManager.addType(type, layoutResId);
+                return levelManager;
             }
         }
 
@@ -294,34 +291,34 @@ final class ResourcesManager {
     /**
      * loading管理
      */
-    public static class LoadingsManager {
+    public static class LoadingManager {
 
         private int level;
         private int loadingLayoutResId;
         private int loadingHeaderResId;
         private ResourcesManager resourcesManager;
 
-        LoadingsManager(ResourcesManager resourcesManager, int level) {
+        LoadingManager(ResourcesManager resourcesManager, int level) {
             this.resourcesManager = resourcesManager;
             this.level = level;
         }
 
-        public LoadingsManager loadingLayoutResId(@LayoutRes int loadingLayoutResId) {
+        public LoadingManager loadingLayoutResId(@LayoutRes int loadingLayoutResId) {
             this.loadingLayoutResId = loadingLayoutResId;
             return this;
         }
 
-        public LoadingsManager loadingHeaderResId(@LayoutRes int loadingHeaderResId) {
+        public LoadingManager loadingHeaderResId(@LayoutRes int loadingHeaderResId) {
             this.loadingHeaderResId = loadingHeaderResId;
             return this;
         }
 
-        public ErrorsManager error() {
+        public ErrorManager error() {
             register();
             return resourcesManager.error(level);
         }
 
-        public EmptysManager empty() {
+        public EmptyManager empty() {
             register();
             return resourcesManager.empty(level);
         }
@@ -335,23 +332,23 @@ final class ResourcesManager {
     /**
      * error管理
      */
-    public static class ErrorsManager {
+    public static class ErrorManager {
 
         private int level;
         private int errorLayoutResId;
         private ResourcesManager resourcesManager;
 
-        ErrorsManager(ResourcesManager resourcesManager, int level) {
+        ErrorManager(ResourcesManager resourcesManager, int level) {
             this.resourcesManager = resourcesManager;
             this.level = level;
         }
 
-        public ErrorsManager errorLayoutResId(@LayoutRes int errorLayoutResId) {
+        public ErrorManager errorLayoutResId(@LayoutRes int errorLayoutResId) {
             this.errorLayoutResId = errorLayoutResId;
             return this;
         }
 
-        public EmptysManager empty() {
+        public EmptyManager empty() {
             register();
             return resourcesManager.empty(level);
         }
@@ -364,18 +361,18 @@ final class ResourcesManager {
     /**
      * empty管理
      */
-    public static class EmptysManager {
+    public static class EmptyManager {
 
         private int level;
         private int emptyLayoutResId;
         private ResourcesManager resourcesManager;
 
-        EmptysManager(ResourcesManager resourcesManager, int level) {
+        EmptyManager(ResourcesManager resourcesManager, int level) {
             this.resourcesManager = resourcesManager;
             this.level = level;
         }
 
-        public EmptysManager emptyLayoutResId(@LayoutRes int emptyLayoutResId) {
+        public EmptyManager emptyLayoutResId(@LayoutRes int emptyLayoutResId) {
             this.emptyLayoutResId = emptyLayoutResId;
             return this;
         }
@@ -385,12 +382,21 @@ final class ResourcesManager {
         }
     }
 
-    static class AttrsEntity {
+    static class AttrEntity {
+        /**
+         * 闭合时最低展示多少个
+         */
         int minSize;
+        /**
+         * 是否是闭合状态
+         */
         boolean isFolded;
+        /**
+         * 初始化是否闭合
+         */
         boolean initState;
 
-        AttrsEntity(int minSize, boolean isFolded) {
+        AttrEntity(int minSize, boolean isFolded) {
             this.minSize = minSize;
             this.initState = isFolded;
             this.isFolded = isFolded;

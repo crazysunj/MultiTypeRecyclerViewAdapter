@@ -18,6 +18,14 @@ package com.crazysunj.multitypeadapter.helper;
 import android.util.LruCache;
 import android.util.SparseArray;
 
+import androidx.annotation.CallSuper;
+import androidx.annotation.IntDef;
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListUpdateCallback;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crazysunj.multitypeadapter.adapter.EmptyEntityAdapter;
 import com.crazysunj.multitypeadapter.adapter.ErrorEntityAdapter;
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
@@ -33,14 +41,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
-
-import androidx.annotation.CallSuper;
-import androidx.annotation.IntDef;
-import androidx.annotation.IntRange;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListUpdateCallback;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * @author: sunjian
@@ -63,7 +63,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     protected static final String TAG = RecyclerViewAdapterHelper.class.getSimpleName();
 
     /**
-     * 标准模式，相应level在一起
+     * 标准模式，根据level顺序摆放
      */
     public static final int MODE_STANDARD = 0;
     /**
@@ -185,7 +185,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     /**
      * 根据level存储的数据
      */
-    private SparseArray<LevelData<T>> mLevelOldData;
+    private SparseArray<LevelData<T>> mLevelData;
     /**
      * loading的data缓存
      */
@@ -217,7 +217,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     /**
      * 全局loading刷新数据
      */
-    private ArrayList<T> mGlobalLoadingEntitys;
+    private SparseArray<LevelData<T>> mLoadingLevelData;
 
     /**
      * 当前模式
@@ -228,25 +228,17 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      */
     private int mCurrentLevel;
 
-    public RecyclerViewAdapterHelper(List<T> data) {
-        this(data, MODE_STANDARD);
+    public RecyclerViewAdapterHelper() {
+        this(MODE_STANDARD);
     }
 
-    public RecyclerViewAdapterHelper(List<T> data, @RefreshMode int mode) {
-        mData = data == null ? new ArrayList<T>() : data;
+    public RecyclerViewAdapterHelper(@RefreshMode int mode) {
+        mData = new ArrayList<>();
         mCurrentMode = mode;
         mNewData = new ArrayList<>();
-        mLevelOldData = new SparseArray<>();
+        mLevelData = new SparseArray<>();
         mResourcesManager = new ResourcesManager();
         mRefreshQueue = new LinkedList<>();
-
-        registerModule();
-
-        if (mCurrentMode == MODE_STANDARD && !mData.isEmpty()) {
-            List<T> newData = initStandardNewData(mData);
-            mData.clear();
-            mData.addAll(newData);
-        }
     }
 
     /**
@@ -338,9 +330,9 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * 链式注册Module
      *
      * @param level 数据类型等级
-     * @return LevelsManager
+     * @return LevelManager
      */
-    public ResourcesManager.LevelsManager registerModule(@IntRange(from = 0, to = 999) int level) {
+    public ResourcesManager.LevelManager registerModule(@IntRange(from = 0, to = 999) int level) {
         return mResourcesManager.level(level);
     }
 
@@ -358,15 +350,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @return 获取LevelData
      */
     public LevelData<T> getDataWithLevel(int level) {
-        return mLevelOldData.get(level);
-    }
-
-    /**
-     * @param type 数据类型
-     * @return 获取LevelData
-     */
-    public LevelData<T> getDataWithType(int type) {
-        return mLevelOldData.get(getLevel(type));
+        return mLevelData.get(level);
     }
 
     /**
@@ -374,43 +358,33 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * 调用前请初始化loading全局数据{@link #initGlobalLoadingConfig(LoadingConfig)}
      */
     public void notifyLoadingChanged() {
-        if (mGlobalLoadingEntitys == null) {
+        if (mLoadingLevelData == null) {
             return;
         }
 
         mNewData.clear();
-        mLevelOldData.clear();
+        mLevelData.clear();
 
-        for (T entity : mGlobalLoadingEntitys) {
-            final int itemType = entity.getItemType();
-            int level;
-            if (itemType >= -LOADING_DATA_TYPE_DIFFER && itemType < -HEADER_TYPE_DIFFER) {
-                level = getLevel(itemType);
-                LevelData<T> levelData = mLevelOldData.get(level);
-                if (levelData == null) {
-                    levelData = new LevelData<>(new ArrayList<T>(), null, null);
-                    mLevelOldData.put(level, levelData);
-                } else {
-                    List<T> data = levelData.getData();
-                    if (data == null) {
-                        levelData.setData(new ArrayList<T>());
-                    }
-                }
-                levelData.getData().add(entity);
-            } else if (itemType >= -LOADING_HEADER_TYPE_DIFFER && itemType < -LOADING_DATA_TYPE_DIFFER) {
-                level = getLevel(itemType);
-                LevelData<T> levelData = mLevelOldData.get(level);
-                if (levelData == null) {
-                    levelData = new LevelData<>(null, entity, null);
-                    mLevelOldData.put(level, levelData);
-                } else {
-                    levelData.setHeader(entity);
-                }
-            } else {
-                throw new DataException("are you sure the ture level ? itemType = " + itemType);
+        final int size = mLoadingLevelData.size();
+        List<T> data = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            int level = mLoadingLevelData.keyAt(i);
+            LevelData<T> levelData = mLoadingLevelData.valueAt(i);
+            mLevelData.put(level, levelData);
+            T header = levelData.getHeader();
+            List<T> itemData = levelData.getData();
+            T footer = levelData.getFooter();
+            if (header != null) {
+                data.add(header);
+            }
+            if (itemData != null) {
+                data.addAll(itemData);
+            }
+            if (footer != null) {
+                data.add(footer);
             }
         }
-        mNewData.addAll(mGlobalLoadingEntitys);
+        mNewData.addAll(data);
         notifyModuleChanged(mNewData, null, null, REFRESH_TYPE_LOAD_ALL, REFRESH_ALL);
     }
 
@@ -421,30 +395,18 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param level level
      */
     public void notifyLoadingChanged(int level) {
-        if (mGlobalLoadingEntitys == null) {
+        if (mLoadingLevelData == null) {
             return;
         }
 
-        List<T> loadingEntitys = new ArrayList<>();
         T header = null;
-        for (T entity : mGlobalLoadingEntitys) {
-            final int itemType = entity.getItemType();
-            if (itemType >= -LOADING_DATA_TYPE_DIFFER && itemType < -HEADER_TYPE_DIFFER) {
-                final int itemLevel = getLevel(itemType);
-                if (itemLevel == level) {
-                    loadingEntitys.add(entity);
-                }
-                continue;
-            }
-
-            if (itemType >= -LOADING_HEADER_TYPE_DIFFER && itemType < -LOADING_DATA_TYPE_DIFFER) {
-                final int itemLevel = getLevel(itemType);
-                if (itemLevel == level) {
-                    header = entity;
-                }
-            }
+        List<T> data = null;
+        LevelData<T> levelData = mLoadingLevelData.get(level);
+        if (levelData != null) {
+            header = levelData.getHeader();
+            data = levelData.getData();
         }
-        notifyModuleChanged(loadingEntitys, header, null, level, REFRESH_HEADER_FOOTER_DATA);
+        notifyModuleChanged(data, header, null, level, REFRESH_HEADER_FOOTER_DATA);
     }
 
     /**
@@ -612,10 +574,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param level     level
      */
     public void notifyModuleEmptyChanged(@NonNull T emptyData, int level) {
-        if (getLevel(emptyData.getItemType()) == level) {
+        if (emptyData.getItemType() == level - EMPTY_TYPE_DIFFER) {
             notifyModuleChanged(Collections.singletonList(emptyData), null, null, level, REFRESH_HEADER_FOOTER_DATA);
         } else {
-            throw new DataException("please set correct itemType ! level = " + level);
+            throw new DataException("Please set correct itemType ! level = " + level);
         }
     }
 
@@ -646,10 +608,10 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @param level     level
      */
     public void notifyModuleErrorChanged(@NonNull T errorData, int level) {
-        if (getLevel(errorData.getItemType()) == level) {
+        if (errorData.getItemType() == level - ERROR_TYPE_DIFFER) {
             notifyModuleChanged(Collections.singletonList(errorData), null, null, level, REFRESH_HEADER_FOOTER_DATA);
         } else {
-            throw new DataException("please set correct itemType ! level = " + level);
+            throw new DataException("Please set correct itemType ! level = " + level);
         }
     }
 
@@ -673,58 +635,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     }
 
     /**
-     * 切换模式并刷新全局数据
-     * 默认为当前刷新模式
-     * 不支持动画，支持动画可调用{@link #notifyDataByDiff(List, int)}
-     *
-     * @param newData     数据
-     * @param refreshMode 模式
-     */
-    @SuppressWarnings("unchecked")
-    public void notifyDataSetChanged(@NonNull List<? extends T> newData, @RefreshMode int refreshMode) {
-        checkAdapterBind();
-
-        if (!mIsCanRefresh) {
-            return;
-        }
-        mCurrentLevel = REFRESH_TYPE_DATA_ALL;
-        onStart();
-        mData.clear();
-
-        if (refreshMode == MODE_STANDARD) {
-            mData.addAll(initStandardNewData((List<T>) newData));
-        } else {
-            mData.addAll(newData);
-        }
-        mAdapter.notifyDataSetChanged();
-
-        mCurrentMode = refreshMode;
-        onEnd();
-    }
-
-
-    /**
-     * 默认标准刷新
-     *
-     * @param newData 数据
-     */
-    public void notifyDataSetChanged(@NonNull List<? extends T> newData) {
-        notifyDataSetChanged(newData, mCurrentMode);
-    }
-
-    /**
-     * 该方法可以用来扩展整个页面切换空页面、错误页面等
-     * 刷新全部数据
-     *
-     * @param data 传入数据
-     */
-    public void notifyDataSetChanged(@NonNull T data) {
-        notifyDataSetChanged(Collections.singletonList(data));
-    }
-
-    /**
      * 全局刷新
-     * 切记，该方法不能用于改变集合之后的刷新，只能用于某item修改
      * 标记为过时，请直接调用{@link RecyclerView.Adapter#notifyDataSetChanged()}
      */
     @Deprecated
@@ -740,59 +651,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     }
 
     /**
-     * 直接操作数据后的全局刷新方法
-     * 该方法只支持item的改变，同{@link #setData(int, MultiTypeEntity)}
-     * 注意点：如果notifyModule调用过快，Adapter将不会即时更新，可调用{@link #notifyDataChanged(MultiTypeEntity)}解决此问题
-     * 标记为过时，请直接调用{@link RecyclerView.Adapter#notifyDataSetChanged()}
-     */
-    @Deprecated
-    public void notifyDataChanged() {
-        checkAdapterBind();
-        if (!mIsCanRefresh) {
-            return;
-        }
-        mCurrentLevel = REFRESH_TYPE_DATA_ALL;
-        onStart();
-        mAdapter.notifyItemRangeChanged(getPreDataCount(), mData.size());
-        onEnd();
-    }
-
-    /**
-     * 直接操作单个数据后的刷新方法
-     * 该方法只支持item的改变，同{@link #setData(int, MultiTypeEntity)}
-     * 标记为过时，请用{@link #setData(int, MultiTypeEntity)}替代
-     *
-     * @param data 数据，支持header,data,footer
-     */
-    @Deprecated
-    public void notifyDataChanged(@NonNull T data) {
-        int position = mData.indexOf(data);
-        if (position < 0) {
-            return;
-        }
-        T innerEntity = mData.get(position);
-        if (innerEntity == data) {
-            checkAdapterBind();
-            if (!mIsCanRefresh) {
-                return;
-            }
-            mCurrentLevel = getLevel(data.getItemType());
-            onStart();
-            mAdapter.notifyItemChanged(position + getPreDataCount());
-            onEnd();
-        } else {
-            setData(position, data);
-        }
-    }
-
-    /**
      * 直接操作单个level后的刷新方法
      * 该方法只支持item的改变，同{@link #setData(int, MultiTypeEntity)}
-     * 注意点：如果notifyModule调用过快，Adapter将不会即时更新，可调用{@link #notifyDataChanged(MultiTypeEntity)}解决此问题
      *
      * @param level level
      */
-    public void notifyDataChanged(int level) {
+    public void notifyDataSetChanged(int level) {
         LevelData<T> levelData = getDataWithLevel(level);
         if (levelData == null) {
             return;
@@ -814,48 +678,78 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         }
         List<T> list = levelData.getData();
         if (list != null && !list.isEmpty()) {
-            ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(level);
+            ResourcesManager.AttrEntity attrEntity = mResourcesManager.getAttrsEntity(level);
             int size = list.size();
-            if (!attrsEntity.isFolded || size <= attrsEntity.minSize) {
+            if (!attrEntity.isFolded || size <= attrEntity.minSize) {
                 count += size;
             } else {
-                count += attrsEntity.minSize;
+                count += attrEntity.minSize;
             }
         }
         mAdapter.notifyItemRangeChanged(positionStart + getPreDataCount(), count);
         onEnd();
     }
 
+    /**
+     * 专门用于混合模式的全局刷新 {@link RecyclerViewAdapterHelper#MODE_MIXED}
+     *
+     * @param list List
+     */
+    public void notifyDataSetChanged(@NonNull List<? extends T> list) {
+        checkAdapterBind();
+        if (!mIsCanRefresh) {
+            return;
+        }
+        mCurrentMode = MODE_MIXED;
+        mCurrentLevel = REFRESH_TYPE_DATA_ALL;
+        onStart();
+        mNewData.clear();
+        mNewData.addAll(list);
+        mData.clear();
+        mData.addAll(mNewData);
+        mAdapter.notifyDataSetChanged();
+        onEnd();
+    }
+
 
     /**
-     * 切换模式并刷新全局数据
-     * 同{@link #notifyDataSetChanged(List, int)}
-     * 默认为当前刷新模式
-     * 支持刷新动画
+     * 专门用于标准模式的全局刷新 {@link RecyclerViewAdapterHelper#MODE_STANDARD}
      *
-     * @param newData     数据
-     * @param refreshMode 模式
+     * @param levelData SparseArray，需要对list2次封装
      */
-    @SuppressWarnings("unchecked")
-    public void notifyDataByDiff(@NonNull List<? extends T> newData, @RefreshMode int refreshMode) {
+    public void notifyDataSetChanged(@NonNull SparseArray<LevelData<T>> levelData) {
+        mCurrentMode = MODE_STANDARD;
+        final int size = levelData.size();
         mNewData.clear();
-        if (refreshMode == MODE_STANDARD) {
-            mNewData.addAll(initStandardNewData((List<T>) newData));
-        } else {
-            mNewData.addAll(newData);
+        mLevelData.clear();
+        for (int i = 0; i < size; i++) {
+            LevelData<T> itemData = levelData.valueAt(i);
+            if (itemData == null) {
+                continue;
+            }
+            int level = levelData.keyAt(i);
+            mLevelData.put(level, itemData);
+            T header = itemData.getHeader();
+            if (header != null) {
+                mNewData.add(header);
+            }
+            List<T> data = itemData.getData();
+            if (data != null) {
+                ResourcesManager.AttrEntity attrEntity = mResourcesManager.getAttrsEntity(level);
+                int itemSize = data.size();
+                if (!attrEntity.isFolded || itemSize <= attrEntity.minSize) {
+                    mNewData.addAll(data);
+                } else {
+                    mNewData.addAll(data.subList(0, attrEntity.minSize));
+                }
+            }
+            T footer = itemData.getFooter();
+            if (footer != null) {
+                mNewData.add(footer);
+            }
         }
         notifyModuleChanged(mNewData, null, null, REFRESH_TYPE_DATA_ALL, REFRESH_ALL);
-        mCurrentMode = refreshMode;
     }
-
-    public void notifyDataByDiff(@NonNull List<? extends T> newData) {
-        notifyDataByDiff(newData, mCurrentMode);
-    }
-
-    public void notifyDataByDiff(@NonNull T data) {
-        notifyDataByDiff(Collections.singletonList(data));
-    }
-
 
     /**
      * 清除level数组中的数据
@@ -868,11 +762,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             return;
         }
         for (int level : levels) {
-            mLevelOldData.remove(level);
+            mLevelData.remove(level);
         }
         mNewData.clear();
-        for (int i = 0, size = mLevelOldData.size(); i < size; i++) {
-            LevelData<T> levelData = mLevelOldData.valueAt(i);
+        for (int i = 0, size = mLevelData.size(); i < size; i++) {
+            LevelData<T> levelData = mLevelData.valueAt(i);
             T header = levelData.getHeader();
             List<T> data = levelData.getData();
             T footer = levelData.getFooter();
@@ -903,7 +797,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
 
         SparseArray<LevelData<T>> temData = new SparseArray<>();
         for (int level : levels) {
-            LevelData<T> levelData = mLevelOldData.get(level);
+            LevelData<T> levelData = mLevelData.get(level);
             if (levelData == null) {
                 continue;
             }
@@ -911,7 +805,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         }
 
         mNewData.clear();
-        mLevelOldData.clear();
+        mLevelData.clear();
         for (int i = 0, size = temData.size(); i < size; i++) {
             int level = temData.keyAt(i);
             LevelData<T> levelData = temData.valueAt(i);
@@ -927,7 +821,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             if (footer != null) {
                 mNewData.add(footer);
             }
-            mLevelOldData.put(level, levelData);
+            mLevelData.put(level, levelData);
         }
         notifyModuleChanged(mNewData, null, null, REFRESH_TYPE_DATA_ALL, REFRESH_ALL);
     }
@@ -948,18 +842,27 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         mCurrentLevel = REFRESH_TYPE_CLEAR;
         onStart();
         mData.clear();
-        mLevelOldData.clear();
+        mLevelData.clear();
         mAdapter.notifyDataSetChanged();
         onEnd();
     }
 
     /**
-     * 添加数据
-     * 标准模式只支持当前level
+     * 添加数据，仅用于混合模式{@link RecyclerViewAdapterHelper#MODE_MIXED}
      *
      * @param position 添加的位置
      */
     public void addData(int position, @NonNull T data) {
+        addData(position, data, DEFAULT_HEADER_LEVEL);
+    }
+
+    /**
+     * 添加数据，仅用于标准模式{@link RecyclerViewAdapterHelper#MODE_STANDARD}
+     *
+     * @param position 添加的位置
+     * @param level    level，必须添加level，不然无法确认添加的是什么level，存放在哪里
+     */
+    public void addData(int position, @NonNull T data, int level) {
 
         if (position >= mData.size()) {
             addData(data);
@@ -974,64 +877,69 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         onStart();
 
         if (mCurrentMode == MODE_STANDARD) {
-            T t = mData.get(position);
-            int itemType = t.getItemType();
-            final int level = getLevel(data.getItemType());
-            final int currentLevel = getLevel(itemType);
-            if (level != currentLevel) {
-                if (position - 1 >= 0) {
-                    final int preLevel = getLevel(mData.get(position - 1).getItemType());
-                    if (level < preLevel || level > currentLevel) {
+            final int itemType = data.getItemType();
+            final int currentLevel = getLevelByPosition(position);
+            if (level > currentLevel) {
+                onEnd();
+                throw new DataException("the data's level can't be add, the level bigger");
+            }
+
+            if (position - 1 >= 0) {
+                final int preLevel = getLevelByPosition(position - 1);
+                if (level == preLevel) {
+                    final int preItemType = mData.get(position - 1).getItemType();
+                    if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0 && preItemType == itemType) {
+                        // 插入的位置前一个是head类型且与它同一type，冲突
                         onEnd();
-                        throw new DataException("the data's level can't be add");
-                    } else {
-                        if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
-                            position -= 1;
-                        }
+                        throw new DataException("the data's level can't be add, one level has one header");
                     }
-                } else if (position == 0) {
-                    if (level > currentLevel) {
+
+                    if (itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER && preItemType == itemType) {
+                        // 插入的位置前一个是foot类型且与它同一type，冲突
                         onEnd();
-                        throw new DataException("the data's level can't be add");
-                    } else {
-                        if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
-                            position -= 1;
-                        }
+                        throw new DataException("the data's level can't be add, one level has one footer");
                     }
-                } else {
-                    onEnd();
-                    throw new DataException("the data's level can't be add");
                 }
             }
-            LevelData<T> levelData = mLevelOldData.get(level);
+
+            if (level == currentLevel) {
+                final int currentItemType = mData.get(position).getItemType();
+                if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0 && currentItemType == itemType) {
+                    // 插入的位置是head类型且与它同一type，冲突
+                    onEnd();
+                    throw new DataException("the data's level can't be add, one level has one header");
+                }
+
+                if (itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER && currentItemType == itemType) {
+                    // 插入的位置前一个是foot类型且与它同一type，冲突
+                    onEnd();
+                    throw new DataException("the data's level can't be add, one level has one footer");
+                }
+            }
+
+            LevelData<T> levelData = mLevelData.get(level);
             if (levelData == null) {
-                //不可能为空
                 levelData = new LevelData<>(new ArrayList<T>(), null, null);
-                mLevelOldData.put(level, levelData);
+                mLevelData.put(level, levelData);
             }
             List<T> list = levelData.getData();
             if (list == null) {
                 levelData.setData(new ArrayList<T>());
                 list = levelData.getData();
             }
-            int pos;
             if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
-                pos = position + 1;
-                list.add(0, data);
+                levelData.setHeader(data);
             } else if (itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER) {
-                pos = position;
-                list.add(data);
+                levelData.setFooter(data);
             } else if (itemType >= 0) {
-                pos = position;
                 int positionStart = getPositionStart(level);
                 T header = levelData.getHeader();
-                int addPosition = header == null ? pos - positionStart : pos - positionStart - 1;
+                int addPosition = header == null ? position - positionStart : position - positionStart - 1;
                 list.add(addPosition, data);
             } else {
                 onEnd();
-                throw new DataException("the data's type can't be add");
+                throw new DataException("The data's type can't be add");
             }
-            position = pos;
         }
         mData.add(position, data);
         mAdapter.notifyItemInserted(position + getPreDataCount());
@@ -1039,11 +947,21 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     }
 
     /**
-     * 添加数据
+     * 添加数据，{@link RecyclerViewAdapterHelper#MODE_MIXED}
      *
      * @param data 数据
      */
     public void addData(@NonNull T data) {
+        addData(data, DEFAULT_HEADER_LEVEL);
+    }
+
+    /**
+     * 添加数据，{@link RecyclerViewAdapterHelper#MODE_STANDARD}
+     *
+     * @param data  数据
+     * @param level level，标准模式需要提供level，除了校验数据外，可能新增的数据从未加载过，无法确认level
+     */
+    public void addData(@NonNull T data, int level) {
         checkAdapterBind();
 
         if (!mIsCanRefresh) {
@@ -1053,52 +971,55 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         onStart();
 
         if (mCurrentMode == MODE_STANDARD) {
-            int position;
-            int level = getLevel(data.getItemType());
-            if (mData.isEmpty()) {
-                position = 0;
-            } else {
-                int lastPosition = mData.size() - 1;
-                T t = mData.get(lastPosition);
-                int itemType = t.getItemType();
-                final int lastLevel = getLevel(itemType);
-                if (level == lastLevel) {
-                    int pos;
-                    if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
-                        pos = lastPosition + 1;
-                    } else if (itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER) {
-                        pos = lastPosition;
-                    } else if (itemType >= 0) {
-                        pos = lastPosition + 1;
-                    } else {
-                        onEnd();
-                        throw new DataException("the data's type can't be add");
-                    }
-                    position = pos;
-                } else if (level > lastLevel) {
-                    position = lastPosition + 1;
-                } else {
+            final int size = mData.size();
+            int itemType = data.getItemType();
+            if (size > 0) {
+                // 前面有数据
+                final int lastLevel = getLevelByPosition(size - 1);
+                if (level < lastLevel) {
                     onEnd();
-                    throw new DataException("the data's level can't be add");
+                    throw new DataException("the data's level can't be add, the level smaller");
+                }
+                if (level == lastLevel) {
+                    int lastItemType = mData.get(size - 1).getItemType();
+                    if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0 && lastItemType == itemType) {
+                        // 插入的位置是head类型且与它同一type，冲突
+                        onEnd();
+                        throw new DataException("the data's level can't be add, one level has one header");
+                    }
+
+                    if (itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER && lastItemType == itemType) {
+                        // 插入的位置前一个是foot类型且与它同一type，冲突
+                        onEnd();
+                        throw new DataException("the data's level can't be add, one level has one footer");
+                    }
                 }
             }
-            LevelData<T> levelData = mLevelOldData.get(level);
+
+            LevelData<T> levelData = mLevelData.get(level);
             if (levelData == null) {
                 levelData = new LevelData<>(new ArrayList<T>(), null, null);
-                mLevelOldData.put(level, levelData);
+                mLevelData.put(level, levelData);
             }
             List<T> list = levelData.getData();
             if (list == null) {
                 levelData.setData(new ArrayList<T>());
                 list = levelData.getData();
             }
-            list.add(data);
-            mData.add(position, data);
-            mAdapter.notifyItemInserted(position + getPreDataCount());
-        } else {
-            mData.add(data);
-            mAdapter.notifyItemInserted(mData.size() + getPreDataCount());
+
+            if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
+                levelData.setHeader(data);
+            } else if (itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER) {
+                levelData.setFooter(data);
+            } else if (itemType >= 0) {
+                list.add(data);
+            } else {
+                onEnd();
+                throw new DataException("The data's type can't be add");
+            }
         }
+        mData.add(data);
+        mAdapter.notifyItemInserted(mData.size() + getPreDataCount());
         onEnd();
     }
 
@@ -1127,25 +1048,37 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         mAdapter.notifyItemRangeChanged(internalPosition, mData.size() - internalPosition);
 
         if (mCurrentMode == MODE_STANDARD) {
-            int itemType = removeData.getItemType();
-            boolean isHeader = itemType >= -HEADER_TYPE_DIFFER && itemType < 0;
-            boolean isFooter = itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER;
-            LevelData<T> levelData = getDataWithType(itemType);
-            if (levelData == null) {
-                onEnd();
-                return removeData;
-            }
-            if (isHeader) {
-                levelData.removeHeader();
-            } else if (isFooter) {
-                levelData.removeFooter();
-            } else {
-                List<T> list = levelData.getData();
-                if (list == null || list.isEmpty()) {
-                    onEnd();
-                    return removeData;
+            final int size = mLevelData.size();
+            int index = -1;
+            for (int i = 0; i < size; i++) {
+                LevelData<T> levelData = mLevelData.valueAt(i);
+                if (levelData == null) {
+                    continue;
                 }
-                list.remove(removeData);
+                T header = levelData.getHeader();
+                if (header != null) {
+                    index++;
+                    if (index == position) {
+                        levelData.removeHeader();
+                        break;
+                    }
+                }
+                List<T> data = levelData.getData();
+                if (data != null) {
+                    index += data.size();
+                    if (position <= index) {
+                        data.remove(removeData);
+                        break;
+                    }
+                }
+                T footer = levelData.getFooter();
+                if (footer != null) {
+                    index++;
+                    if (index == position) {
+                        levelData.removeFooter();
+                        break;
+                    }
+                }
             }
         }
         onEnd();
@@ -1184,32 +1117,74 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             T remove = mData.remove(positionStart);
             removeData.add(remove);
         }
-        final int removePostion = positionStart + getPreDataCount();
-        mAdapter.notifyItemRangeRemoved(removePostion, itemCount);
-        mAdapter.notifyItemRangeChanged(removePostion, mData.size() - removePostion);
+        final int removePosition = positionStart + getPreDataCount();
+        mAdapter.notifyItemRangeRemoved(removePosition, itemCount);
+        mAdapter.notifyItemRangeChanged(removePosition, mData.size() - removePosition);
+
+
         if (mCurrentMode == MODE_STANDARD) {
-            final int level = getListLevel(removeData);
-            final int levelStart = getPositionStart(level);
-            final LevelData<T> dataWithLevel = getDataWithLevel(level);
-            int levelEnd = levelStart;
-            if (dataWithLevel.getHeader() != null) {
-                levelEnd++;
-            }
-            if (dataWithLevel.getFooter() != null) {
-                levelEnd++;
-            }
-            List<T> data = dataWithLevel.getData();
-            if (data != null) {
-                levelEnd += data.size();
-            }
-            if (positionStart == levelStart) {
-                dataWithLevel.removeHeader();
-            }
-            if (positionStart + itemCount - 1 == levelEnd) {
-                dataWithLevel.removeFooter();
-            }
-            if (data != null) {
-                data.removeAll(removeData);
+            final int levelSize = mLevelData.size();
+            final int removeSize = removeData.size();
+            int index = -1;
+            for (int i = 0; i < levelSize; i++) {
+                LevelData<T> levelData = mLevelData.valueAt(i);
+                if (levelData == null) {
+                    continue;
+                }
+                T header = levelData.getHeader();
+                if (header != null) {
+                    index++;
+                    if (index >= positionStart && index < positionStart + removeSize) {
+                        levelData.removeHeader();
+                        if (index == positionStart + removeSize - 1) {
+                            break;
+                        }
+                    }
+                }
+                List<T> data = levelData.getData();
+                if (data != null) {
+                    final int dataSize = data.size();
+                    if (index >= positionStart && index < positionStart + removeSize) {
+                        index += dataSize;
+                        if (index < positionStart + removeSize) {
+                            data.clear();
+                            if (index == positionStart + removeSize - 1) {
+                                break;
+                            }
+                        } else {
+                            final int diff = index - (positionStart + removeSize - 1);
+                            for (int j = 0, count = dataSize - diff; j < count; j++) {
+                                data.remove(0);
+                            }
+                            break;
+                        }
+                    }
+                    final int lastIndex = index + dataSize - 1;
+                    if (lastIndex >= positionStart + removeSize - 1 && index <= positionStart + removeSize - 1) {
+                        final int start = dataSize - (lastIndex - positionStart + 1);
+                        for (int j = start, count = start + removeSize; j < count; j++) {
+                            data.remove(start);
+                        }
+                        break;
+                    } else if ((lastIndex < positionStart + removeSize - 1) && index <= positionStart + removeSize - 1) {
+                        final int needRemoveSize = lastIndex - positionStart + 1;
+                        final int start = dataSize - needRemoveSize;
+                        for (int j = start, count = start + needRemoveSize; j < count; j++) {
+                            data.remove(start);
+                        }
+                    }
+                    index += dataSize;
+                }
+                T footer = levelData.getFooter();
+                if (footer != null) {
+                    index++;
+                    if (index >= positionStart && index < positionStart + removeSize) {
+                        levelData.removeFooter();
+                        if (index == positionStart + removeSize - 1) {
+                            break;
+                        }
+                    }
+                }
             }
         }
         onEnd();
@@ -1235,20 +1210,19 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             T currentData = mData.get(position);
             if (currentData == null) {
                 onEnd();
-                throw new DataException("the change data == null ?");
+                throw new DataException("The change data == null ?");
             }
             final int itemType = data.getItemType();
-            final int level = getLevel(itemType);
-            if (getLevel(currentData.getItemType()) != level) {
+            if (currentData.getItemType() != itemType) {
                 onEnd();
-                throw new DataException("the data's level can't be set");
+                throw new DataException("The data's itemType can't be set");
             }
 
             T oldData = mData.set(position, data);
             mAdapter.notifyItemChanged(position + getPreDataCount());
             boolean isHeader = itemType >= -HEADER_TYPE_DIFFER && itemType < 0;
             boolean isFooter = itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER;
-            LevelData<T> levelData = getDataWithType(itemType);
+            LevelData<T> levelData = mLevelData.get(getLevelByPosition(position));
             if (levelData == null) {
                 onEnd();
                 return;
@@ -1276,14 +1250,25 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     }
 
     /**
-     * 插入数据
-     * 标准模式只支持当前level
+     * 插入数据 {@link RecyclerViewAdapterHelper#MODE_MIXED}
      * 可以配合{@link #removeData(int, int)}实现展开闭合效果
      *
      * @param position 位置
      * @param data     数据
      */
     public void addData(int position, @NonNull List<? extends T> data) {
+        addData(position, data, DEFAULT_HEADER_LEVEL);
+    }
+
+    /**
+     * 插入数据 {@link RecyclerViewAdapterHelper#MODE_STANDARD}
+     * 可以配合{@link #removeData(int, int)}实现展开闭合效果
+     *
+     * @param position 位置
+     * @param data     数据
+     * @param level    level，必须添加level，不然无法确认添加的是什么level，存放在哪里
+     */
+    public void addData(int position, @NonNull List<? extends T> data, int level) {
         if (data.isEmpty()) {
             return;
         }
@@ -1301,40 +1286,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         onStart();
 
         if (mCurrentMode == MODE_STANDARD) {
-            T t = mData.get(position);
-            int itemType = t.getItemType();
-            final int level = getListLevel(data);
-            int currentLevel = getLevel(itemType);
-            if (level != currentLevel) {
-                if (position - 1 >= 0) {
-                    final int preLevel = getLevel(mData.get(position - 1).getItemType());
-                    if (level < preLevel || level > currentLevel) {
-                        onEnd();
-                        throw new DataException("the data's level can't be add");
-                    } else {
-                        if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
-                            position -= 1;
-                        }
-                    }
-                } else if (position == 0) {
-                    if (level > currentLevel) {
-                        onEnd();
-                        throw new DataException("the data's level can't be add");
-                    } else {
-                        if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
-                            position -= 1;
-                        }
-                    }
-                } else {
-                    onEnd();
-                    throw new DataException("the data's level can't be add");
-                }
-            }
-            LevelData<T> levelData = mLevelOldData.get(level);
+            // 不再校验用户传入的数据
+            LevelData<T> levelData = mLevelData.get(level);
             if (levelData == null) {
-                //不可能为空
                 levelData = new LevelData<>(new ArrayList<T>(), null, null);
-                mLevelOldData.put(level, levelData);
+                mLevelData.put(level, levelData);
             }
             List<T> list = levelData.getData();
             if (list == null) {
@@ -1342,24 +1298,44 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
                 list = levelData.getData();
             }
 
-            int pos;
-            if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
-                pos = position + 1;
-                list.addAll(0, data);
-            } else if (itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER) {
-                pos = position;
-                list.addAll(data);
-            } else if (itemType >= 0) {
-                pos = position;
-                int positionStart = getPositionStart(level);
-                T header = levelData.getHeader();
-                int addPosition = header == null ? pos - positionStart : pos - positionStart - 1;
-                list.addAll(addPosition, data);
-            } else {
-                onEnd();
-                throw new DataException("please check the current showing data");
+            boolean isHaveHeader = data.get(0).getItemType() == level - HEADER_TYPE_DIFFER;
+            boolean isHaveFooter = data.get(data.size() - 1).getItemType() == level - FOOTER_TYPE_DIFFER;
+
+            int positionStart = getPositionStart(level);
+            if (positionStart == position) {
+                if (isHaveHeader && levelData.getHeader() != null) {
+                    onEnd();
+                    throw new DataException("Please check the current showing data");
+                }
             }
-            position = pos;
+
+            if (position > positionStart) {
+                if (isHaveHeader) {
+                    onEnd();
+                    throw new DataException("Please check the current showing data");
+                }
+            }
+
+            if (isHaveFooter) {
+                if (levelData.getFooter() != null) {
+                    onEnd();
+                    throw new DataException("Please check the current showing data");
+                }
+                if ((levelData.getHeader() == null ? 0 : 1) + positionStart + list.size() > position) {
+                    onEnd();
+                    throw new DataException("Please check the current showing data");
+                }
+            }
+
+            if (isHaveHeader) {
+                levelData.setHeader(data.remove(0));
+            }
+
+            if (isHaveFooter) {
+                levelData.setFooter(data.remove(data.size() - 1));
+            }
+
+            list.addAll(isHaveHeader ? position - positionStart - 1 : position - positionStart, data);
         }
         mData.addAll(position, data);
         mAdapter.notifyItemRangeInserted(position + getPreDataCount(), data.size());
@@ -1367,12 +1343,21 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     }
 
     /**
-     * 添加数据集合
-     * 标准模式只支持当前level
+     * 添加数据集合 {@link RecyclerViewAdapterHelper#MODE_MIXED}
      *
      * @param newData 数据
      */
     public void addData(@NonNull List<? extends T> newData) {
+        addData(newData, DEFAULT_HEADER_LEVEL);
+    }
+
+    /**
+     * 添加数据集合 {@link RecyclerViewAdapterHelper#MODE_STANDARD}
+     *
+     * @param newData 数据
+     * @param level   level，必须添加level，不然无法确认添加的是什么level，存放在哪里
+     */
+    public void addData(@NonNull List<? extends T> newData, int level) {
         if (newData.isEmpty()) {
             return;
         }
@@ -1384,52 +1369,39 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         mCurrentLevel = REFRESH_TYPE_OTHER;
         onStart();
         if (mCurrentMode == MODE_STANDARD) {
-            int position;
-            int level = getListLevel(newData);
-            if (mData.isEmpty()) {
-                position = 0;
-            } else {
-                int lastPosition = mData.size() - 1;
-                T t = mData.get(lastPosition);
-                int itemType = t.getItemType();
-                final int lastLevel = getLevel(itemType);
-                if (level == lastLevel) {
-                    int pos;
-                    if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
-                        pos = lastPosition + 1;
-                    } else if (itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER) {
-                        pos = lastPosition;
-                    } else if (itemType >= 0) {
-                        pos = lastPosition + 1;
-                    } else {
-                        onEnd();
-                        throw new DataException("please check the current showing data");
-                    }
-                    position = pos;
-                } else if (level > lastLevel) {
-                    position = lastPosition + 1;
-                } else {
-                    onEnd();
-                    throw new DataException("please check the current showing data");
-                }
-            }
-            LevelData<T> levelData = mLevelOldData.get(level);
+            LevelData<T> levelData = mLevelData.get(level);
             if (levelData == null) {
                 levelData = new LevelData<>(new ArrayList<T>(), null, null);
-                mLevelOldData.put(level, levelData);
+                mLevelData.put(level, levelData);
             }
             List<T> list = levelData.getData();
             if (list == null) {
                 levelData.setData(new ArrayList<T>());
                 list = levelData.getData();
             }
+
+            boolean isHaveHeader = newData.get(0).getItemType() == level - HEADER_TYPE_DIFFER;
+
+            if (isHaveHeader) {
+                if (levelData.getHeader() != null || levelData.getFooter() != null || !list.isEmpty()) {
+                    onEnd();
+                    throw new DataException("Please check the current showing data");
+                }
+            }
+
+            if (levelData.getFooter() != null) {
+                onEnd();
+                throw new DataException("Please check the current showing data");
+            }
+
+            boolean isHaveFooter = newData.get(newData.size() - 1).getItemType() == level - FOOTER_TYPE_DIFFER;
+            if (isHaveFooter) {
+                levelData.setFooter(newData.remove(newData.size() - 1));
+            }
             list.addAll(newData);
-            mData.addAll(position, newData);
-            mAdapter.notifyItemRangeInserted(position + getPreDataCount(), newData.size());
-        } else {
-            mData.addAll(newData);
-            mAdapter.notifyItemRangeInserted(mData.size() - newData.size() + getPreDataCount(), newData.size());
         }
+        mData.addAll(newData);
+        mAdapter.notifyItemRangeInserted(mData.size() - newData.size() + getPreDataCount(), newData.size());
         onEnd();
     }
 
@@ -1437,22 +1409,11 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * 判断数据是否处于闭合状态
      *
      * @param level level
-     * @return boolean ture为已闭合状态，false为展开状态
+     * @return boolean true为已闭合状态，false为展开状态
      */
     public boolean isDataFolded(int level) {
-        LevelData<T> levelData = getDataWithLevel(level);
-        if (levelData == null) {
-            return false;
-        }
-
-        List<T> data = levelData.getData();
-        if (data == null || data.isEmpty()) {
-            return false;
-        }
-
-        int size = data.size();
-        ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(level);
-        return !(!attrsEntity.isFolded || size <= attrsEntity.minSize);
+        ResourcesManager.AttrEntity attrEntity = mResourcesManager.getAttrsEntity(level);
+        return attrEntity.isFolded;
     }
 
     /**
@@ -1472,12 +1433,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             return;
         }
         final int size = data.size();
-        ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(level);
-        if ((!attrsEntity.isFolded || size <= attrsEntity.minSize) && !isFold) {
+        ResourcesManager.AttrEntity attrEntity = mResourcesManager.getAttrsEntity(level);
+        if ((!attrEntity.isFolded || size <= attrEntity.minSize) && !isFold) {
             return;
         }
 
-        if ((attrsEntity.isFolded || size <= attrsEntity.minSize) && isFold) {
+        if ((attrEntity.isFolded || size <= attrEntity.minSize) && isFold) {
             return;
         }
 
@@ -1488,49 +1449,21 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         mCurrentLevel = level;
         onStart();
         int headerCount = levelData.getHeader() == null ? 0 : 1;
-        int positionStart = getPositionStart(level) + headerCount + attrsEntity.minSize;
-        List<T> handleData = data.subList(attrsEntity.minSize, size);
+        int positionStart = getPositionStart(level) + headerCount + attrEntity.minSize;
+        List<T> handleData = data.subList(attrEntity.minSize, size);
 
         if (isFold) {
             mData.removeAll(handleData);
-            int removePostion = positionStart + getPreDataCount();
-            mAdapter.notifyItemRangeRemoved(removePostion, handleData.size());
-            mAdapter.notifyItemRangeChanged(removePostion, mData.size() - removePostion);
-            attrsEntity.isFolded = true;
+            int removePosition = positionStart + getPreDataCount();
+            mAdapter.notifyItemRangeRemoved(removePosition, handleData.size());
+            mAdapter.notifyItemRangeChanged(removePosition, mData.size() - removePosition);
+            attrEntity.isFolded = true;
         } else {
             mData.addAll(positionStart, handleData);
             mAdapter.notifyItemRangeInserted(positionStart + getPreDataCount(), handleData.size());
-            attrsEntity.isFolded = false;
+            attrEntity.isFolded = false;
         }
         onEnd();
-    }
-
-    /**
-     * 切换模式，只切换模式以及对数据整理，并不会刷新，
-     * 如果需要切换模式并刷新数据，请调用{@link #notifyDataSetChanged(List, int)}或者{@link #notifyDataByDiff(List, int)}
-     *
-     * @param mode   模式
-     * @param isSort 是否整理数据
-     */
-    public void switchMode(@RefreshMode int mode, boolean isSort) {
-        if (!mIsCanRefresh) {
-            return;
-        }
-        mCurrentLevel = REFRESH_TYPE_DATA_ALL;
-        onStart();
-
-        mCurrentMode = mode;
-        if (isSort && mCurrentMode == MODE_STANDARD) {
-            mNewData.clear();
-            mNewData.addAll(mData);
-            mData.clear();
-            mData.addAll(initStandardNewData(mNewData));
-        }
-        onEnd();
-    }
-
-    public void switchMode(@RefreshMode int mode) {
-        switchMode(mode, true);
     }
 
     /**
@@ -1642,11 +1575,6 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     protected abstract void startRefresh(HandleBase<T> refreshData);
 
     /**
-     * 注册资源
-     */
-    protected abstract void registerModule();
-
-    /**
      * 刷新生命周期-开始
      */
     @CallSuper
@@ -1735,7 +1663,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         mNewData.clear();
         mNewData.addAll(mData);
 
-        LevelData<T> oldLevelData = mLevelOldData.get(level);
+        LevelData<T> oldLevelData = mLevelData.get(level);
         List<T> data = null;
         T header = null;
         T footer = null;
@@ -1777,15 +1705,15 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
 
         if (!(newData == null || newData.isEmpty()) && isRefreshData) {
             data = newData;
-            ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(level);
-            if (!attrsEntity.initState || data.size() <= attrsEntity.minSize) {
+            ResourcesManager.AttrEntity attrEntity = mResourcesManager.getAttrsEntity(level);
+            if (!attrEntity.initState || data.size() <= attrEntity.minSize) {
                 mNewData.addAll(header == null ? positionStart : positionStart + 1, data);
                 dataSize = data.size();
             } else {
-                mNewData.addAll(header == null ? positionStart : positionStart + 1, data.subList(0, attrsEntity.minSize));
-                dataSize = attrsEntity.minSize;
+                mNewData.addAll(header == null ? positionStart : positionStart + 1, data.subList(0, attrEntity.minSize));
+                dataSize = attrEntity.minSize;
             }
-            attrsEntity.isFolded = attrsEntity.initState;
+            attrEntity.isFolded = attrEntity.initState;
         }
 
         if (newHeader != null && isRefreshHeader) {
@@ -1802,7 +1730,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             mNewData.add(positionStart, footer);
         }
         DiffUtil.DiffResult result = DiffUtil.calculateDiff(getDiffCallBack(mData, mNewData), isDetectMoves());
-        mLevelOldData.put(level, new LevelData<>(data, header, footer));
+        mLevelData.put(level, new LevelData<>(data, header, footer));
         return result;
     }
 
@@ -1813,7 +1741,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
      * @return int
      */
     public int getDataSize(int level) {
-        LevelData<T> data = mLevelOldData.get(level);
+        LevelData<T> data = mLevelData.get(level);
         if (data == null) {
             return 0;
         }
@@ -1822,12 +1750,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             return 0;
         }
 
-        ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(level);
+        ResourcesManager.AttrEntity attrEntity = mResourcesManager.getAttrsEntity(level);
         int size = list.size();
-        if (!attrsEntity.isFolded || size <= attrsEntity.minSize) {
+        if (!attrEntity.isFolded || size <= attrEntity.minSize) {
             return size;
         }
-        return attrsEntity.minSize;
+        return attrEntity.minSize;
     }
 
     /**
@@ -1842,8 +1770,13 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
 
     private int getPositionStart(int level) {
         int sum = 0;
-        for (int i = 0; i < level; i++) {
-            LevelData<T> data = mLevelOldData.get(i);
+        final int length = mLevelData.size();
+        for (int i = 0; i < length; i++) {
+            int l = mLevelData.keyAt(i);
+            if (l >= level) {
+                break;
+            }
+            LevelData<T> data = mLevelData.valueAt(i);
             if (data == null) {
                 continue;
             }
@@ -1858,12 +1791,12 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
                 continue;
             }
 
-            ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(i);
+            ResourcesManager.AttrEntity attrEntity = mResourcesManager.getAttrsEntity(l);
             int size = list.size();
-            if (!attrsEntity.isFolded || size <= attrsEntity.minSize) {
+            if (!attrEntity.isFolded || size <= attrEntity.minSize) {
                 sum += size;
             } else {
-                sum += attrsEntity.minSize;
+                sum += attrEntity.minSize;
             }
         }
         return sum;
@@ -1879,36 +1812,83 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         return mResourcesManager.getLayoutId(viewType);
     }
 
+
     /**
-     * 根据type获取level
+     * 根据position获取对应level
      *
-     * @param type 数据类型
-     * @return 数据类型等级
+     * @param position position
+     * @return level
      */
-    public int getLevel(int type) {
-        final int level = mResourcesManager.getLevel(type);
-        if (level <= DEFAULT_HEADER_LEVEL) {
-            onEnd();
-            throw new DataException("boy , are you sure register this type = " + type + " ?");
+    public int getLevelByPosition(int position) {
+        final int size = mLevelData.size();
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            LevelData<T> levelData = mLevelData.valueAt(i);
+            if (levelData == null) {
+                continue;
+            }
+            T header = levelData.getHeader();
+            final int level = mLevelData.keyAt(i);
+            if (header != null) {
+                index++;
+                if (index == position) {
+                    return level;
+                }
+            }
+            List<T> data = levelData.getData();
+            if (data != null) {
+                index += data.size();
+                if (position <= index) {
+                    return level;
+                }
+            }
+            T footer = levelData.getFooter();
+            if (footer != null) {
+                index++;
+                if (index == position) {
+                    return level;
+                }
+            }
         }
-        return level;
+        return DEFAULT_HEADER_LEVEL;
     }
 
     /**
-     * 获取一个list的level
+     * 根据内部item获取对应level
      *
-     * @param list list
-     * @return int
+     * @param item 内部item
+     * @return level
      */
-    private int getListLevel(List<? extends T> list) {
-        int level = getLevel(list.get(0).getItemType());
-        for (T t : list) {
-            if (level != getLevel(t.getItemType())) {
-                onEnd();
-                throw new DataException("please check data level! data = " + t);
+    public int getLevelByItem(@NonNull T item) {
+        final int size = mLevelData.size();
+        for (int i = 0; i < size; i++) {
+            LevelData<T> levelData = mLevelData.valueAt(i);
+            if (levelData == null) {
+                continue;
+            }
+            T header = levelData.getHeader();
+            final int level = mLevelData.keyAt(i);
+            if (header != null) {
+                if (header == item) {
+                    return level;
+                }
+            }
+            List<T> data = levelData.getData();
+            if (data != null) {
+                for (T d : data) {
+                    if (d == item) {
+                        return level;
+                    }
+                }
+            }
+            T footer = levelData.getFooter();
+            if (footer != null) {
+                if (footer == item) {
+                    return level;
+                }
             }
         }
-        return level;
+        return DEFAULT_HEADER_LEVEL;
     }
 
     /**
@@ -1986,22 +1966,26 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
             return;
         }
 
-        if (mGlobalLoadingEntitys == null) {
-            mGlobalLoadingEntitys = new ArrayList<>();
+        if (mLoadingLevelData == null) {
+            mLoadingLevelData = new SparseArray<>();
         } else {
-            mGlobalLoadingEntitys.clear();
+            mLoadingLevelData.clear();
         }
 
         for (int i = 0; i < size; i++) {
             LoadingConfigEntity entity = configs.valueAt(i);
             int level = configs.keyAt(i);
+            T header = null;
+            List<T> data = null;
             if (entity.isHaveHeader) {
-                mGlobalLoadingEntitys.add(createLoadingHeader(level));
+                header = createLoadingHeader(level);
             }
 
             if (entity.count > 0) {
-                mGlobalLoadingEntitys.addAll(createLoadingData(level, entity.count));
+                data = new ArrayList<>(createLoadingData(level, entity.count));
             }
+            LevelData<T> levelData = new LevelData<>(data, header, null);
+            mLoadingLevelData.put(level, levelData);
         }
     }
 
@@ -2012,7 +1996,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         if (mCurrentMode == MODE_MIXED) {
             onEnd();
             mRefreshQueue.clear();
-            throw new RefreshException("current refresh mode can't support random refresh mode !");
+            throw new RefreshException("Current refresh mode can't support random refresh mode !");
         }
     }
 
@@ -2022,7 +2006,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     private void checkMixedMode() {
         if (mCurrentMode == MODE_STANDARD) {
             onEnd();
-            throw new RefreshException("current refresh mode can't support standard refresh mode !");
+            throw new RefreshException("Current refresh mode can't support standard refresh mode !");
         }
     }
 
@@ -2033,7 +2017,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     private void checkAdapterBind() {
         if (mAdapter == null) {
             onEnd();
-            throw new AdapterBindException("are you sure bind the adapter ?");
+            throw new AdapterBindException("Are you sure bind the adapter ?");
         }
     }
 
@@ -2044,7 +2028,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     private void checkLoadingAdapterBind() {
         if (mLoadingEntityAdapter == null) {
             onEnd();
-            throw new AdapterBindException("are you sure bind the loading adapter ?");
+            throw new AdapterBindException("Are you sure bind the loading adapter ?");
         }
     }
 
@@ -2055,7 +2039,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     private void checkEmptyAdapterBind() {
         if (mEmptyEntityAdapter == null) {
             onEnd();
-            throw new AdapterBindException("are you sure bind the empty adapter ?");
+            throw new AdapterBindException("Are you sure bind the empty adapter ?");
         }
     }
 
@@ -2066,60 +2050,8 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     private void checkErrorAdapterBind() {
         if (mErrorEntityAdapter == null) {
             onEnd();
-            throw new AdapterBindException("are you sure bind the error adapter ?");
+            throw new AdapterBindException("Are you sure bind the error adapter ?");
         }
-    }
-
-    /**
-     * 初始化标准模式数据
-     *
-     * @param newData 新数据
-     */
-    private List<T> initStandardNewData(List<T> newData) {
-        mLevelOldData.clear();
-        SparseArray<List<T>> temDatas = new SparseArray<>();
-        SparseArray<T> temHeaders = new SparseArray<>();
-        SparseArray<T> temFooters = new SparseArray<>();
-        for (T data : newData) {
-            final int itemType = data.getItemType();
-            final int level = getLevel(itemType);
-            if (itemType >= 0 && itemType < HEADER_TYPE_DIFFER) {
-                List<T> dataList = temDatas.get(level);
-                if (dataList == null) {
-                    dataList = new ArrayList<>();
-                    temDatas.put(level, dataList);
-                }
-                dataList.add(data);
-            } else if (itemType >= -HEADER_TYPE_DIFFER && itemType < 0) {
-                temHeaders.put(level, data);
-            } else if (itemType >= -FOOTER_TYPE_DIFFER && itemType < -EMPTY_TYPE_DIFFER) {
-                temFooters.put(level, data);
-            }
-        }
-
-        List<T> addData = new ArrayList<>();
-        int size = temDatas.size();
-        for (int i = 0; i < size; i++) {
-            int level = temDatas.keyAt(i);
-            List<T> data = temDatas.get(level);
-            T header = temHeaders.get(level);
-            T footer = temFooters.get(level);
-            mLevelOldData.put(level, new LevelData<>(data, header, footer));
-            if (header != null) {
-                addData.add(header);
-            }
-            ResourcesManager.AttrsEntity attrsEntity = mResourcesManager.getAttrsEntity(level);
-            if (!attrsEntity.initState || data.size() <= attrsEntity.minSize) {
-                addData.addAll(data);
-            } else {
-                addData.addAll(data.subList(0, attrsEntity.minSize));
-            }
-            attrsEntity.isFolded = attrsEntity.initState;
-            if (footer != null) {
-                addData.add(footer);
-            }
-        }
-        return addData;
     }
 
     private String getDataKey(int level) {
@@ -2139,24 +2071,19 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
     }
 
     /**
-     * 释放资源，谨慎使用
+     * 释放资源，谨慎使用，资源释放之后，需要重新注册，不然会引起异常，最好跟主容器绑定生命周期
      */
     public void release() {
         mRefreshQueue.clear();
-        mRefreshQueue = null;
         mNewData.clear();
-        mNewData = null;
         mData.clear();
-        mData = null;
-        mGlobalLoadingEntitys.clear();
-        mGlobalLoadingEntitys = null;
+        mLoadingLevelData.clear();
+        mLoadingLevelData = null;
         mSingleCache.evictAll();
         mSingleCache = null;
         mDataCache.evictAll();
         mDataCache = null;
-        mLevelOldData.clear();
-        mLevelOldData = null;
+        mLevelData.clear();
         mResourcesManager.release();
-        mResourcesManager = null;
     }
 }

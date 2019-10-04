@@ -22,11 +22,11 @@ public class SimpleHelper extends AsynAdapterHelper<MultiHeaderEntity> {
     public static final int LEVEL_FOURTH = 3;
 
     public SimpleHelper() {
-        super(null);
+        super();
+        registerModule();
     }
 
-    @Override
-    protected void registerModule() {
+    private void registerModule() {
         registerModule(LEVEL_FIRST)
                 .type(TYPE_ONE)
                 .layoutResId(R.layout.item_first)

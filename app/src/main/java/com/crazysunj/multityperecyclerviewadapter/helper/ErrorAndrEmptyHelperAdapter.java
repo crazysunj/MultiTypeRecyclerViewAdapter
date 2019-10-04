@@ -1,14 +1,15 @@
 package com.crazysunj.multityperecyclerviewadapter.helper;
 
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.helper.LoadingConfig;
+import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderAdapter;
 import com.crazysunj.multityperecyclerviewadapter.R;
-import com.crazysunj.multityperecyclerviewadapter.apt.RxAptHelperAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.data.ErrorAndEmptyEmptyEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.ErrorAndEmptyErrorEntity;
 import com.crazysunj.multityperecyclerviewadapter.data.ErrorAndEmptyLoadingEntity;
@@ -57,7 +58,7 @@ public class ErrorAndrEmptyHelperAdapter extends BaseHelperAdapter<StickyItem, S
             @Override
             public void bindLoadingEntity(StickyItem loadingEntity, int position) {
                 int itemType = loadingEntity.getItemType();
-                int type = position < 0 ? itemType + RxAptHelperAdapterHelper.LOADING_HEADER_TYPE_DIFFER : itemType + RxAptHelperAdapterHelper.LOADING_DATA_TYPE_DIFFER;
+                int type = position < 0 ? itemType + RecyclerViewAdapterHelper.LOADING_HEADER_TYPE_DIFFER : itemType + RecyclerViewAdapterHelper.LOADING_DATA_TYPE_DIFFER;
                 switch (type) {
                     case SimpleHelper.TYPE_ONE:
                         loadingEntity.setHeaderId(1);

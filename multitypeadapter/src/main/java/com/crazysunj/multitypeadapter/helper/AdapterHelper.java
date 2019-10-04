@@ -15,15 +15,17 @@
  */
 package com.crazysunj.multitypeadapter.helper;
 
+import android.util.SparseArray;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * @author: sunjian
@@ -314,12 +316,12 @@ public class AdapterHelper {
 
         /**
          * 刷新全部数据
-         * 详细见{@link RecyclerViewAdapterHelper#notifyDataSetChanged(MultiTypeEntity)}
+         * 详细见{@link RecyclerViewAdapterHelper#notifyDataSetChanged(SparseArray)}
          *
          * @param data 传入数据
          * @return ActionAdapterHelper
          */
-        public ActionAdapterHelper all(final MultiTypeEntity data) {
+        public ActionAdapterHelper all(final SparseArray<LevelData<MultiTypeEntity>> data) {
             return create(new CallHandler() {
                 @Override
                 public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
@@ -328,6 +330,31 @@ public class AdapterHelper {
                         @Override
                         public void action(RecyclerViewAdapterHelper helper) {
                             helper.notifyDataSetChanged(data);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
+                }
+            });
+        }
+
+        /**
+         * 插入数据
+         * 详细见{@link RecyclerViewAdapterHelper#addData(int, List, int)}
+         *
+         * @param position 插入位置
+         * @param data     插入集合
+         * @param level    level
+         * @return ActionAdapterHelper
+         */
+        public ActionAdapterHelper add(final int position, @NonNull final List<? extends MultiTypeEntity> data, final int level) {
+            return create(new CallHandler() {
+                @Override
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.addData(position, data, level);
                             actionHandler.action(helper);
                         }
                     }, helper);
@@ -361,6 +388,31 @@ public class AdapterHelper {
 
         /**
          * 插入数据
+         * 详细见{@link RecyclerViewAdapterHelper#addData(int, MultiTypeEntity, int)}
+         *
+         * @param position 插入位置
+         * @param data     插入数据
+         * @param level    level
+         * @return ActionAdapterHelper
+         */
+        public ActionAdapterHelper add(final int position, @NonNull final MultiTypeEntity data, final int level) {
+            return create(new CallHandler() {
+                @Override
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.addData(position, data, level);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
+                }
+            });
+        }
+
+        /**
+         * 插入数据
          * 详细见{@link RecyclerViewAdapterHelper#addData(int, MultiTypeEntity)}
          *
          * @param position 插入位置
@@ -385,6 +437,30 @@ public class AdapterHelper {
 
         /**
          * 插入数据
+         * 详细见{@link RecyclerViewAdapterHelper#addData(List, int)}
+         *
+         * @param data  插入集合
+         * @param level level
+         * @return ActionAdapterHelper
+         */
+        public ActionAdapterHelper add(@NonNull final List<? extends MultiTypeEntity> data, final int level) {
+            return create(new CallHandler() {
+                @Override
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.addData(data, level);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
+                }
+            });
+        }
+
+        /**
+         * 插入数据
          * 详细见{@link RecyclerViewAdapterHelper#addData(List)}
          *
          * @param data 插入集合
@@ -399,6 +475,30 @@ public class AdapterHelper {
                         @Override
                         public void action(RecyclerViewAdapterHelper helper) {
                             helper.addData(data);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
+                }
+            });
+        }
+
+        /**
+         * 插入数据
+         * 详细见{@link RecyclerViewAdapterHelper#addData(MultiTypeEntity, int)}
+         *
+         * @param data  插入数据
+         * @param level level
+         * @return ActionAdapterHelper
+         */
+        public ActionAdapterHelper add(@NonNull final MultiTypeEntity data, final int level) {
+            return create(new CallHandler() {
+                @Override
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.addData(data, level);
                             actionHandler.action(helper);
                         }
                     }, helper);

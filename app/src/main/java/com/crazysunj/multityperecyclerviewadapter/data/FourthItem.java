@@ -1,6 +1,6 @@
 package com.crazysunj.multityperecyclerviewadapter.data;
 
-import android.util.Log;
+import androidx.annotation.Nullable;
 
 import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
@@ -23,6 +23,7 @@ public class FourthItem implements FourthStickyItem {
 
     public FourthItem(String name) {
         this.name = name;
+        id = UUID.nameUUIDFromBytes((name + stickyName).getBytes()).hashCode();
     }
 
     public FourthItem(String name, long id) {
@@ -39,12 +40,11 @@ public class FourthItem implements FourthStickyItem {
     }
 
     @Override
-    public long getId() {
-        if (id == 0) {
-            return id = UUID.nameUUIDFromBytes((name + stickyName).getBytes()).hashCode();
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof FourthItem)) {
+            return false;
         }
-        Log.d("FooterOCEntity", "FourthItem");
-        return id;
+        return id == ((FourthItem) obj).id;
     }
 
     @Override

@@ -3,9 +3,15 @@ package com.crazysunj.multityperecyclerviewadapter;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multityperecyclerviewadapter.data.FirstItem;
@@ -26,11 +32,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 public class RxStandardLinearActivity extends AppCompatActivity {
 
     private TextView textView1;
@@ -50,15 +51,12 @@ public class RxStandardLinearActivity extends AppCompatActivity {
         textView3 = (TextView) findViewById(R.id.text3);
         textView4 = (TextView) findViewById(R.id.text4);
 
-
-        List<MultiHeaderEntity> list = initData();
-
-        helper = new RxAdapterHelper(list);
+        helper = new RxAdapterHelper();
         SimpleRxHelperAdapter adapter = new SimpleRxHelperAdapter(helper);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 //        recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
         recyclerView.setAdapter(adapter);
-
+        helper.notifyDataSetChanged(initData());
     }
 
     private void notifyLevel(int level, Random random) {
@@ -72,126 +70,118 @@ public class RxStandardLinearActivity extends AppCompatActivity {
             }
             textView1.setText(String.format(Locale.getDefault(), "类型1的数量：%d", list.size()));
         } else if (level == SimpleHelper.LEVEL_SENCOND) {
-            header = new HeaderSecondItem("我是第二种类型的头--新");
-            int rand = random.nextInt(4);
-            for (int i = 0, size = rand + 1; i < size; i++) {
-                list.add(new SecondItem(String.format(Locale.getDefault(), "我是第二种类型%d--新", i)));
-            }
-            textView2.setText(String.format(Locale.getDefault(), "类型2的数量：%d", list.size()));
-        } else if (level == SimpleHelper.LEVEL_THIRD) {
-            header = new HeaderThirdItem("我是第三种类型的头--新");
-            int rand = random.nextInt(4);
-            for (int i = 0, size = rand + 1; i < size; i++) {
-                list.add(new ThirdItem(String.format(Locale.getDefault(), "我是第三种类型%d--新", i)));
-            }
-            textView3.setText(String.format(Locale.getDefault(), "类型3的数量：%d", list.size()));
-        } else {
             header = new HeaderFourthItem("我是第四种类型的头--新");
             int rand = random.nextInt(4);
             for (int i = 0, size = rand + 1; i < size; i++) {
                 list.add(new FourthItem(String.format(Locale.getDefault(), "我是第四种类型%d--新", i)));
             }
             textView4.setText(String.format(Locale.getDefault(), "类型4的数量：%d", list.size()));
+        } else if (level == SimpleHelper.LEVEL_THIRD) {
+            header = new HeaderSecondItem("我是第二种类型的头--新");
+            int rand = random.nextInt(4);
+            for (int i = 0, size = rand + 1; i < size; i++) {
+                list.add(new SecondItem(String.format(Locale.getDefault(), "我是第二种类型%d--新", i)));
+            }
+            textView2.setText(String.format(Locale.getDefault(), "类型2的数量：%d", list.size()));
+        } else {
+            header = new HeaderThirdItem("我是第三种类型的头--新");
+            int rand = random.nextInt(4);
+            for (int i = 0, size = rand + 1; i < size; i++) {
+                list.add(new ThirdItem(String.format(Locale.getDefault(), "我是第三种类型%d--新", i)));
+            }
+            textView3.setText(String.format(Locale.getDefault(), "类型3的数量：%d", list.size()));
         }
         helper.notifyModuleDataAndHeaderChanged(list, header, level);
     }
 
     @NonNull
-    private List<MultiHeaderEntity> initData() {
+    private SparseArray<LevelData<MultiHeaderEntity>> initData() {
+        SparseArray<LevelData<MultiHeaderEntity>> levelData = new SparseArray<>();
+
         Random random = new Random();
-        List<MultiHeaderEntity> list = new ArrayList<>();
         int firstCount = 0;
         int secondCount = 0;
         int thirdCount = 0;
         int fourthCount = 0;
-        list.add(new HeaderFirstItem("我是第一种类型的头"));
-        list.add(new HeaderSecondItem("我是第二种类型的头"));
-        list.add(new HeaderThirdItem("我是第三种类型的头"));
-        list.add(new HeaderFourthItem("我是第四种类型的头"));
-
-        int rand1 = random.nextInt(4);
-        List<SecondItem> list1 = new ArrayList<>();
-        for (int i = 0, size = rand1 + 1; i < size; i++) {
-            list1.add(new SecondItem(String.format(Locale.getDefault(), "1-我是第二种类型%d", i)));
-        }
-        secondCount += list1.size();
-        list.addAll(list1);
-
-        int rand2 = random.nextInt(4);
-        List<FourthItem> list2 = new ArrayList<>();
-        for (int i = 0, size = rand2 + 1; i < size; i++) {
-            list2.add(new FourthItem(String.format(Locale.getDefault(), "1-我是第四种类型%d", i)));
-        }
-        fourthCount += list2.size();
-        list.addAll(list2);
-
+        List<MultiHeaderEntity> firstList = new ArrayList<>();
         int rand3 = random.nextInt(4);
         final List<FirstItem> list3 = new ArrayList<>();
         for (int i = 0, size = rand3 + 1; i < size; i++) {
             list3.add(new FirstItem(String.format(Locale.getDefault(), "1-我是第一种类型%d", i)));
         }
         firstCount += list3.size();
-        list.addAll(list3);
-
-
-        int rand4 = random.nextInt(4);
-        List<ThirdItem> list4 = new ArrayList<>();
-        for (int i = 0, size = rand4 + 1; i < size; i++) {
-            list4.add(new ThirdItem(String.format(Locale.getDefault(), "1-我是第三种类型%d", i)));
-        }
-        thirdCount += list4.size();
-        list.addAll(list4);
-
-        int rand5 = random.nextInt(4);
-        List<FourthItem> list5 = new ArrayList<>();
-        for (int i = 0, size = rand5 + 1; i < size; i++) {
-            list5.add(new FourthItem(String.format(Locale.getDefault(), "2-我是第四种类型%d", i)));
-        }
-        fourthCount += list5.size();
-        list.addAll(list5);
-
+        firstList.addAll(list3);
         int rand6 = random.nextInt(4);
         final List<FirstItem> list6 = new ArrayList<>();
         for (int i = 0, size = rand6 + 1; i < size; i++) {
             list6.add(new FirstItem(String.format(Locale.getDefault(), "2-我是第一种类型%d", i)));
         }
         firstCount += list6.size();
-        list.addAll(list6);
+        firstList.addAll(list6);
+        levelData.put(SimpleHelper.LEVEL_FIRST, new LevelData<>(firstList, new HeaderFirstItem("我是第一种类型的头"), null));
 
-        int rand7 = random.nextInt(4);
-        List<ThirdItem> list7 = new ArrayList<>();
-        for (int i = 0, size = rand7 + 1; i < size; i++) {
-            list7.add(new ThirdItem(String.format(Locale.getDefault(), "2-我是第三种类型%d", i)));
+        List<MultiHeaderEntity> secondList = new ArrayList<>();
+        int rand2 = random.nextInt(4);
+        List<FourthItem> list2 = new ArrayList<>();
+        for (int i = 0, size = rand2 + 1; i < size; i++) {
+            list2.add(new FourthItem(String.format(Locale.getDefault(), "1-我是第四种类型%d", i)));
         }
-        thirdCount += list7.size();
-        list.addAll(list7);
+        fourthCount += list2.size();
+        secondList.addAll(list2);
+        int rand5 = random.nextInt(4);
+        List<FourthItem> list5 = new ArrayList<>();
+        for (int i = 0, size = rand5 + 1; i < size; i++) {
+            list5.add(new FourthItem(String.format(Locale.getDefault(), "2-我是第四种类型%d", i)));
+        }
+        fourthCount += list5.size();
+        secondList.addAll(list5);
+        levelData.put(SimpleHelper.LEVEL_SENCOND, new LevelData<>(secondList, new HeaderFourthItem("我是第四种类型的头"), null));
 
+        List<MultiHeaderEntity> thirdList = new ArrayList<>();
+        int rand1 = random.nextInt(4);
+        List<SecondItem> list1 = new ArrayList<>();
+        for (int i = 0, size = rand1 + 1; i < size; i++) {
+            list1.add(new SecondItem(String.format(Locale.getDefault(), "1-我是第二种类型%d", i)));
+        }
+        secondCount += list1.size();
+        thirdList.addAll(list1);
         int rand8 = random.nextInt(4);
         List<SecondItem> list8 = new ArrayList<>();
         for (int i = 0, size = rand8 + 1; i < size; i++) {
             list8.add(new SecondItem(String.format(Locale.getDefault(), "2-我是第二种类型%d", i)));
         }
         secondCount += list8.size();
-        list.addAll(list8);
+        thirdList.addAll(list8);
+        levelData.put(SimpleHelper.LEVEL_THIRD, new LevelData<>(thirdList, new HeaderSecondItem("我是第二种类型的头"), null));
+
+        List<MultiHeaderEntity> fourthList = new ArrayList<>();
+        int rand4 = random.nextInt(4);
+        List<ThirdItem> list4 = new ArrayList<>();
+        for (int i = 0, size = rand4 + 1; i < size; i++) {
+            list4.add(new ThirdItem(String.format(Locale.getDefault(), "1-我是第三种类型%d", i)));
+        }
+        thirdCount += list4.size();
+        fourthList.addAll(list4);
+        int rand7 = random.nextInt(4);
+        List<ThirdItem> list7 = new ArrayList<>();
+        for (int i = 0, size = rand7 + 1; i < size; i++) {
+            list7.add(new ThirdItem(String.format(Locale.getDefault(), "2-我是第三种类型%d", i)));
+        }
+        thirdCount += list7.size();
+        fourthList.addAll(list7);
+        levelData.put(SimpleHelper.LEVEL_FOURTH, new LevelData<>(fourthList, new HeaderThirdItem("我是第三种类型的头"), null));
+
 
         textView1.setText(String.format(Locale.getDefault(), "类型1的数量：%d", firstCount));
         textView2.setText(String.format(Locale.getDefault(), "类型2的数量：%d", secondCount));
         textView3.setText(String.format(Locale.getDefault(), "类型3的数量：%d", thirdCount));
         textView4.setText(String.format(Locale.getDefault(), "类型4的数量：%d", fourthCount));
-        return list;
-    }
-
-    public void click1(View view) {
-
-        helper.notifyLoadingChanged();
-        view.postDelayed(() -> helper.notifyDataSetChanged(initData()), 3000);
-
+        return levelData;
     }
 
     public void click2(View view) {
         helper.notifyLoadingChanged();
-        view.postDelayed(() -> helper.notifyDataByDiff(initData()), 8000);
-
+        view.postDelayed(() -> helper.notifyDataSetChanged(initData()), 8000);
     }
 
 
@@ -205,10 +195,11 @@ public class RxStandardLinearActivity extends AppCompatActivity {
                 return;
             }
             int position = random.nextInt(data.size());
+            int level = helper.getLevelByPosition(position);
+            List<MultiHeaderEntity> list = helper.getDataWithLevel(level).getData();
             MultiHeaderEntity removeData = helper.removeData(position);
             int itemType = removeData.getItemType();
             TextView textView;
-            int level = helper.getLevel(itemType);
             if (itemType < 0) {
                 Log.d("RxStandardLinearActivit", "itemType:" + itemType);
                 textView = getOtherTextView(level);
@@ -218,7 +209,6 @@ public class RxStandardLinearActivity extends AppCompatActivity {
             String text = "移除了第" + (position + 1) + "个数据,Type为" + itemType + " level为" + level;
             Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
             Log.d("RxStandardLinearActivit", text);
-            List<MultiHeaderEntity> list = helper.getDataWithType(itemType).getData();
             int size = list == null ? 0 : list.size();
             textView.setText(String.format(Locale.getDefault(), "类型%d的数量：%d", level + 1, size));
         } catch (Exception e) {
@@ -268,8 +258,8 @@ public class RxStandardLinearActivity extends AppCompatActivity {
                 return;
             }
             int position = random.nextInt(data.size());
+            int level = helper.getLevelByPosition(position);
             int itemType = data.get(position).getItemType();
-            int level = helper.getLevel(itemType);
             helper.setData(position, itemType < 0 ? getOtherChangeItem(level) : getDataChangeItem(itemType));
             String text = "修改了第" + (position + 1) + "个数据,Type为" + itemType + " level为" + level;
             Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
@@ -329,7 +319,6 @@ public class RxStandardLinearActivity extends AppCompatActivity {
     }
 
     public void click5(View view) {
-
         helper.clearModule(SimpleHelper.LEVEL_FIRST);
     }
 
@@ -355,10 +344,11 @@ public class RxStandardLinearActivity extends AppCompatActivity {
         try {
             Random random = new Random();
             final int level = random.nextInt(4);
+            Log.d("RxStandardLinear", "level:" + level);
             helper.notifyLoadingChanged(level);
-            textView1.postDelayed(() -> notifyLevel(level, random), 1000);
+            textView1.postDelayed(() -> notifyLevel(level, random), 4000);
         } catch (Exception e) {
-            Log.d("RxStandardLinearActivit", e.getMessage());
+            Log.d("RxStandardLinear", e.getMessage());
         }
     }
 }

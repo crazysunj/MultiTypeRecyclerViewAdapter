@@ -2,10 +2,16 @@ package com.crazysunj.multityperecyclerviewadapter;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multityperecyclerviewadapter.constant.Constants;
 import com.crazysunj.multityperecyclerviewadapter.expand.FirstOCEntity;
 import com.crazysunj.multityperecyclerviewadapter.expand.FooterOCEntity;
@@ -18,10 +24,6 @@ import com.crazysunj.multityperecyclerviewadapter.expand.TitleOCEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class OpenCloseActivity extends AppCompatActivity {
 
@@ -43,32 +45,30 @@ public class OpenCloseActivity extends AppCompatActivity {
             }
         });
 
-        mAdapter.setOnFooterClickListener((type, isFlod) -> mAdapter.open(type, isFlod));
+        mAdapter.setOnFooterClickListener((level, isFold) -> mAdapter.open(level, isFold));
 
         recyclerView.setAdapter(mAdapter);
         initData();
     }
 
     private void initData() {
-
-        List<OpenCloseItem> data = new ArrayList<OpenCloseItem>();
+        SparseArray<LevelData<OpenCloseItem>> levelData = new SparseArray<>();
 
         int firstTypeLevel = OpenCloseAdapterHelper.LEVEL_FIRST;
-        data.add(new TitleOCEntity(firstTypeLevel, "类型1"));
-        data.addAll(getFirst());
-        data.add(new FooterOCEntity(firstTypeLevel, Constants.EXPAND));
-//        data.add(new FooterOCEntity(firstType, Constants.EXPAND, mAdapter.getHelper().getId()));
+        levelData.put(firstTypeLevel, new LevelData<>(getFirst(),
+                new TitleOCEntity(firstTypeLevel, "类型1"),
+                new FooterOCEntity(firstTypeLevel, mAdapter.isDataFolded(firstTypeLevel) ? Constants.EXPAND : Constants.FOLD)));
 
         int secondType = OpenCloseAdapterHelper.LEVEL_SECOND;
-        data.add(new TitleOCEntity(secondType, "类型2"));
-        data.addAll(getSecond());
-        data.add(new FooterOCEntity(secondType, Constants.FOLD));
+        levelData.put(secondType, new LevelData<>(getSecond(),
+                new TitleOCEntity(secondType, "类型2"),
+                new FooterOCEntity(secondType, mAdapter.isDataFolded(secondType) ? Constants.EXPAND : Constants.FOLD)));
 
         int thirdType = OpenCloseAdapterHelper.LEVEL_THIRD;
-        data.add(new TitleOCEntity(thirdType, "类型3"));
-        data.addAll(getThird());
-        data.add(new FooterOCEntity(thirdType, Constants.FOLD));
-        mAdapter.notifyAll(data);
+        levelData.put(thirdType, new LevelData<>(getThird(),
+                new TitleOCEntity(thirdType, "类型3"),
+                new FooterOCEntity(thirdType, mAdapter.isDataFolded(thirdType) ? Constants.EXPAND : Constants.FOLD)));
+        mAdapter.notifyAll(levelData);
     }
 
     public static int COUNT = 15;

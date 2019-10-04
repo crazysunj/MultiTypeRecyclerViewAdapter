@@ -2,6 +2,8 @@ package com.crazysunj.sample.entity;
 
 import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
+
 import com.crazysunj.sample.base.MutiTypeTitleEntity;
 import com.crazysunj.sample.util.MD5Util;
 
@@ -65,9 +67,11 @@ public class ItemEntity2 implements MutiTypeTitleEntity {
     public int getItemType() {
         return TYPE_2;
     }
-
     @Override
-    public long getId() {
-        return id;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof ItemEntity2)) {
+            return false;
+        }
+        return id == ((ItemEntity2) obj).id;
     }
 }

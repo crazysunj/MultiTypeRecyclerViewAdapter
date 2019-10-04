@@ -1,5 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.data;
 
+import androidx.annotation.Nullable;
+
 import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.helper.SimpleHelper;
 import com.crazysunj.multityperecyclerviewadapter.sticky.ThirdStickyItem;
@@ -19,6 +21,7 @@ public class ThirdItem implements ThirdStickyItem {
 
     public ThirdItem(String name) {
         this.name = name;
+        id = UUID.nameUUIDFromBytes((name + stickyName).getBytes()).hashCode();
     }
 
     public ThirdItem(String name, long id) {
@@ -35,11 +38,11 @@ public class ThirdItem implements ThirdStickyItem {
     }
 
     @Override
-    public long getId() {
-        if (id == 0) {
-            return id = UUID.nameUUIDFromBytes((name + stickyName).getBytes()).hashCode();
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof ThirdItem)) {
+            return false;
         }
-        return id;
+        return id == ((ThirdItem) obj).id;
     }
 
     @Override

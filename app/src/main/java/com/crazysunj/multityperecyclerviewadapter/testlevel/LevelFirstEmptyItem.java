@@ -1,5 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.testlevel;
 
+import androidx.annotation.Nullable;
+
 import static com.crazysunj.multityperecyclerviewadapter.testlevel.TestLevelAdapter.TYPE_LEVEL_FIRST_EMPTY;
 
 /**
@@ -26,7 +28,13 @@ public class LevelFirstEmptyItem implements MultiTypeTitleEntity {
     }
 
     @Override
-    public long getId() {
-        return 0;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof LevelFirstEmptyItem)) {
+            return false;
+        }
+        if (msg == null) {
+            return false;
+        }
+        return msg.equals(((LevelFirstEmptyItem) obj).msg);
     }
 }

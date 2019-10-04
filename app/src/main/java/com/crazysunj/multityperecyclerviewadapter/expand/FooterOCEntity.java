@@ -1,6 +1,6 @@
 package com.crazysunj.multityperecyclerviewadapter.expand;
 
-import android.util.Log;
+import androidx.annotation.Nullable;
 
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
@@ -53,9 +53,17 @@ public class FooterOCEntity implements OpenCloseItem {
     }
 
     @Override
-    public long getId() {
-        Log.d("FooterOCEntity", "title:" + title + " type:" + type+" id:"+id);
-        return id;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof FooterOCEntity)) {
+            return false;
+        }
+        if (id != ((FooterOCEntity) obj).id) {
+            return false;
+        }
+        if (title == null) {
+            return false;
+        }
+        return title.equals(((FooterOCEntity) obj).title);
     }
 
     @Override

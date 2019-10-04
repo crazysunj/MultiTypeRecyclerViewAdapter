@@ -1,5 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.expand;
 
+import androidx.annotation.Nullable;
+
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 
 /**
@@ -36,10 +38,12 @@ public class LoadingOCEntity implements OpenCloseItem {
     }
 
     @Override
-    public long getId() {
-        return id;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof LoadingOCEntity)) {
+            return false;
+        }
+        return id == ((LoadingOCEntity) obj).id;
     }
-
     @Override
     public long getHeaderId() {
         return StickyHeaderDecoration.NO_HEADER_ID;

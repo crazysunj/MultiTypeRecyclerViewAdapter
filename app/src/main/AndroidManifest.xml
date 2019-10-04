@@ -22,15 +22,11 @@
         <activity android:name=".RxContinuityActivity" />
         <activity android:name=".RxStandardLinearActivity" />
         <activity android:name=".RxMixedLinearActivity" />
-        <activity android:name=".RxAptDefaultActivity" />
-        <activity android:name=".RxAptStandardLinearActivity" />
-        <activity android:name=".RxAptErrorAndEmptyLinearActivity" />
         <activity
             android:name=".OpenCloseActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".Rx180Activity" />
         <activity android:name=".switchtype.SwitchTypeActivity" />
         <activity android:name=".TestLevelActivity" />
         <activity android:name=".Refresh240Activity"></activity>

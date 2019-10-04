@@ -3,12 +3,18 @@ package com.crazysunj.sample.adapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
 import com.coorchice.library.SuperTextView;
 import com.crazysunj.itemdecoration.grid.GridLayoutDividerItemDecoration;
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 import com.crazysunj.multitypeadapter.helper.LoadingConfig;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
-import com.crazysunj.multitypeadapter.util.IDUtil;
+import com.crazysunj.sample.IDUtil;
 import com.crazysunj.sample.R;
 import com.crazysunj.sample.adapter.helper.MyAdapterHelper;
 import com.crazysunj.sample.base.BaseHelperAdapter;
@@ -25,12 +31,6 @@ import com.crazysunj.sample.entity.LoadingEntity;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
-
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 /**
  * author: sunjian
@@ -102,6 +102,7 @@ public class MyHelperAdapter extends BaseHelperAdapter<MutiTypeTitleEntity, Base
                 renderHeader(helper, (CommonHeadEntity) item);
                 break;
             case MyAdapterHelper.LEVEL_1 - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
+            case MyAdapterHelper.LEVEL_2 - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
                 renderFooter(helper, (CommonFooterEntity) item);
                 break;
             default:
@@ -198,10 +199,10 @@ public class MyHelperAdapter extends BaseHelperAdapter<MutiTypeTitleEntity, Base
         footer.setOnClickListener(v -> {
             if (Constants.EXPAND.equals(item.getTitle())) {
                 item.setTitle(Constants.FOLD);
-                mHelper.foldType(type, false);
+                mHelper.foldType(isChanged1 ? MyAdapterHelper.LEVEL_1 : MyAdapterHelper.LEVEL_2, false);
             } else {
                 item.setTitle(Constants.EXPAND);
-                mHelper.foldType(type, true);
+                mHelper.foldType(isChanged1 ? MyAdapterHelper.LEVEL_1 : MyAdapterHelper.LEVEL_2, true);
             }
             footer.setText(item.getTitle());
         });
@@ -221,11 +222,6 @@ public class MyHelperAdapter extends BaseHelperAdapter<MutiTypeTitleEntity, Base
             }
 
             @Override
-            public long getId() {
-                return "banner图".hashCode();
-            }
-
-            @Override
             public String getTitle() {
                 return "banner图";
             }
@@ -241,23 +237,31 @@ public class MyHelperAdapter extends BaseHelperAdapter<MutiTypeTitleEntity, Base
             }
 
             @Override
-            public long getId() {
-                return "底部Tab".hashCode();
-            }
-
-            @Override
             public String getTitle() {
                 return "底部Tab";
             }
         }, MyAdapterHelper.LEVEL_FOOT);
     }
 
+    private boolean isChanged1 = true;
+    private boolean isChanged2 = true;
+
+    public void setChanged1(boolean changed1) {
+        isChanged1 = changed1;
+    }
+
+    public void setChanged2(boolean changed2) {
+        isChanged2 = changed2;
+    }
+
     public void notifyType1(List<ItemEntity1> itemEntity1s) {
-        mHelper.notifyModuleDataAndHeaderAndFooterChanged(itemEntity1s, entity1Header, entity1Footer, MyAdapterHelper.LEVEL_1);
+        mHelper.notifyModuleDataAndHeaderAndFooterChanged(itemEntity1s, entity1Header, entity1Footer,
+                isChanged1 ? MyAdapterHelper.LEVEL_1 : MyAdapterHelper.LEVEL_2);
     }
 
     public void notifyType2(List<ItemEntity2> itemEntity2s) {
-        mHelper.notifyModuleDataAndHeaderChanged(itemEntity2s, entity2Header, MyAdapterHelper.LEVEL_2);
+        mHelper.notifyModuleDataAndHeaderChanged(itemEntity2s, entity2Header,
+                isChanged2 ? MyAdapterHelper.LEVEL_2 : MyAdapterHelper.LEVEL_1);
     }
 
     public void notifyType3(ItemEntity3 itemEntity3) {

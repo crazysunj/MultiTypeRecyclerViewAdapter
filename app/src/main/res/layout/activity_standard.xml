@@ -64,13 +64,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="click1"
-            android:text="一般全局刷新" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="click2"
             android:text="Diff全局刷新" />
 

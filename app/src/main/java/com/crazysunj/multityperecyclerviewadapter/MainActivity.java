@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.crazysunj.multityperecyclerviewadapter.switchtype.SwitchTypeActivity;
-
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.crazysunj.multityperecyclerviewadapter.switchtype.SwitchTypeActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,24 +45,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, RxMixedLinearActivity.class));
     }
 
-    public void click11(View view) {
-        startActivity(new Intent(this, RxAptDefaultActivity.class));
-    }
-
-    public void click12(View view) {
-        startActivity(new Intent(this, RxAptStandardLinearActivity.class));
-    }
-
-    public void click13(View view) {
-        startActivity(new Intent(this, RxAptErrorAndEmptyLinearActivity.class));
-    }
-
     public void click14(View view) {
         startActivity(new Intent(this, OpenCloseActivity.class));
-    }
-
-    public void click15(View view) {
-        startActivity(new Intent(this, Rx180Activity.class));
     }
 
     public void click16(View view) {

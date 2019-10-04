@@ -31,10 +31,9 @@ public interface MultiTypeEntity {
     int getItemType();
 
     /**
-     * id标志不同数据项(唯一标识)
-     * 可自定义，主要用于DiffUtil的判断
-     *
-     * @return long
+     * 比较两个数据内容是否相同，完全由用户去自定义，这里不采用系统的equals是因为Java的许多集合操作都会关联这个方法
+     * @param entity
+     * @return
      */
-    long getId();
+//    boolean areContentsTheSame(MultiTypeEntity entity);
 }

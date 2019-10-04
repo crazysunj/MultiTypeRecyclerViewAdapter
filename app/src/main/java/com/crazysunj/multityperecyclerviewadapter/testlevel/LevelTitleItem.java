@@ -1,5 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.testlevel;
 
+import androidx.annotation.Nullable;
+
 import java.util.UUID;
 
 /**
@@ -35,7 +37,16 @@ public class LevelTitleItem implements MultiTypeTitleEntity {
     }
 
     @Override
-    public long getId() {
-        return id;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof LevelTitleItem)) {
+            return false;
+        }
+        if (id != ((LevelTitleItem) obj).id) {
+            return false;
+        }
+        if (msg == null) {
+            return false;
+        }
+        return msg.equals(((LevelTitleItem) obj).msg);
     }
 }

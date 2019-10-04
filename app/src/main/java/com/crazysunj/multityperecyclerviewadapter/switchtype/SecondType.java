@@ -1,5 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.switchtype;
 
+import androidx.annotation.Nullable;
+
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 
 
@@ -31,7 +33,10 @@ public class SecondType implements MultiTypeEntity {
     }
 
     @Override
-    public long getId() {
-        return id;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof SecondType)) {
+            return false;
+        }
+        return id == ((SecondType) obj).id;
     }
 }

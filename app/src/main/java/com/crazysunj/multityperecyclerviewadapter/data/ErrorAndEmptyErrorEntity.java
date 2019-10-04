@@ -1,5 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.data;
 
+import androidx.annotation.Nullable;
+
 import java.util.UUID;
 
 /**
@@ -32,7 +34,11 @@ public class ErrorAndEmptyErrorEntity extends NoStickyEntity {
     }
 
     @Override
-    public long getId() {
-        return id;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof ErrorAndEmptyErrorEntity)) {
+            return false;
+        }
+        return id == ((ErrorAndEmptyErrorEntity) obj).id;
     }
+
 }

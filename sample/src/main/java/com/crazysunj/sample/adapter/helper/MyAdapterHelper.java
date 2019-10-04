@@ -1,16 +1,12 @@
 package com.crazysunj.sample.adapter.helper;
 
+import androidx.recyclerview.widget.DiffUtil;
+
 import com.crazysunj.multitypeadapter.helper.AsynAdapterHelper;
 import com.crazysunj.sample.R;
 import com.crazysunj.sample.base.MutiTypeTitleEntity;
-import com.crazysunj.sample.entity.ItemEntity1;
-import com.crazysunj.sample.entity.ItemEntity2;
-import com.crazysunj.sample.entity.ItemEntity3;
-import com.crazysunj.sample.entity.ItemEntity4;
 
 import java.util.List;
-
-import androidx.recyclerview.widget.DiffUtil;
 
 /**
  * author: sunjian
@@ -31,60 +27,42 @@ public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity> {
     private DataChangeCallback callback;
 
     public MyAdapterHelper(DataChangeCallback callback) {
-        super(null);
+        super();
         this.callback = callback;
+        registerModule();
     }
 
-    @Override
-    protected void registerModule() {
+    private void registerModule() {
 
         registerModule(LEVEL_HEAD)
-                .type(TYPE_HEAD)
-                .layoutResId(R.layout.head_home)
                 .loading()
                 .loadingLayoutResId(R.layout.layout_loading)
                 .register();
 
-        registerModule(LEVEL_1)
-                .type(ItemEntity1.TYPE_1)
-                .layoutResId(R.layout.item_1)
-                .headerResId(R.layout.header_common)
-                .footerResId(R.layout.item_footer)
-                .isFolded(true)
-                .minSize(2)
+        registerModule(MyAdapterHelper.LEVEL_1)
                 .loading()
                 .loadingHeaderResId(R.layout.layout_loading_header)
                 .loadingLayoutResId(R.layout.layout_loading)
                 .register();
 
         registerModule(LEVEL_2)
-                .type(ItemEntity2.TYPE_2)
-                .layoutResId(R.layout.item_2)
-                .headerResId(R.layout.header_common)
                 .loading()
                 .loadingHeaderResId(R.layout.layout_loading_header)
                 .loadingLayoutResId(R.layout.layout_loading)
                 .register();
 
         registerModule(LEVEL_3)
-                .type(ItemEntity3.TYPE_3)
-                .layoutResId(R.layout.item_3)
                 .loading()
                 .loadingLayoutResId(R.layout.layout_loading)
                 .register();
 
         registerModule(LEVEL_4)
-                .type(ItemEntity4.TYPE_4)
-                .layoutResId(R.layout.item_4)
-                .headerResId(R.layout.header_common)
                 .loading()
                 .loadingHeaderResId(R.layout.layout_loading_header)
                 .loadingLayoutResId(R.layout.layout_loading)
                 .register();
 
         registerModule(LEVEL_FOOT)
-                .type(TYPE_FOOT)
-                .layoutResId(R.layout.footer_home)
                 .loading()
                 .loadingLayoutResId(R.layout.layout_loading)
                 .register();
@@ -144,7 +122,7 @@ public class MyAdapterHelper extends AsynAdapterHelper<MutiTypeTitleEntity> {
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
             MutiTypeTitleEntity oldItem = mOldDatas.get(oldItemPosition);
             MutiTypeTitleEntity newItem = mNewDatas.get(newItemPosition);
-            return oldItem.getId() == newItem.getId() && oldItem.getTitle().equals(newItem.getTitle());
+            return oldItem.getTitle().equals(newItem.getTitle());
         }
     }
 }

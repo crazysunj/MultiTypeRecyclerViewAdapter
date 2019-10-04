@@ -1,5 +1,7 @@
 package com.crazysunj.sample.entity;
 
+import androidx.annotation.Nullable;
+
 import com.crazysunj.sample.base.MutiTypeTitleEntity;
 
 /**
@@ -31,7 +33,10 @@ public class LoadingEntity implements MutiTypeTitleEntity {
     }
 
     @Override
-    public long getId() {
-        return id;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof LoadingEntity)) {
+            return false;
+        }
+        return id == ((LoadingEntity) obj).id;
     }
 }

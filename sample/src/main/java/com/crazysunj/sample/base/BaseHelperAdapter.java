@@ -5,17 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
+import com.crazysunj.multitypeadapter.helper.ResourcesManager;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * description
@@ -33,6 +34,10 @@ public abstract class BaseHelperAdapter<T extends MultiTypeEntity, VH extends Ba
         mData = helper.getData();
         helper.bindAdapter(this);
         mHelper = helper;
+    }
+
+    public ResourcesManager.LevelManager registerModule(int level) {
+        return mHelper.registerModule(level);
     }
 
     @Override

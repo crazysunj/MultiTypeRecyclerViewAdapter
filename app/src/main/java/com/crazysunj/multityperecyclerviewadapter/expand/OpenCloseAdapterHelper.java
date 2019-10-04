@@ -3,10 +3,6 @@ package com.crazysunj.multityperecyclerviewadapter.expand;
 import com.crazysunj.multitypeadapter.helper.AsynAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.R;
 
-import java.util.List;
-
-import androidx.recyclerview.widget.DiffUtil;
-
 /**
  * description
  * <p>
@@ -20,11 +16,11 @@ public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem> {
     public static final int LEVEL_THIRD = 2;
 
     public OpenCloseAdapterHelper() {
-        super(null);
+        super();
+        registerModule();
     }
 
-    @Override
-    protected void registerModule() {
+    private void registerModule() {
 
         registerModule(LEVEL_FIRST)
                 .type(FirstOCEntity.OC_FIRST_TYPE)
@@ -57,10 +53,5 @@ public class OpenCloseAdapterHelper extends AsynAdapterHelper<OpenCloseItem> {
                 .footerResId(R.layout.item_footer)
                 .minSize(4)
                 .register();
-    }
-
-    @Override
-    protected DiffUtil.Callback getDiffCallBack(List<OpenCloseItem> oldData, List<OpenCloseItem> newData) {
-        return new OpenCloseDiffCallBack(oldData, newData);
     }
 }

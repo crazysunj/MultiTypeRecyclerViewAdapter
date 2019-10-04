@@ -19,11 +19,11 @@ public class SwitchTypeAdapterHelper extends AsynAdapterHelper<MultiTypeEntity> 
     public static final int LEVEL_SWITCH = 4;
 
     public SwitchTypeAdapterHelper() {
-        super(null);
+        super();
+        registerModule();
     }
 
-    @Override
-    protected void registerModule() {
+    private void registerModule() {
         registerModule(LEVEL_FIRST)
                 .type(FirstType.TYPE_1)
                 .layoutResId(R.layout.item_first)

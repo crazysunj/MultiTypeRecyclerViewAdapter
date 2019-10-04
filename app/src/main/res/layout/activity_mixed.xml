@@ -19,27 +19,6 @@
             android:onClick="click1"
             android:text="一般全局刷新" />
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="click2"
-            android:text="Diff全局刷新" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="click3"
-            android:text="切换模式并刷新" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="click4"
-            android:text="切换并刷新新集合" />
-
     </LinearLayout>
 
     <LinearLayout

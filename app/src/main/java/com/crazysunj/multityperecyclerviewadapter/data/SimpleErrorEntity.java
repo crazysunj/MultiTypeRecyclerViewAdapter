@@ -1,5 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.data;
 
+import androidx.annotation.Nullable;
+
 import com.crazysunj.multityperecyclerviewadapter.helper.DefaultMultiHeaderEntity;
 
 import java.util.UUID;
@@ -34,7 +36,11 @@ public class SimpleErrorEntity extends DefaultMultiHeaderEntity {
     }
 
     @Override
-    public long getId() {
-        return id;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof SimpleErrorEntity)) {
+            return false;
+        }
+        return id == ((SimpleErrorEntity) obj).id;
     }
+
 }

@@ -1,12 +1,19 @@
 package com.crazysunj.multityperecyclerviewadapter;
 
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.LevelFooterItem;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.LevelTitleItem;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.MultiTypeTitleEntity;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.TestLevelAdapter;
+import com.crazysunj.multityperecyclerviewadapter.testlevel.TestLevelAdapterHelper;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.TypeFiveItem;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.TypeFourItem;
 import com.crazysunj.multityperecyclerviewadapter.testlevel.TypeOneItem;
@@ -17,10 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class TestLevelActivity extends AppCompatActivity {
 
@@ -38,7 +41,7 @@ public class TestLevelActivity extends AppCompatActivity {
         levelFirstRefreshCount++;
         levelSecondRefreshCount++;
         levelThirdRefreshCount++;
-        adapter = new TestLevelAdapter(getData());
+        adapter = new TestLevelAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }
@@ -67,25 +70,27 @@ public class TestLevelActivity extends AppCompatActivity {
     }
 
 
-    private List<MultiTypeTitleEntity> getData() {
-        List<MultiTypeTitleEntity> data = new ArrayList<>();
-        List<MultiTypeTitleEntity> firstData = getLevelFirstData();
-        List<MultiTypeTitleEntity> secondData = getLevelSecondData();
-        List<MultiTypeTitleEntity> thirdData = getLevelThirdData();
+    private SparseArray<LevelData<MultiTypeTitleEntity>> getData() {
+        SparseArray<LevelData<MultiTypeTitleEntity>> levelData = new SparseArray<>();
+
         MultiTypeTitleEntity firstHeader = getLevelFirstHeader();
         MultiTypeTitleEntity firstFooter = getLevelFirstFooter();
+        List<MultiTypeTitleEntity> firstData = getLevelFirstData();
+
+        levelData.put(TestLevelAdapterHelper.LEVEL_FIRST, new LevelData<>(firstData, firstHeader, firstFooter));
+
+
+        List<MultiTypeTitleEntity> secondData = getLevelSecondData();
         MultiTypeTitleEntity secondHeader = getLevelSecondHeader();
+        levelData.put(TestLevelAdapterHelper.LEVEL_SECOND, new LevelData<>(secondData, secondHeader, null));
+
+
+        List<MultiTypeTitleEntity> thirdData = getLevelThirdData();
         MultiTypeTitleEntity thirdHeader = getLevelThirdHeader();
         MultiTypeTitleEntity thirdFooter = getLevelThirdFooter();
-        data.addAll(firstData);
-        data.addAll(secondData);
-        data.addAll(thirdData);
-        data.add(firstHeader);
-        data.add(firstFooter);
-        data.add(secondHeader);
-        data.add(thirdHeader);
-        data.add(thirdFooter);
-        return data;
+        levelData.put(TestLevelAdapterHelper.LEVEL_THIRD, new LevelData<>(thirdData, thirdHeader, thirdFooter));
+
+        return levelData;
     }
 
     int levelFirstRefreshCount;

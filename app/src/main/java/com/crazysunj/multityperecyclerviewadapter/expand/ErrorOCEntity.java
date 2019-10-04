@@ -1,5 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.expand;
 
+import androidx.annotation.Nullable;
+
 import com.crazysunj.multitypeadapter.sticky.StickyHeaderDecoration;
 
 import java.util.UUID;
@@ -21,6 +23,7 @@ public class ErrorOCEntity implements OpenCloseItem {
     public ErrorOCEntity(int type, String title) {
         this.type = type;
         this.title = title;
+        id = UUID.nameUUIDFromBytes((FLAG + title).getBytes()).hashCode();
     }
 
     public void setTitle(String title) {
@@ -43,11 +46,17 @@ public class ErrorOCEntity implements OpenCloseItem {
     }
 
     @Override
-    public long getId() {
-        if (id == 0) {
-            return id = UUID.nameUUIDFromBytes((FLAG + title).getBytes()).hashCode();
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof ErrorOCEntity)) {
+            return false;
         }
-        return id;
+        if (id != ((ErrorOCEntity) obj).id) {
+            return false;
+        }
+        if (title == null) {
+            return false;
+        }
+        return title.equals(((ErrorOCEntity) obj).title);
     }
 
     @Override

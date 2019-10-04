@@ -18,8 +18,6 @@ package com.crazysunj.multitypeadapter.helper;
 import com.crazysunj.multitypeadapter.entity.HandleBase;
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 
-import java.util.List;
-
 /**
  * @author: sunjian
  * created on: 2017/4/1
@@ -28,15 +26,7 @@ import java.util.List;
  * 卡顿的原因主要是计算差异数据量过大以及大量UI更新
  * 可以采用异步刷新{@link AsynAdapterHelper}
  */
-public abstract class SynAdapterHelper<T extends MultiTypeEntity> extends RecyclerViewAdapterHelper<T> {
-
-    public SynAdapterHelper(List<T> data) {
-        super(data);
-    }
-
-    public SynAdapterHelper(List<T> data, @RefreshMode int mode) {
-        super(data, mode);
-    }
+public class SynAdapterHelper<T extends MultiTypeEntity> extends RecyclerViewAdapterHelper<T> {
 
     @Override
     protected void startRefresh(HandleBase<T> refreshData) {

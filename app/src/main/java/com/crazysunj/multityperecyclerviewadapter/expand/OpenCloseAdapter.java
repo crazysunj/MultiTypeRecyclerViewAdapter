@@ -2,12 +2,14 @@ package com.crazysunj.multityperecyclerviewadapter.expand;
 
 
 import android.util.Log;
+import android.util.SparseArray;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
+import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
-import com.crazysunj.multitypeadapter.util.IDUtil;
+import com.crazysunj.multityperecyclerviewadapter.IDUtil;
 import com.crazysunj.multityperecyclerviewadapter.R;
 import com.crazysunj.multityperecyclerviewadapter.constant.Constants;
 import com.crazysunj.multityperecyclerviewadapter.helper.BaseHelperAdapter;
@@ -69,7 +71,7 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, BaseViewH
             case OpenCloseAdapterHelper.LEVEL_FIRST - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
             case OpenCloseAdapterHelper.LEVEL_SECOND - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
             case OpenCloseAdapterHelper.LEVEL_THIRD - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
-                renderFooter(holder, (FooterOCEntity) item);
+                renderFooter(holder, (FooterOCEntity) item, itemType + RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER);
                 break;
             case OpenCloseAdapterHelper.LEVEL_FIRST - RecyclerViewAdapterHelper.EMPTY_TYPE_DIFFER:
                 renderEmpty(holder, (EmptyOCEntity) item);
@@ -82,12 +84,16 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, BaseViewH
         }
     }
 
-    public void open(int type, boolean isFold) {
-        mHelper.foldType(type, isFold);
+    public void open(int level, boolean isFold) {
+        mHelper.foldType(level, isFold);
     }
 
-    public void notifyAll(List<OpenCloseItem> data) {
-        mHelper.notifyDataByDiff(data);
+    public boolean isDataFolded(int level) {
+        return mHelper.isDataFolded(level);
+    }
+
+    public void notifyAll(SparseArray<LevelData<OpenCloseItem>> data) {
+        mHelper.notifyDataSetChanged(data);
     }
 
     public void notifyFirstEmpty() {
@@ -153,7 +159,7 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, BaseViewH
         helper.setText(R.id.empty_title, String.format("我是空 title:%s flag:%s type:%s", item.getTitle(), item.getFlag(), (item.getItemType() + RecyclerViewAdapterHelper.EMPTY_TYPE_DIFFER)));
     }
 
-    private void renderFooter(BaseViewHolder helper, final FooterOCEntity item) {
+    private void renderFooter(BaseViewHolder helper, final FooterOCEntity item, int level) {
         final int type = item.getItemType() + RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER;
         final TextView footer = helper.getView(R.id.item_footer);
         String text = String.format("我是底 title:%s flag:%s type:%s", item.getTitle(), item.getFlag(), type);
@@ -161,11 +167,11 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, BaseViewH
         footer.setText(text);
         footer.setOnClickListener(v -> {
             if (mOnFooterClickListener != null) {
-                if (Constants.EXPAND.equals(item.getTitle())) {
-                    mOnFooterClickListener.onFooterClick(type, false);
+                if (isDataFolded(level)) {
+                    mOnFooterClickListener.onFooterClick(level, false);
                     item.setTitle(Constants.FOLD);
                 } else {
-                    mOnFooterClickListener.onFooterClick(type, true);
+                    mOnFooterClickListener.onFooterClick(level, true);
                     item.setTitle(Constants.EXPAND);
                 }
                 footer.setText(String.format("我是底 title:%s flag:%s type:%s", item.getTitle(), item.getFlag(), type));
@@ -179,7 +185,7 @@ public class OpenCloseAdapter extends BaseHelperAdapter<OpenCloseItem, BaseViewH
     }
 
     public interface OnFooterClickListener {
-        void onFooterClick(int type, boolean isFlod);
+        void onFooterClick(int level, boolean isFold);
     }
 
     private void renderHeader(BaseViewHolder helper, TitleOCEntity item) {

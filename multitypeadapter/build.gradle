@@ -22,7 +22,6 @@ android {
 dependencies {
     compileOnly libs.recyclerview
     compileOnly libs.diffutil
-    compileOnly project(libs.MTRVA_File_Anno)
 }
 
 publish {

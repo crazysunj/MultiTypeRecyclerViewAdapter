@@ -13,7 +13,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crazysunj.sample.adapter.MyHelperAdapter;
+import com.crazysunj.sample.adapter.helper.MyAdapterHelper;
 import com.crazysunj.sample.entity.ItemEntity1;
 import com.crazysunj.sample.entity.ItemEntity2;
 import com.crazysunj.sample.entity.ItemEntity3;
@@ -26,12 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -100,7 +101,9 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayShowTitleEnabled(false);
         }
         mToolbar.setNavigationIcon(R.mipmap.ic_scan);
-        mToolbar.setNavigationOnClickListener(v -> SnackBarUtil.show(MainActivity.this, "哥，别扫了"));
+        mToolbar.setNavigationOnClickListener(v -> {
+            refreshLoading();
+        });
         mNavigationIcon = mToolbar.getNavigationIcon();
         mAppBar.addOnOffsetChangedListener((AppBarLayout appBarLayout, int verticalOffset) -> {
             int totalScrollRange = appBarLayout.getTotalScrollRange();
@@ -169,14 +172,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshFoot() {
-        mRecyclerView.postDelayed(() -> mAdapter.notifyFoot(), mRandom.nextInt(RANDOM_DELAY_TIME));
+        mRecyclerView.postDelayed(() -> {
+            mAdapter.registerModule(MyAdapterHelper.LEVEL_FOOT)
+                    .type(MyAdapterHelper.TYPE_FOOT)
+                    .layoutResId(R.layout.footer_home)
+                    .register();
+            mAdapter.notifyFoot();
+        }, mRandom.nextInt(RANDOM_DELAY_TIME));
     }
 
     private void refreshHead() {
-        mRecyclerView.postDelayed(() -> mAdapter.notifyHead(), mRandom.nextInt(RANDOM_DELAY_TIME));
+        mRecyclerView.postDelayed(() -> {
+            mAdapter.registerModule(MyAdapterHelper.LEVEL_HEAD)
+                    .type(MyAdapterHelper.TYPE_HEAD)
+                    .layoutResId(R.layout.head_home)
+                    .register();
+            mAdapter.notifyHead();
+        }, mRandom.nextInt(RANDOM_DELAY_TIME));
     }
 
+    private boolean isChanged1 = true;
+    private boolean isChanged2 = true;
+
     private void refreshItem1() {
+
+        mAdapter.registerModule(isChanged1 ? MyAdapterHelper.LEVEL_1 : MyAdapterHelper.LEVEL_2)
+                .type(ItemEntity1.TYPE_1)
+                .layoutResId(R.layout.item_1)
+                .headerResId(R.layout.header_common)
+                .footerResId(R.layout.item_footer)
+                .isFolded(true)
+                .minSize(2)
+                .register();
+
         mRecyclerView.postDelayed(() -> {
             List<ItemEntity1> list = new ArrayList<ItemEntity1>();
             list.add(new ItemEntity1("冠心病康复指导", "课程提醒", mRandom.nextInt(4) - 1));
@@ -184,25 +212,47 @@ public class MainActivity extends AppCompatActivity {
             list.add(new ItemEntity1("服用银杏叶制剂", "用药提醒", mRandom.nextInt(4) - 1));
             list.add(new ItemEntity1("血管", "输液", mRandom.nextInt(4) - 1));
             list.add(new ItemEntity1("冠心", "课程", mRandom.nextInt(4) - 1));
+            mAdapter.setChanged1(isChanged1);
             mAdapter.notifyType1(list);
+            isChanged1 = !isChanged1;
         }, mRandom.nextInt(RANDOM_DELAY_TIME));
     }
 
     private void refreshItem2() {
+
+        mAdapter.registerModule(isChanged2 ? MyAdapterHelper.LEVEL_2 : MyAdapterHelper.LEVEL_1)
+                .type(ItemEntity2.TYPE_2)
+                .layoutResId(R.layout.item_2)
+                .headerResId(R.layout.header_common)
+                .register();
+
         mRecyclerView.postDelayed(() -> {
             List<ItemEntity2> list = new ArrayList<ItemEntity2>();
             list.add(new ItemEntity2(R.mipmap.ic_bf_1, "住院康复营养A餐", "白粥+香菇肉丝+芹菜干丝", "￥ 26/餐"));
             list.add(new ItemEntity2(R.mipmap.ic_bf_2, "住院康复营养B餐", "猪肉玉米粥+菌菇汤", "￥ 24/餐"));
+            mAdapter.setChanged2(isChanged2);
             mAdapter.notifyType2(list);
+            isChanged2 = !isChanged2;
         }, mRandom.nextInt(RANDOM_DELAY_TIME));
     }
 
     private void refreshItem3() {
-        mRecyclerView.postDelayed(() -> mAdapter.notifyType3(new ItemEntity3()), mRandom.nextInt(RANDOM_DELAY_TIME));
+        mRecyclerView.postDelayed(() -> {
+            mAdapter.registerModule(MyAdapterHelper.LEVEL_3)
+                    .type(ItemEntity3.TYPE_3)
+                    .layoutResId(R.layout.item_3)
+                    .register();
+            mAdapter.notifyType3(new ItemEntity3());
+        }, mRandom.nextInt(RANDOM_DELAY_TIME));
     }
 
 
     private void refreshItem4() {
+        mAdapter.registerModule(MyAdapterHelper.LEVEL_4)
+                .type(ItemEntity4.TYPE_4)
+                .layoutResId(R.layout.item_4)
+                .headerResId(R.layout.header_common)
+                .register();
         mRecyclerView.postDelayed(() -> {
             List<ItemEntity4> list = new ArrayList<ItemEntity4>();
             list.add(new ItemEntity4(R.mipmap.ic_doctor_1, "怎样系统预防及治疗冠心病", "刘飞", "首都医科大学宣武医院主治医师", "健康行家", "25人见过", "￥ 150/次"));

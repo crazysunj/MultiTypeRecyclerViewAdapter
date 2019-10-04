@@ -1,5 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.switchtype;
 
+import androidx.annotation.Nullable;
+
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 
 /**
@@ -33,7 +35,10 @@ public class SwtichType implements MultiTypeEntity {
     }
 
     @Override
-    public long getId() {
-        return -type;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof SwtichType)) {
+            return false;
+        }
+        return type == ((SwtichType) obj).type;
     }
 }

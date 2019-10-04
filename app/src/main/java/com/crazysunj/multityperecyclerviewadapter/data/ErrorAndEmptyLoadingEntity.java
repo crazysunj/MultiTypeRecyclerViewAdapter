@@ -1,5 +1,7 @@
 package com.crazysunj.multityperecyclerviewadapter.data;
 
+import androidx.annotation.Nullable;
+
 import com.crazysunj.multityperecyclerviewadapter.sticky.StickyItem;
 
 import java.util.UUID;
@@ -31,8 +33,11 @@ public class ErrorAndEmptyLoadingEntity implements StickyItem {
     }
 
     @Override
-    public long getId() {
-        return id;
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof ErrorAndEmptyLoadingEntity)) {
+            return false;
+        }
+        return id == ((ErrorAndEmptyLoadingEntity) obj).id;
     }
 
     @Override
