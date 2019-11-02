@@ -77,6 +77,13 @@
             android:onClick="click18"
             android:text="2.4.0版本，新刷新工具" />
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="click19"
+            android:textAllCaps="false"
+            android:text="RecyclerView组件化" />
+
     </LinearLayout>
 
 </ScrollView>

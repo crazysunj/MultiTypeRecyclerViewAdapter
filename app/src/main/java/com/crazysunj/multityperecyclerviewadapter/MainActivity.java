@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.crazysunj.multityperecyclerviewadapter.component.ComponentActivity;
 import com.crazysunj.multityperecyclerviewadapter.switchtype.SwitchTypeActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -59,5 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void click18(View view) {
         startActivity(new Intent(this, Refresh240Activity.class));
+    }
+
+    public void click19(View view) {
+        startActivity(new Intent(this, ComponentActivity.class));
     }
 }

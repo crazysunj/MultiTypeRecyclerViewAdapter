@@ -17,6 +17,7 @@ package com.crazysunj.multitypeadapter.helper;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 
 import androidx.recyclerview.widget.DiffUtil;
@@ -42,7 +43,7 @@ public class AsynAdapterHelper<T extends MultiTypeEntity> extends RecyclerViewAd
     protected ExecutorService mExecutor = Executors.newSingleThreadExecutor();
 
     @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == HANDLE_DATA_UPDATE) {

@@ -29,9 +29,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation project(libs.MTRVA_File)
-    //    implementation libs.MTRVA_Anno
+    implementation project(libs.component_File)
 //    implementation libs.MTRVA
-    //    annotationProcessor libs.MTRVA_Compiler
+//    implementation libs.component
     implementation libs.appcompat
     implementation libs.constraintlayout
     implementation libs.itemDecoration
@@ -39,6 +39,7 @@ dependencies {
     implementation libs.recyclerview
     implementation libs.rxandroid
     implementation libs.rxjava
+    implementation libs.smartRefreshLayout
     testImplementation libs.junit
     //    implementation libs.diffutil
 }

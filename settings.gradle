@@ -1,1 +1,1 @@
-include ':app', ':multitypeadapter', ':sample'
+include ':app', ':multitypeadapter', ':sample', ':component'

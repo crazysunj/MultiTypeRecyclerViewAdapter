@@ -8,7 +8,9 @@ ext {
 
     dependencies = [
             MTRVA_File        : ':multitypeadapter',
-            MTRVA             : 'com.crazysunj:multitypeadapter:2.4.2',
+            component_File    : ':component',
+            MTRVA             : 'com.crazysunj:multitypeadapter:2.5.2',
+            component         : 'com.crazysunj:component:2.5.2',
             diffutil          : 'com.crazysunj:diffutil:0.0.2',
             multidex          : 'androidx.multidex:multidex:2.0.1',
             recyclerview      : 'androidx.recyclerview:recyclerview:1.1.0-beta04',
@@ -25,13 +27,14 @@ ext {
             junit             : 'junit:junit:4.12',
             debugLeakcanary   : 'com.squareup.leakcanary:leakcanary-android:1.6.3',
             releaseLeakcanary : 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3',
+            smartRefreshLayout: 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
     ]
 
     bintray = [
             userOrg       : 'twsunj',
             groupId       : 'com.crazysunj',
             uploadName    : 'MultiTypeRecyclerViewAdapter',
-            publishVersion: '2.5.1',
+            publishVersion: '2.5.2',
             desc          : 'MultiTypeRecyclerViewAdapter For Android',
             website       : 'https://github.com/crazysunj/MultiTypeRecyclerViewAdapter',
             licences      : ['Apache-2.0']

@@ -1,0 +1,37 @@
+apply plugin: 'com.android.library'
+apply plugin: 'bintray-release'
+
+def configs = rootProject.ext.android //android配置
+def libs = rootProject.ext.dependencies //依赖库配置
+def bintrays = rootProject.ext.bintray //bintray配置
+android {
+    compileSdkVersion configs.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion configs.libMinSdkVersion
+        targetSdkVersion configs.targetSdkVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+}
+
+dependencies {
+    compileOnly libs.recyclerview
+    compileOnly project(libs.MTRVA_File)
+}
+
+publish {
+    artifactId = 'component'
+    userOrg = bintrays.userOrg
+    groupId = bintrays.groupId
+    uploadName = bintrays.uploadName
+    publishVersion = bintrays.publishVersion
+    desc = bintrays.desc
+    website = bintrays.website
+    licences = bintrays.licences
+}

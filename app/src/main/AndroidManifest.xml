@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.crazysunj.multityperecyclerviewadapter">
 
     <application
@@ -7,15 +8,16 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".LinearActivity" />
+        <activity android:name=".component.ComponentActivity" />
         <activity android:name=".GridActivity" />
         <activity android:name=".RxLinearActivity" />
         <activity android:name=".RxErrorAndEmptyLinearActivity" />
@@ -29,7 +31,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".switchtype.SwitchTypeActivity" />
         <activity android:name=".TestLevelActivity" />
-        <activity android:name=".Refresh240Activity"></activity>
+        <activity android:name=".Refresh240Activity" />
     </application>
 
 </manifest>
