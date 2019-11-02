@@ -316,6 +316,29 @@ public class AdapterHelper {
 
         /**
          * 刷新全部数据
+         * 详细见{@link RecyclerViewAdapterHelper#notifyDataSetDiffChanged(List)}
+         *
+         * @param data 传入集合
+         * @return ActionAdapterHelper
+         */
+        public ActionAdapterHelper allDiff(final List<? extends MultiTypeEntity> data) {
+            return create(new CallHandler() {
+                @Override
+                public void call(final ActionHandler actionHandler, RecyclerViewAdapterHelper helper) {
+                    into(new ActionHandler() {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public void action(RecyclerViewAdapterHelper helper) {
+                            helper.notifyDataSetDiffChanged(data);
+                            actionHandler.action(helper);
+                        }
+                    }, helper);
+                }
+            });
+        }
+
+        /**
+         * 刷新全部数据
          * 详细见{@link RecyclerViewAdapterHelper#notifyDataSetChanged(SparseArray)}
          *
          * @param data 传入数据

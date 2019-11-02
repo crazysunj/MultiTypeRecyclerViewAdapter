@@ -25,10 +25,8 @@ import com.crazysunj.multitypeadapter.entity.HandleBase;
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author: sunjian
@@ -41,8 +39,7 @@ public class AsynAdapterHelper<T extends MultiTypeEntity> extends RecyclerViewAd
 
     private static final int HANDLE_DATA_UPDATE = 1;
 
-    protected ScheduledExecutorService mExecutor = Executors.newSingleThreadScheduledExecutor();
-    protected ScheduledFuture<?> mFuture;
+    protected ExecutorService mExecutor = Executors.newSingleThreadExecutor();
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -55,27 +52,24 @@ public class AsynAdapterHelper<T extends MultiTypeEntity> extends RecyclerViewAd
         }
     };
 
+    public AsynAdapterHelper() {
+    }
+
+    public AsynAdapterHelper(int mode) {
+        super(mode);
+    }
+
     @Override
     protected void startRefresh(HandleBase<T> refreshData) {
-        cancelFuture();
-        mFuture = mExecutor.schedule(new HandleTask(refreshData),
-                0, TimeUnit.MILLISECONDS);
+        mExecutor.execute(new HandleTask(refreshData));
     }
 
     @Override
     public void release() {
-        cancelFuture();
         if (!mExecutor.isShutdown()) {
             mExecutor.shutdown();
         }
         super.release();
-    }
-
-    protected void cancelFuture() {
-        if (mFuture != null && !mFuture.isCancelled()) {
-            mFuture.cancel(true);
-            mFuture = null;
-        }
     }
 
     /**
@@ -83,7 +77,6 @@ public class AsynAdapterHelper<T extends MultiTypeEntity> extends RecyclerViewAd
      */
     public void reset() {
         clearQueue();
-        cancelFuture();
     }
 
     private final class HandleTask implements Runnable {

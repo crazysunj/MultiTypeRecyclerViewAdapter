@@ -10,8 +10,6 @@ android {
     defaultConfig {
         minSdkVersion configs.libMinSdkVersion
         targetSdkVersion configs.targetSdkVersion
-        versionCode 1
-        versionName bintrays.publishVersion
     }
 
     lintOptions {

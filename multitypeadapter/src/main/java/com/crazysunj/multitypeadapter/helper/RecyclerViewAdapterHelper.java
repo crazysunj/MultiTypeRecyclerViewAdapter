@@ -711,6 +711,18 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         onEnd();
     }
 
+    /**
+     * 专门用于混合模式的diff全局刷新 {@link RecyclerViewAdapterHelper#MODE_MIXED}
+     *
+     * @param list List
+     */
+    public void notifyDataSetDiffChanged(@NonNull List<? extends T> list) {
+        checkAdapterBind();
+        mCurrentMode = MODE_MIXED;
+        mNewData.clear();
+        mNewData.addAll(list);
+        notifyModuleChanged(mNewData, null, null, REFRESH_TYPE_DATA_ALL, REFRESH_ALL);
+    }
 
     /**
      * 专门用于标准模式的全局刷新 {@link RecyclerViewAdapterHelper#MODE_STANDARD}
@@ -1996,7 +2008,7 @@ public abstract class RecyclerViewAdapterHelper<T extends MultiTypeEntity> {
         if (mCurrentMode == MODE_MIXED) {
             onEnd();
             mRefreshQueue.clear();
-            throw new RefreshException("Current refresh mode can't support random refresh mode !");
+            throw new RefreshException("Current refresh mode can't support mixed refresh mode !");
         }
     }
 

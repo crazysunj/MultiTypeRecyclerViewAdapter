@@ -28,6 +28,13 @@ import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
  */
 public class SynAdapterHelper<T extends MultiTypeEntity> extends RecyclerViewAdapterHelper<T> {
 
+    public SynAdapterHelper() {
+    }
+
+    public SynAdapterHelper(int mode) {
+        super(mode);
+    }
+
     @Override
     protected void startRefresh(HandleBase<T> refreshData) {
         handleResult(handleRefresh(refreshData.getNewData(), refreshData.getNewHeader(),
