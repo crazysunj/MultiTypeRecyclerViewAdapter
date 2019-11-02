@@ -17,6 +17,7 @@
 
 * 一行代码刷新(附动画)单个level(一个level可对应多个type)
 * 支持常规增删改查操作
+* 支持RecyclerView组件化
 * 支持异步，高频率，链式刷新，可扩展(如配合RxJava)
 * 单个level支持Loading(加载)，Empty(空)，Error(错误)页面切换
 * 单个level支持header，footer
