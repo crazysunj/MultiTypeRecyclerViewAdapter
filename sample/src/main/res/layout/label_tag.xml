@@ -11,7 +11,7 @@
     android:paddingLeft="4dp"
     android:paddingRight="4dp"
     android:paddingTop="2dp"
-    app:corner="10dp"
-    app:stroke_color="@color/color_5C93F7"
-    app:stroke_width="1dp"
+    app:stv_corner="10dp"
+    app:stv_stroke_color="@color/color_5C93F7"
+    app:stv_stroke_width="1dp"
     tools:text="低脂肪" />
